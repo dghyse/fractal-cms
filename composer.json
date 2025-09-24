@@ -1,0 +1,60 @@
+{
+  "name": "dghyse/fractal-cms",
+  "description": "Dghyse porte folio",
+  "keywords": ["David Ghyse", "fractal-cms", "cms", "fractalcms"],
+  "homepage": "https://github.com/dghyse/fractal-cms",
+  "type": "project",
+  "license": "proprietary",
+  "support": {
+    "issues": "https://github.com/dghyse/fractal-cms/issues"
+  },
+  "authors": [
+    {
+      "name": "David Ghyse",
+      "email": "david.ghyse@free.fr"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+
+  ],
+  "require": {
+    "php": ">=8.0",
+    "ext-intl": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-gd": "*",
+    "ext-fileinfo": "*",
+    "vlucas/phpdotenv": "~5.0",
+    "yiisoft/yii2": "~2.0",
+    "yiisoft/yii2-redis": "~2.0",
+    "bower-asset/bootstrap": "~5.0",
+    "league/flysystem": "^3.25"
+  },
+  "require-dev" : {
+    "yiisoft/yii2-debug":"~2.0",
+    "yiisoft/yii2-gii":"~2.0"
+  },
+  "config": {
+    "process-timeout": 1800,
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "fractalCms\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+    ]
+  }
+}
