@@ -18,6 +18,8 @@ use fractalCms\console\AdminController;
 use fractalCms\console\AuthorController;
 use fractalCms\console\InitController;
 use fractalCms\console\RbacController;
+use fractalCms\helpers\Menu;
+use fractalCms\helpers\ConfigType;
 use fractalCms\models\User;
 use Yii;
 use yii\base\BootstrapInterface;
@@ -36,11 +38,11 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public $filePath = '@webroot/data';
     public $relativeImgDirName = 'items';
     public $cacheImgPath = 'cache';
-    public $version = '1.0.0';
+    public $version = 'v1.0.1';
     public $name = 'FractalCMS';
-
-
     public $commandNameSpace = 'fractalCms:';
+
+    private $_contextId = 'cms';
 
     public function bootstrap($app)
     {
@@ -54,12 +56,21 @@ class Module extends \yii\base\Module implements BootstrapInterface
                     'autoRenewCookie' => true,
                     'loginUrl' => [$this->uniqueId.'/authentication/login'],
                     'idParam' => '__cmsId',
-                    'returnUrlParam' => '__cmsReturnUrl',
+                    'returnUrlParam' => '__fractalCmsReturnUrl',
                     'identityCookie' => [
-                        'name' => '_cmsIdentity', 'httpOnly' => true
+                        'name' => '_fractalCmsIdentity', 'httpOnly' => true
                     ]
                 ],
             ]);
+
+            Yii::$container->setSingleton(Menu::class, [
+                'class' => Menu::class,
+            ]);
+
+              Yii::$container->setSingleton(ConfigType::class, [
+                  'class' => ConfigType::class,
+              ]);
+
             if ($app instanceof ConsoleApplication) {
                 //Init migration
                 if (isset($app->controllerMap['migrate']) === true) {
@@ -93,46 +104,130 @@ class Module extends \yii\base\Module implements BootstrapInterface
                 $app->getUrlManager()->addRules(
                     [
                         new GroupUrlRule([
+                            'prefix' => Module::getInstance()->id,
                             'routePrefix' => Module::getInstance()->id,
                             'rules' => [
                                 [
-                                    'pattern' => 'cms/tableau-de-bord',
+                                    'pattern' =>'tableau-de-bord',
                                     'route' => 'default/index',
                                 ],
                                 [
-                                    'pattern' => 'cms/gestion-des-utilisateurs',
+                                    'pattern' => 'gestion-des-utilisateurs',
                                     'route' => 'user/index',
                                 ],
                                 [
-                                    'pattern' => 'cms/connexion',
+                                    'pattern' => 'connexion',
                                     'route' => 'authentification/login',
                                 ],
                                 [
-                                    'pattern' => 'cms/deconnexion',
-                                    'route' => 'authentification/logout',
+                                    'pattern' => 'deconnexion',
+                                    'route' => 'authentication/logout',
                                 ],
                                 [
-                                    'pattern' => 'cms/utilisateurs/<id:([^/]+)>/editer',
+                                    'pattern' => 'utilisateurs/<id:([^/]+)>/editer',
                                     'route' => 'user/update',
                                 ],
                                 [
-                                    'pattern' => 'cms/utilisateurs/<id:([^/]+)>/supprimer',
+                                    'pattern' => 'utilisateurs/<id:([^/]+)>/supprimer',
                                     'route' => 'user-api/delete',
                                 ],
                                 [
-                                    'pattern' => 'cms/utilisateurs/<id:([^/]+)>/activer-desactiver',
+                                    'pattern' => 'utilisateurs/<id:([^/]+)>/activer-desactiver',
                                     'route' => 'user-api/activate',
                                 ],
                                 [
-                                    'pattern' => 'cms/utilisateurs/creer',
+                                    'pattern' => 'utilisateurs/creer',
                                     'route' => 'user/create',
                                 ],
                                 [
-                                    'pattern' => 'cms/utilisateurs/liste',
+                                    'pattern' => 'utilisateurs/liste',
                                     'route' => 'user/index',
                                 ],
                                 [
-                                    'pattern' => 'cms/contents/<contentId:([^/]+)>/manage-items',
+                                    'pattern' => 'configuration-des-items/liste',
+                                    'route' => 'config-item/index',
+                                ],
+                                [
+                                    'pattern' => 'configuration-des-items/creer',
+                                    'route' => 'config-item/create',
+                                ],
+                                [
+                                    'pattern' => 'configuration-des-items/<id:([^/]+)>/editer',
+                                    'route' => 'config-item/update',
+                                ],
+                                [
+                                    'pattern' => 'configuration-des-items/<id:([^/]+)>/supprimer',
+                                    'route' => 'api/config-item/delete',
+                                ],
+
+                                [
+                                    'pattern' => 'configuration-type-article/liste',
+                                    'route' => 'config-type/index',
+                                ],
+                                [
+                                    'pattern' => 'configuration-type-article/creer',
+                                    'route' => 'config-type/create',
+                                ],
+                                [
+                                    'pattern' => 'configuration-type-article/<id:([^/]+)>/editer',
+                                    'route' => 'config-type/update',
+                                ],
+                                [
+                                    'pattern' => 'configuration-type-article/<id:([^/]+)>/supprimer',
+                                    'route' => 'api/config-type/delete',
+                                ],
+                                [
+                                    'pattern' => 'articles/liste',
+                                    'route' => 'content/index',
+                                ],
+                                [
+                                    'pattern' => 'articles/creer',
+                                    'route' => 'content/create',
+                                ],
+                                [
+                                    'pattern' => 'articles/<id:([^/]+)>/editer',
+                                    'route' => 'content/update',
+                                ],
+                                [
+                                    'pattern' => 'articles/<id:([^/]+)>/supprimer',
+                                    'route' => 'api/content/delete',
+                                ],
+
+                                [
+                                    'pattern' => 'menus/liste',
+                                    'route' => 'menu/index',
+                                ],
+                                [
+                                    'pattern' => 'menu/creer',
+                                    'route' => 'menu/create',
+                                ],
+                                [
+                                    'pattern' => 'menu/<id:([^/]+)>/editer',
+                                    'route' => 'menu/update',
+                                ],
+                                [
+                                    'pattern' => 'menu/<id:([^/]+)>/supprimer',
+                                    'route' => 'api/menu/delete',
+                                ],
+                                [
+                                    'pattern' => 'parametres/liste',
+                                    'route' => 'parameter/index',
+                                ],
+                                [
+                                    'pattern' => 'parametres/creer',
+                                    'route' => 'parameter/create',
+                                ],
+                                [
+                                    'pattern' => 'parametres/<id:([^/]+)>/editer',
+                                    'route' => 'parameter/update',
+                                ],
+                                [
+                                    'pattern' => 'parametres/<id:([^/]+)>/supprimer',
+                                    'route' => 'api/parameter/delete',
+                                ],
+
+                                [
+                                    'pattern' => 'contents/<contentId:([^/]+)>/manage-items',
                                     'route' => 'api/item/manage-items',
                                 ],
                             ]
@@ -155,6 +250,16 @@ class Module extends \yii\base\Module implements BootstrapInterface
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;
         }
+    }
 
+
+    public function getContextId() : string
+    {
+        try {
+            return $this->_contextId;
+        }catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw  $e;
+        }
     }
 }

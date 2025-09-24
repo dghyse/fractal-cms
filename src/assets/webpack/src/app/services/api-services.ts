@@ -1,11 +1,13 @@
 import { HttpClientConfiguration, IHttpClient } from '@aurelia/fetch-client';
 import {ILogger, resolve} from 'aurelia';
 import {EApi} from "../enums/api";
+import {ConfigService} from "./config-service";
 
 export class ApiServices {
 
     public constructor(
         private readonly httpClient: IHttpClient = resolve(IHttpClient),
+        private readonly configService:ConfigService = resolve(ConfigService),
         private readonly logger: ILogger = resolve(ILogger).scopeTo('ApiServices')
     )
     {
@@ -61,7 +63,7 @@ export class ApiServices {
 
     public manageItems(id:number, body:FormData): Promise<string>
     {
-        const url:string = EApi.ITEM_MANAGE.replace('{contentId}', id.toString());
+        const url:string = this.configService.getApiBaseUrl()+'/'+EApi.ITEM_MANAGE.replace('{contentId}', id.toString());
         return this.httpClient.fetch(url, {
             method: 'POST',
             body:body,
