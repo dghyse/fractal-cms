@@ -10,6 +10,7 @@ import {CmsApp} from "./app/app";
 
 declare const webpackBaseUrl: string;
 declare let __webpack_public_path__: string;
+declare let apiBaseUrl: string;
 if (webpackBaseUrl !== undefined) {
     __webpack_public_path__ = webpackBaseUrl;
 }
