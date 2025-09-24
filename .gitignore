@@ -1,0 +1,7 @@
+## Editors - OS
+node_modules
+src/node_modules
+vendor/
+.idea
+## Force files to keep
+!.gitkeep

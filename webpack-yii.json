@@ -1,0 +1,20 @@
+{
+    "sourceDir": "./src/assets/webpack",
+    "entry": {
+        "main": "./scss/main.scss",
+        "app": ["./startup.ts"]
+    },
+    "externals": {
+    },
+    "alias": {
+    },
+    "subDirectories": {
+        "sources": "src",
+        "dist": "build"
+    },
+    "assets": {
+        "styles": "css",
+        "scripts": "js"
+    },
+    "catalog": "assets-catalog.json"
+}
