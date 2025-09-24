@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext","dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "target": "ES2017",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "sourceMap": true,
+    "typeRoots": [
+        "node_modules/@types",
+    ]
+  },
+  "include": [
+    "src/assets/webpack/src/**/*",
+  ],
+  "files": [
+    "src/assets/webpack/src/resource.d.ts"
+  ]
+}
