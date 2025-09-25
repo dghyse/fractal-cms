@@ -120,7 +120,7 @@ use yii\helpers\ArrayHelper;
         <?php endif;?>
         <div class="row  justify-content-center mt-3">
             <div  class="col-sm-6 text-center form-group">
-                <button type="submit" class="btn btn-primary">Enregister</button>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
             </div>
         </div>
         <?php  echo Html::endForm(); ?>

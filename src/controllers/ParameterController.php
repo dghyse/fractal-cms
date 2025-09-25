@@ -72,7 +72,7 @@ class ParameterController extends Controller
     public function actionIndex() : string
     {
         try {
-            $modelsQuery = Parameter::find();
+            $modelsQuery = Parameter::find()->orderBy(['group' => SORT_ASC, 'name' => SORT_ASC]);
             return $this->render('index', [
                 'modelsQuery' => $modelsQuery
             ]);

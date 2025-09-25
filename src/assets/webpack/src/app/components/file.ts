@@ -262,13 +262,12 @@ export class File
     };
     // File upload completed
     protected onFileSuccess = (file:Resumable.ResumableFile, serverMessage:string) => {
-        const response = JSON.parse(serverMessage);
         if (this.multiple === false) {
-            this.setFile('@webapp/runtime/uploads/' + response.finalFilename, file);
+            this.setFile('@webapp/runtime/uploads/' + file.fileName, file);
         } else {
-            this.appendFile('@webapp/runtime/uploads/' + response.finalFilename, file);
+            this.appendFile('@webapp/runtime/uploads/' + file.fileName, file);
         }
-        this.logger.debug('onFileSuccess', file, serverMessage);
+        this.logger.debug('onFileSuccess', file, file);
     };
     // File upload progress
     protected onFileProgress = (file:Resumable.ResumableFile, serverMessage:string) => {

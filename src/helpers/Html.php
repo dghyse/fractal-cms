@@ -27,6 +27,7 @@ class Html extends \yii\helpers\Html
     const CONFIG_TYPE_CHECKBOX = 'checkbox';
     const CONFIG_TYPE_WYSIWYG = 'wysiwyg';
     const CONFIG_TYPE_LIST = 'list';
+    const CONFIG_TYPE_FORMS = 'forms';
 
     public $cachePath = 'cache';
 

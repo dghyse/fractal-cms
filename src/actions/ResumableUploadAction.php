@@ -52,7 +52,7 @@ class ResumableUploadAction extends ViewAction
      */
     public function run()
     {
-        if ($this->getIsUpload() === true) {
+        if ($this->getIsUpload() === true && Yii::$app->request->isGet === false) {
             $this->originalFilename = $this->getResumableParam('filename');
             $this->finalFilename = $this->originalFilename;
             $this->extension = $this->extractExtension($this->originalFilename);
@@ -60,10 +60,10 @@ class ResumableUploadAction extends ViewAction
             Yii::$app->response->format = Response::FORMAT_JSON;
             Yii::$app->response->data = ['finalFilename' => $this->finalFilename];
             return Yii::$app->response;
-        } elseif(Yii::$app->request->isGet === true) {
+        }  /*elseif(Yii::$app->request->isGet === true) {
             // perform resume test
             throw new NotFoundHttpException();
-        }
+        }*/
     }
 
     /**
