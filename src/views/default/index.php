@@ -25,7 +25,7 @@ $moduleInstance = Module::getInstance();
     <!-- Bienvenue -->
     <section class="mb-10">
         <h1 class="text-2xl font-bold">👋 Bienvenue, <?php echo ucfirst($model->firstname);?></h1>
-        <p class="text-gray-600">Gérez vos contenus et sections simplement avec <?php echo $moduleInstance->name.' v'.$moduleInstance->version?></p>
+        <p class="text-gray-600">Gérez vos contenus et sections simplement avec <?php echo $moduleInstance->name.' '.$moduleInstance->version?></p>
     </section>
 
     <!-- Dashboard en 2 colonnes -->
