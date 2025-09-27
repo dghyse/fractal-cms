@@ -15,3 +15,8 @@ Release v1.1.1 27/09/2025 <david.ghyse@free.fr>
 ----------------------------------------------
 
 *   Change front fractal version, view default
+
+Release v1.1.2 27/09/2025 <david.ghyse@free.fr>
+----------------------------------------------
+
+*  Fix parse url
