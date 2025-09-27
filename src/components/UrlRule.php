@@ -4,6 +4,7 @@ namespace fractalCms\components;
 
 use fractalCms\models\Content;
 use fractalCms\models\Slug;
+use fractalCms\Module;
 use yii\base\BaseObject;
 use yii\web\UrlRule as BaseUrl;
 use Exception;
@@ -17,11 +18,10 @@ class UrlRule extends BaseObject implements UrlRuleInterface
     {
         try {
             $prettyUrl = $route;
-            $routes = explode('-', $route);
-
-            if (count($routes) === 2) {
-                $elementName = $routes[0];
-                $elementId = $routes[1];
+            $matches = [];
+            if ( preg_match('/(content)-(\d+)$/', $route, $matches) === 1) {
+                $elementName = $matches[1];
+                $elementId = $matches[2];
                 $content = Content::findOne($elementId);
                 if ($content instanceof Content) {
                     $slug = Slug::findOne($content->slugId);

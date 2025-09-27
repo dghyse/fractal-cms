@@ -11,6 +11,7 @@
 
 namespace fractalCms\assets;
 
+use fractalCms\Module;
 use yii\caching\Cache;
 use yii\caching\FileDependency;
 use yii\helpers\Json;
@@ -117,7 +118,7 @@ class WebpackAsset extends AssetBundle
         /* @var $view View */
         $bundle = parent::register($view);
         $view->registerJsVar('webpackBaseUrl', $bundle->baseUrl.'/');
-        $view->registerJsVar('apiBaseUrl', Url::to(['/']));
+        $view->registerJsVar('apiBaseUrl', Url::to(['/']).Module::getInstance()->id);
 
         return $bundle;
     }

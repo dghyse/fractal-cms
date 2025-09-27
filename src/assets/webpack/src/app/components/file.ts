@@ -4,6 +4,7 @@ import URI from 'urijs';
 import {EApi} from "../enums/api";
 import {EEvents} from "../enums/events";
 import {ApiServices} from "../services/api-services";
+import {ConfigService} from "../services/config-service";
 interface UploadedFile {
     name:string,
     shortname:string|undefined,
@@ -41,6 +42,7 @@ export class File
         private readonly platform: IPlatform = resolve(IPlatform),
         private readonly element: HTMLElement = resolve(INode) as HTMLElement,
         private readonly apiServices: ApiServices = resolve(ApiServices),
+        private readonly configService : ConfigService = resolve(ConfigService),
         private readonly ea: IEventAggregator = resolve(IEventAggregator)
     ) {
         this.logger = logger.scopeTo('File');
@@ -125,37 +127,27 @@ export class File
 
     private generatePreviewUrl(name:string)
     {
-        const url = this.previewUrl.replace('__name__', name);
+        const url = this.configService.getApiBaseUrl()+this.previewUrl.replace('__name__', name);
         const fullUrl:string = url;
         return this.appendParametersUrl(fullUrl);
     }
 
     private generateDeleteUrl(name:string)
     {
-        return this.deleteUrl.replace('__name__', name);
+        return this.configService.getApiBaseUrl()+this.deleteUrl.replace('__name__', name);
     }
     protected getFilesValue()
     {
         let mapped = this.handledFiles.map((uploadedFile: UploadedFile, index:number) => {
             return uploadedFile.name;
         }).join(', ');
-        if (mapped) {
-            //In success
-            /*
-            const message:IImportMessage = {
-                name:this.name,
-                path:mapped
-            };
-            this.ea.publish(ImportChannels.FILE_SUCCESS, message);
-            */
-        }
 
         return (typeof mapped === 'string') ? mapped : '';
     }
 
     private setUp(): void {
         this.logger.debug('setUp');
-        const UploadUrl =  EApi.IMPORT_ASYNC_UPLOAD;
+        const UploadUrl =  this.configService.getApiBaseUrl()+EApi.IMPORT_ASYNC_UPLOAD;
         let resumableConfig:Resumable.ConfigurationHash = {
             target: UploadUrl,
             chunkSize: 512 * 1024
@@ -270,13 +262,14 @@ export class File
     };
     // File upload completed
     protected onFileSuccess = (file:Resumable.ResumableFile, serverMessage:string) => {
-        const response = JSON.parse(serverMessage);
+        const message:any = JSON.parse(serverMessage);
+        const finalFilename = message.hasOwnProperty('finalFilename') ? message['finalFilename'] : null;
         if (this.multiple === false) {
-            this.setFile('@webapp/runtime/uploads/' + response.finalFilename, file);
+            this.setFile('@webapp/runtime/uploads/' + finalFilename, file);
         } else {
-            this.appendFile('@webapp/runtime/uploads/' + response.finalFilename, file);
+            this.appendFile('@webapp/runtime/uploads/' + finalFilename, file);
         }
-        this.logger.debug('onFileSuccess', file, serverMessage);
+        this.logger.debug('onFileSuccess', file, file);
     };
     // File upload progress
     protected onFileProgress = (file:Resumable.ResumableFile, serverMessage:string) => {

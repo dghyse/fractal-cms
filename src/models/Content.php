@@ -416,7 +416,7 @@ class Content extends \yii\db\ActiveRecord
     public function getRoute() : string | false
     {
         try {
-            $prefix = Module::getInstance()->id;
+            $prefix = Module::getInstance()->getContextId();
             return '/'.$prefix.'/content-'.$this->id;
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);

@@ -121,7 +121,20 @@ class Cms
         }
     }
 
-
+    public static function getForms() : array
+    {
+        try {
+            return [
+                [
+                    'id' => 'form-contact',
+                    'name' => 'Formulaire de contact'
+                ]
+            ];
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
 
     public static function getInternCmsRoutes()
     {
