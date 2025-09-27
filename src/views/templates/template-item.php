@@ -161,6 +161,15 @@ use fractalCms\helpers\Cms;
                                 ]);
                             }
                             break;
+                        case Html::CONFIG_TYPE_FORMS:
+                                $forms = Cms::getForms();
+                                echo Html::activeLabel($content, 'items['.$model->id.']['.$attribute.']', ['label' => $title, 'class' => 'form-label']);
+                                echo Html::activeDropDownList($content, 'items['.$model->id.']['.$attribute.']', ArrayHelper::map($forms, 'id', 'name'), [
+                                    'prompt' => 'Sélectionner un formulaire',
+                                    'value' => $model->$attribute,
+                                    'class' => 'form-control',
+                                ]);
+                            break;
                     }
                     ?>
                 </div>

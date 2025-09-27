@@ -10,7 +10,7 @@ export class WysiwygEditor {
         placeholder: 'votre texte ici ...',
         modules: {
             toolbar: [
-                [{ header: [1, 2, false] }],
+                [{ header: [1, 2, 3, false] }],
                 ['bold', 'italic', 'underline'],
                 ['blockquote', 'code-block'],
                 [{ list: 'ordered' }, { list: 'bullet' }],

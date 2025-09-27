@@ -59,11 +59,11 @@ class ResumableUploadAction extends ViewAction
             $this->handleChunk();
             Yii::$app->response->format = Response::FORMAT_JSON;
             Yii::$app->response->data = ['finalFilename' => $this->finalFilename];
-            return Yii::$app->response;
         } elseif(Yii::$app->request->isGet === true) {
             // perform resume test
-            throw new NotFoundHttpException();
+            Yii::$app->response->statusCode = 204;
         }
+        return Yii::$app->response;
     }
 
     /**
