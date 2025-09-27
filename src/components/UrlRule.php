@@ -44,12 +44,15 @@ class UrlRule extends BaseObject implements UrlRuleInterface
     public function parseRequest($manager, $request)
     {
         try {
-            $result = false;
             $pathInfo = $request->getPathInfo();
             $params = $request->getQueryParams();
+            $result= [
+                $pathInfo,
+                $params
+            ];
             $slug = Slug::find()->andWhere(['path' => $pathInfo, 'active' => 1])->one();
             if ($slug instanceof Slug) {
-                $content = $slug->getContent()->one();
+                $content = $slug->getContent()->andWhere(['active' => 1])->one();
                 if ($content instanceof Content) {
                     $result= [
                         $content->configType->config,
