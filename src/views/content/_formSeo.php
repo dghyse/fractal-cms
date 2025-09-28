@@ -48,3 +48,44 @@ use yii\helpers\ArrayHelper;
         </div>
     </div>
 </div>
+<div class="card">
+    <div class="card-header">
+        Sitemap
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col form-label">
+                <?php
+                    echo 'Fréquence de modification';
+                ?>
+            </div>
+            <div class="col form-check ">
+                <?php
+                $index = 0;
+                foreach (\fractalCms\models\Seo::optsFrequence() as $label => $value) {
+                    $inputRadioId = Html::getInputId($seo, 'changefreq').'_'.($index + 1);
+                    echo Html::beginTag('div', ['class' => 'form-check form-check-inline']);
+                    echo Html::input('radio', Html::getInputName($seo, 'changefreq'), $value, [
+                        'id' => $inputRadioId,
+                        'class' => 'form-check-input',
+                        'value' => $value,
+                        'checked' => $seo->changefreq == $value,
+                        'label' => null
+                    ]);
+                    echo Html::label($value, $inputRadioId, ['class' => 'form-check-label']);
+                    echo Html::endTag('div');
+                    $index +=1;
+                }
+                ?>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col form-group p-0">
+                <?php
+                echo Html::activeLabel($seo, 'priority', ['label' => 'Priorite (valeurs valides : 0 à 1)', 'class' => 'form-label']);
+                echo Html::activeInput('number', $seo, 'priority', ['class' => 'form-control', 'step' => '0.1', 'min' => '0.0', 'max' => '1.0']);
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
