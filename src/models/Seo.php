@@ -20,6 +20,8 @@ use yii\db\Expression;
  * @property int $id
  * @property string|null $title
  * @property string|null $description
+ * @property string|null $changefreq
+ * @property float $priority
  * @property int|null $active
  * @property string|null $dateCreate
  * @property string|null $dateUpdate
@@ -30,6 +32,10 @@ class Seo extends \yii\db\ActiveRecord
 {
     const SCENARIO_CREATE = 'create';
     const SCENARIO_UPDATE = 'update';
+
+    const FREQUENTLY_DAILY = 'daily';
+    const FREQUENTLY_WEEKLY = 'weekly';
+    const FREQUENTLY_MONTHLY = 'monthly';
 
     public function behaviors()
     {
@@ -56,11 +62,11 @@ class Seo extends \yii\db\ActiveRecord
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = [
-            'title', 'description', 'dateCreate', 'dateUpdate','active'
+            'title', 'description', 'dateCreate', 'dateUpdate','active', 'priority', 'changefreq'
         ];
 
         $scenarios[self::SCENARIO_UPDATE] = [
-            'title', 'description', 'dateCreate', 'dateUpdate','active'
+            'title', 'description', 'dateCreate', 'dateUpdate','active', 'priority', 'changefreq'
         ];
         return $scenarios;
     }
@@ -75,7 +81,10 @@ class Seo extends \yii\db\ActiveRecord
             [['active'], 'default', 'value' => 0],
             [['description'], 'string'],
             [['active'], 'integer'],
-            [['dateCreate', 'dateUpdate'], 'safe'],
+            [['dateCreate', 'dateUpdate', ], 'safe'],
+            [['priority'], 'number', 'min' => 0, 'max' => 1, 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE],'message' =>  'la Priorité doit-être comprise entre 0 <=> 1.0'],
+            [['changefreq'], 'string', 'max' => 15, 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE], 'message' => 'la Priorité doit-être comprise entre 0 <=> 1.0'],
+            ['changefreq', 'in', 'range' => array_keys(self::optsFrequence())],
             [['title'], 'string', 'max' => 255],
             [['title', 'description'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE],
                 'when' => function() {
@@ -96,6 +105,15 @@ class Seo extends \yii\db\ActiveRecord
             'active' => 'Active',
             'dateCreate' => 'Date Create',
             'dateUpdate' => 'Date Update',
+        ];
+    }
+
+    public static function optsFrequence()
+    {
+        return [
+            self::FREQUENTLY_DAILY => self::FREQUENTLY_DAILY,
+            self::FREQUENTLY_MONTHLY => self::FREQUENTLY_MONTHLY,
+            self::FREQUENTLY_WEEKLY => self::FREQUENTLY_WEEKLY,
         ];
     }
 
