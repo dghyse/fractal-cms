@@ -24,6 +24,7 @@
   "require": {
     "php": ">=8.0",
     "ext-intl": "*",
+    "ext-dom": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
     "ext-gd": "*",
