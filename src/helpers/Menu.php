@@ -11,7 +11,6 @@
 namespace fractalCms\helpers;
 
 use fractalCms\components\Constant;
-use fractalCms\models\User;
 use yii\base\Component;
 use Exception;
 use Yii;

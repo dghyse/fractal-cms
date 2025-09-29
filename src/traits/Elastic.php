@@ -10,6 +10,7 @@ use yii\helpers\ArrayHelper;
 
 trait Elastic
 {
+    use Upload;
     public ?ElasticModel $elasticModel = null;
 
 
@@ -85,36 +86,11 @@ trait Elastic
     {
         try {
             $dataFile = Module::getInstance()->filePath;
-            $relativeDirNam = Module::getInstance()->relativeImgDirName;
-            $destMainDir = Yii::getAlias($dataFile.'/'.$relativeDirNam);
-            if (file_exists($destMainDir) === false) {
-                mkdir($destMainDir);
-            }
-
+            $relativeDirName = Module::getInstance()->relativeItemImgDirName;
             if($this->elasticModel !== null && is_array($this->elasticModel->filesAttributes) === true) {
                 foreach ($this->elasticModel->filesAttributes as $attribute => $options) {
                     if (key_exists($attribute, $data) === true && empty($data[$attribute]) === false) {
-                        try {
-                            $filePatch = Yii::getAlias($data[$attribute]);
-                            if (file_exists($filePatch) === true) {
-                                $info = pathinfo($filePatch);
-                                $fileName = ($info['basename']) ?? null;
-                                if ($fileName !== null) {
-                                    $destDir = Yii::getAlias($dataFile.'/'.$relativeDirNam.'/'.$this->id);
-                                    if (file_exists($destDir) === false) {
-                                        mkdir($destDir);
-                                    }
-                                    $newPath = Yii::getAlias($dataFile.'/'.$relativeDirNam.'/'.$this->id.'/'.$fileName);
-                                    $success = copy($filePatch, $newPath);
-                                    if ($success === true) {
-                                        unlink($filePatch);
-                                        $data[$attribute] = $dataFile.'/'.$relativeDirNam.'/'.$this->id.'/'.$fileName;
-                                    }
-                                }
-                            }
-                        } catch (Exception $e) {
-                            Yii::error($e->getMessage(), __METHOD__);
-                        }
+                        $data[$attribute] = $this->saveFile($dataFile, $relativeDirName, $data[$attribute]);
                     }
                 }
             }
@@ -125,25 +101,12 @@ trait Elastic
         }
     }
 
-    public function deletefilesDir() : void
+    public function deleteFilesDir() : void
     {
         try {
             $dataFile = Module::getInstance()->filePath;
-            $relativeDirNam = Module::getInstance()->relativeImgDirName;
-            $destMainDir = Yii::getAlias($dataFile.'/'.$relativeDirNam.'/'.$this->id);
-            if (file_exists($destMainDir) === true) {
-                foreach (scandir($destMainDir) as $value) {
-                    $pathFile = Yii::getAlias($dataFile.'/'.$relativeDirNam.'/'.$this->id.'/'.$value);
-                    if (in_array($value, ['.', '..']) === false && is_file($pathFile) === true) {
-                        unlink($pathFile);
-                    }
-                }
-                try {
-                    rmdir($destMainDir);
-                } catch (Exception $e) {
-                    Yii::error($e->getMessage(), __METHOD__);
-                }
-            }
+            $relativeDirName = Module::getInstance()->relativeItemImgDirName;
+            $this->deleteDir($dataFile, $relativeDirName);
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;

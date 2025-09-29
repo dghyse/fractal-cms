@@ -20,6 +20,7 @@ use fractalCms\console\InitController;
 use fractalCms\console\RbacController;
 use fractalCms\helpers\Menu;
 use fractalCms\helpers\ConfigType;
+use fractalCms\helpers\SitemapBuilder;
 use fractalCms\models\User;
 use Yii;
 use yii\base\BootstrapInterface;
@@ -36,7 +37,8 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public $layout = 'main';
     public $defaultRoute = 'default/index';
     public $filePath = '@webroot/data';
-    public $relativeImgDirName = 'items';
+    public $relativeItemImgDirName = 'items';
+    public $relativeSeoImgDirName = 'seo';
     public $cacheImgPath = 'cache';
     public $version = 'v1.1.2';
     public $name = 'FractalCMS';
@@ -67,9 +69,13 @@ class Module extends \yii\base\Module implements BootstrapInterface
                 'class' => Menu::class,
             ]);
 
-              Yii::$container->setSingleton(ConfigType::class, [
-                  'class' => ConfigType::class,
-              ]);
+            Yii::$container->setSingleton(ConfigType::class, [
+                'class' => ConfigType::class,
+            ]);
+
+            Yii::$container->setSingleton(SitemapBuilder::class, [
+                'class' => SitemapBuilder::class,
+            ]);
 
             if ($app instanceof ConsoleApplication) {
                 //Init migration
