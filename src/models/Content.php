@@ -357,7 +357,7 @@ class Content extends \yii\db\ActiveRecord
     public function findFirstItemById($itemId) : Item | null
     {
         try {
-           return $this->getItems()->andWhere(['itemId' => $itemId])->one();
+           return $this->getItems()->andWhere(['configItemId' => $itemId])->one();
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;

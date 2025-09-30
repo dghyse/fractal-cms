@@ -22,6 +22,7 @@ use Exception;
  * @property int|null $menuId
  * @property int|null $menuItemId
  * @property int|null $contentId
+ * @property string $route
  * @property string $pathKey
  * @property string $name
  * @property int|null $order
@@ -63,11 +64,11 @@ class MenuItem extends \yii\db\ActiveRecord
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = [
-            'menuId', 'menuItemId', 'order', 'dateCreate', 'dateUpdate', 'name', 'contentId', 'pathKey'
+            'menuId', 'menuItemId', 'order', 'dateCreate', 'dateUpdate', 'name', 'contentId', 'pathKey', 'route'
         ];
 
         $scenarios[self::SCENARIO_UPDATE] = [
-            'menuId', 'menuItemId', 'order', 'dateCreate', 'dateUpdate', 'name', 'contentId', 'pathKey'
+            'menuId', 'menuItemId', 'order', 'dateCreate', 'dateUpdate', 'name', 'contentId', 'pathKey', 'route'
         ];
 
         return $scenarios;
@@ -82,9 +83,15 @@ class MenuItem extends \yii\db\ActiveRecord
             [['menuId', 'menuItemId', 'order', 'dateCreate', 'dateUpdate'], 'default', 'value' => null],
             [['menuId', 'menuItemId', 'order', 'contentId'], 'integer'],
             [['dateCreate', 'dateUpdate'], 'safe'],
-            [['name'], 'string', 'max' => 255],
+            [['name', 'route'], 'string', 'max' => 255],
             [['pathKey'], 'unique'],
-            [['name', 'contentId', 'pathKey'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE]],
+            [['name',  'pathKey'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE]],
+            [['contentId'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE], 'message' => 'Sélectionné une cible CMS', 'when' => function() {
+                return empty($this->route);
+            }],
+            [['route'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE], 'message' => 'Sélectionné une cible Interne', 'when' => function() {
+                return empty($this->contentId);
+            }],
             [['menuItemId'], 'exist', 'skipOnError' => true, 'targetClass' => MenuItem::class, 'targetAttribute' => ['menuItemId' => 'id']],
             [['menuId'], 'exist', 'skipOnError' => true, 'targetClass' => Menu::class, 'targetAttribute' => ['menuId' => 'id']],
             [['contentId'], 'exist', 'skipOnError' => true, 'targetClass' => Content::class, 'targetAttribute' => ['contentId' => 'id']],

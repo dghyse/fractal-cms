@@ -14,6 +14,7 @@ use Exception;
 use fractalCms\models\ElasticModel;
 use fractalCms\Module;
 use Yii;
+use yii\helpers\ArrayHelper;
 use yii\web\HttpException;
 
 class Html extends \yii\helpers\Html
@@ -51,6 +52,16 @@ class Html extends \yii\helpers\Html
         return parent::activeDropDownList($model, $attribute, $items, $options);
     }
 
+    public static function activeTextarea($model, $attribute, $options = [])
+    {
+        if ($model->hasErrors($attribute) === true) {
+            $classes = ($options['class']) ?? '';
+            $classes .= ' border-danger text-danger';
+            $options['class'] = $classes;
+        }
+        return parent::activeTextarea($model, $attribute, $options );
+    }
+
     public static function img($src, $options = [])
     {
         $relative = $src;
@@ -81,18 +92,31 @@ class Html extends \yii\helpers\Html
     public static function getImgCache($src, $options = [])
     {
         try {
-            $relativeDirName = Module::getInstance()->relativeImgDirName;
             $relative = false;
             $path = Yii::getAlias($src);
             if (file_exists($path) === true) {
+                //Get type image
+                if (preg_match('/^(@webroot\/data)(.+\/)(.+)$/', $src, $matchType) === 1) {
+                    $explodeUri = explode('/', trim($matchType[2], '/'));
+                    switch ($explodeUri[0]) {
+                        case 'seo':
+                            $relativeDirName = Module::getInstance()->relativeSeoImgDirName;
+                            break;
+                        case 'items':
+                            $relativeDirName = Module::getInstance()->relativeItemImgDirName;
+                            break;
+                    }
+                } else {
+                    $relativeDirName = Module::getInstance()->relativeItemImgDirName;
+                }
                 //Get cache path
                 $itemId = '';
-                if (preg_match('/\/'.$relativeDirName.'\/?(.+)\//', $src, $matchesRelativ) !== false) {
+                if (preg_match('/\/'.$relativeDirName.'\/?(.+)\//', $src, $matchesRelativ) === 1) {
                     $itemId = $matchesRelativ[1];
                 }
                 $mimeType = mime_content_type($path);
                 if (strncmp('image/', $mimeType, 6) === 0 && strncmp('image/svg', $mimeType, 9) !== 0) {
-                    $cachePath = static::prepareCacheDir($itemId);
+                    $cachePath = static::prepareCacheDir($relativeDirName, $itemId);
                     //Get information
                     $pathInfo = pathinfo($path);
                     list($imgWidth, $imgHeight, $type, $attr) = getimagesize($path);
@@ -119,10 +143,9 @@ class Html extends \yii\helpers\Html
         }
     }
 
-    protected static function prepareCacheDir($target = null)
+    protected static function prepareCacheDir($relativeDirName, $target = null)
     {
         try {
-            $relativeDirNam = Module::getInstance()->relativeImgDirName;
             $cacheImgPath = '@webroot/'.Module::getInstance()->cacheImgPath;
 
             $cacheBasePath = Yii::getAlias($cacheImgPath);
@@ -131,14 +154,14 @@ class Html extends \yii\helpers\Html
                 mkdir($cacheBasePath);
             }
 
-            $cachePath = Yii::getAlias($cacheImgPath.'/'.$relativeDirNam);
+            $cachePath = Yii::getAlias($cacheImgPath.'/'.$relativeDirName);
             if (file_exists($cachePath) === false) {
                 //Create cache path
                 mkdir($cachePath);
             }
 
             if ($target !== null) {
-                $cachePath = Yii::getAlias($cacheImgPath.'/'.$relativeDirNam.'/'.$target);
+                $cachePath = Yii::getAlias($cacheImgPath.'/'.$relativeDirName.'/'.$target);
                 if (file_exists($cachePath) === false) {
                     //Create cache path
                     mkdir($cachePath);
@@ -172,11 +195,15 @@ class Html extends \yii\helpers\Html
                 default:
                     throw new HttpException(404, 'Format d\'image non supporté');
             }
-            if ($newHeight === null) {
+            if ($newHeight === null && $newWidth !== null) {
                 $newHeight = round($newWidth / $ratio);
+            } else {
+                $newWidth = $width;
             }
-            if ($newWidth === null) {
+            if ($newWidth === null && $newHeight !== null) {
                 $newWidth = round($newHeight * $ratio);
+            } else {
+                $newHeight = $height;
             }
 
             // Créer une nouvelle image vide

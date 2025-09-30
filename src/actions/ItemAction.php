@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * ItemAction.php
+ *
+ * PHP Version 8.2+
+ *
+ * @author David Ghyse <david.ghysefree.fr>
+ * @version XXX
+ * @package app\actions
+ */
 namespace fractalCms\actions;
 
 use fractalCms\helpers\Cms;
@@ -60,7 +68,7 @@ class ItemAction extends Action
                     if ($modelDb !== null) {
                         $result = ContentItem::deleteAll(['itemId' => $modelDb->id, 'contentId' => $contentId]);
                         if ($result > 0 ) {
-                            $modelDb->deletefilesDir();
+                            $modelDb->deleteFilesDir();
                             $modelDb->delete();
                             $content->reOrderItems();
                         }

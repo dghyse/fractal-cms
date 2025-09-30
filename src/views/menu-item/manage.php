@@ -12,6 +12,7 @@
  * @var \fractalCms\models\MenuItem $model
  * @var \fractalCms\models\MenuItem[] $menusItems
  * @var \fractalCms\models\Content[] $contents
+ * @var array $routes
  */
 use fractalCms\helpers\Html;
 use yii\helpers\Url;
@@ -27,7 +28,8 @@ use yii\helpers\Url;
         echo $this->render('_form', [
             'model' => $model,
             'menusItems' => $menusItems,
-            'contents' => $contents
+            'contents' => $contents,
+            'routes' => $routes,
         ]);
     ?>
 </div>
