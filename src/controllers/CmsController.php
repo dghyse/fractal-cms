@@ -23,10 +23,17 @@ use yii\web\Request;
 class CmsController extends Controller implements ControllerInterface
 {
 
-    public function getContent() : Content | null
+    const EVENT_CONTENT_READY = 'contentReady';
+
+    /**
+     * @var Content $content
+     */
+    private Content $content;
+
+    public function init()
     {
         try {
-            /** @var Request $request */
+            parent::init();
             $content = null;
             $request = Yii::$app->request;
             $pathInfo = $request->getPathInfo();
@@ -36,7 +43,21 @@ class CmsController extends Controller implements ControllerInterface
                 //Get content with slug
                 $content = Content::find()->andWhere(['slugId' => $slug->id])->one();
             }
-            return $content;
+            $this->content = $content;
+            //Event send when content is ready
+            if ($this->content instanceof Content) {
+                $this->trigger(static::EVENT_CONTENT_READY);
+            }
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
+    public function getContent() : Content | null
+    {
+        try {
+            return $this->content;
         }catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;
