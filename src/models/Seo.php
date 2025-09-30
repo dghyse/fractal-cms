@@ -10,9 +10,13 @@
  */
 namespace fractalCms\models;
 
+use fractalCms\Module;
+use fractalCms\traits\Upload;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
+use yii\helpers\HtmlPurifier;
+use Exception;
 
 /**
  * This is the model class for table "seos".
@@ -20,6 +24,12 @@ use yii\db\Expression;
  * @property int $id
  * @property string|null $title
  * @property string|null $description
+ * @property string|null $changefreq
+ * @property float $priority
+ * @property int $noFollow
+ * @property int $ogMeta
+ * @property int $addJsonLd
+ * @property int $imgPath
  * @property int|null $active
  * @property string|null $dateCreate
  * @property string|null $dateUpdate
@@ -28,8 +38,15 @@ use yii\db\Expression;
  */
 class Seo extends \yii\db\ActiveRecord
 {
+    use Upload;
+
     const SCENARIO_CREATE = 'create';
     const SCENARIO_UPDATE = 'update';
+
+    const FREQUENTLY_DAILY = 'daily';
+    const FREQUENTLY_WEEKLY = 'weekly';
+    const FREQUENTLY_MONTHLY = 'monthly';
+    public static $accept = 'jpg, jpeg, gif, png, WebP';
 
     public function behaviors()
     {
@@ -56,11 +73,13 @@ class Seo extends \yii\db\ActiveRecord
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = [
-            'title', 'description', 'dateCreate', 'dateUpdate','active'
+            'title', 'description', 'dateCreate', 'dateUpdate','active', 'priority', 'changefreq',
+            'noFollow', 'ogMeta', 'addJsonLd', 'imgPath'
         ];
 
         $scenarios[self::SCENARIO_UPDATE] = [
-            'title', 'description', 'dateCreate', 'dateUpdate','active'
+            'title', 'description', 'dateCreate', 'dateUpdate','active', 'priority', 'changefreq',
+            'noFollow', 'ogMeta', 'addJsonLd', 'imgPath'
         ];
         return $scenarios;
     }
@@ -72,11 +91,18 @@ class Seo extends \yii\db\ActiveRecord
     {
         return [
             [['title', 'description', 'dateCreate', 'dateUpdate'], 'default', 'value' => null],
-            [['active'], 'default', 'value' => 0],
-            [['description'], 'string'],
-            [['active'], 'integer'],
-            [['dateCreate', 'dateUpdate'], 'safe'],
-            [['title'], 'string', 'max' => 255],
+            [['active', 'noFollow'], 'default', 'value' => 0],
+            [['ogMeta', 'addJsonLd'], 'default', 'value' => 1],
+            [['description', 'title', 'imgPath'], 'filter', 'filter' => function ($value) {
+                return HtmlPurifier::process($value);
+            }],
+            [['active',  'noFollow', 'ogMeta', 'addJsonLd'], 'integer'],
+            [['dateCreate', 'dateUpdate', ], 'safe'],
+            [['description'], 'string', 'max' => 512, 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE], 'message' => 'La description SEO doit avoir au maximum 160 caractères'],
+            [['priority'], 'number', 'min' => 0, 'max' => 1, 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE],'message' =>  'la Priorité doit-être comprise entre 0 <=> 1.0'],
+            [['changefreq'], 'string', 'max' => 15, 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE], 'message' => 'la Priorité doit-être comprise entre 0 <=> 1.0'],
+            ['changefreq', 'in', 'range' => array_keys(self::optsFrequence())],
+            [['title', 'imgPath'], 'string', 'max' => 255],
             [['title', 'description'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE],
                 'when' => function() {
                         return (boolean)$this->active;
@@ -99,6 +125,39 @@ class Seo extends \yii\db\ActiveRecord
         ];
     }
 
+    public function beforeSave($insert)
+    {
+        try {
+            if (empty($this->imgPath) === false) {
+                $dataFile = Module::getInstance()->filePath;
+                $relativeDirName = Module::getInstance()->relativeSeoImgDirName;
+                $this->imgPath = $this->saveFile($dataFile, $relativeDirName, $this->imgPath);
+            }
+            return parent::beforeSave($insert);
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+        }
+    }
+
+    public static function optsFrequence()
+    {
+        return [
+            self::FREQUENTLY_DAILY => self::FREQUENTLY_DAILY,
+            self::FREQUENTLY_MONTHLY => self::FREQUENTLY_MONTHLY,
+            self::FREQUENTLY_WEEKLY => self::FREQUENTLY_WEEKLY,
+        ];
+    }
+
+
+    public static function frequenceSuffix()
+    {
+        return [
+            self::FREQUENTLY_DAILY => 'journalière',
+            self::FREQUENTLY_MONTHLY => 'mensuelle',
+            self::FREQUENTLY_WEEKLY => 'hebdomadaire',
+        ];
+    }
+
     /**
      * Gets query for [[Contents]].
      *
@@ -107,6 +166,11 @@ class Seo extends \yii\db\ActiveRecord
     public function getContents()
     {
         return $this->hasMany(Content::class, ['seoId' => 'id']);
+    }
+
+    public function getContent()
+    {
+        return $this->hasOne(Content::class, ['seoId' => 'id']);
     }
 
 }

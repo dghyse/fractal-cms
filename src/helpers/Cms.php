@@ -11,6 +11,7 @@
 namespace fractalCms\helpers;
 
 use Exception;
+use fractalCms\controllers\CmsController;
 use fractalCms\helpers\ConfigType as ConfigTypeHelpers;
 use fractalCms\models\ConfigItem;
 use fractalCms\models\Content;
@@ -18,8 +19,9 @@ use fractalCms\models\MenuItem;
 use fractalCms\models\Parameter;
 use Yii;
 use yii\db\ActiveQuery;
-use yii\di\Container;
-use yii\web\Controller;
+use yii\rest\Controller;
+use ReflectionClass;
+use ReflectionMethod;
 
 class Cms
 {
@@ -82,6 +84,65 @@ class Cms
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;
         }
+    }
+
+    public static function getControllerStructure() : array
+    {
+        try {
+            $structure = [];
+            $controllerNameSpace = Yii::$app->controllerNamespace;
+            $controllerPath = Yii::$app->controllerPath;
+            if (file_exists($controllerPath) === true) {
+                foreach (scandir($controllerPath) as $controllerFile) {
+                    $pathFile = $controllerPath.'/'.$controllerFile;
+                    if (in_array($controllerFile, ['.', '..']) === false && is_file($pathFile) === true) {
+                        $pathInfo = pathinfo($pathFile);
+                        $controllerName = $pathInfo['filename'];
+                        $namespace = $controllerNameSpace.'\\'.$controllerName;
+                        $reflexion = new ReflectionClass($namespace);
+                        $parentRefl = $reflexion->getParentClass();
+                        $parentInstance = $parentRefl->newInstanceWithoutConstructor();
+                        if (
+                            ($parentInstance !== null) &&
+                            ($parentInstance instanceof CmsController) === false &&
+                            ($parentInstance instanceof Controller) === false &&
+                            preg_match('/^(\w+)(Controller)$/', $controllerName, $matchesController) === 1
+                        ) {
+                            $controllerId = static::camelToId($matchesController[1]);
+                            $methods = $reflexion->getMethods();
+                            /** @var  ReflectionMethod $method */
+                            foreach ($methods as $method) {
+                                if (preg_match('/^(action)([A-Z].+)$/', $method->name, $matches) === 1) {
+                                    $actionId = static::camelToId($matches[2]);
+                                    $item = [
+                                        'id' => $controllerId.'/'.$actionId,
+                                        'name' => $controllerId.'/'.$actionId,
+                                    ];
+                                    $structure[] = $item;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return $structure;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
+    public static function camelToId($camelCase, $separator = '-') : string
+    {
+        try {
+            $pattern = '/(?<=\w)(?=[A-Z])|(?<=[a-z])(?=\d)/';
+            $snakeCase = preg_replace($pattern, $separator, $camelCase);
+            return strtolower($snakeCase);
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw  $e;
+        }
+
     }
 
     public static function buildStructure(ActiveQuery $contentsQuery) : array

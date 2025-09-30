@@ -21,6 +21,7 @@ $moduleInstance = Module::getInstance();
 WebpackAsset::register($this);
 BootstrapAsset::register($this);
 $baseUrl = StaticAsset::register($this)->baseUrl;
+Yii::$app->response->headers->set('X-Frame-Options', 'ALLOW-FROM \'self\'');
 Yii::$app->response->headers->set('X-Content-Type-Options', 'nosniff');
 $this->beginPage();
 $url = Yii::$app->request->url;
@@ -32,6 +33,7 @@ $this->title = $moduleInstance->name;
         <head>
             <meta charset="utf-8">
             <meta http-equiv="x-ua-compatible" content="ie=edge">
+            <meta name="robots" content="noindex, nofollow">
             <title>
                 <?php echo $this->title; ?>
             </title>

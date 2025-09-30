@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * ResumableDeleteAction.php
+ *
+ * PHP Version 8.2+
+ *
+ * @author David Ghyse <david.ghysefree.fr>
+ * @version XXX
+ * @package app\actions
+ */
 namespace fractalCms\actions;
 
 

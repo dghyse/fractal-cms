@@ -31,9 +31,12 @@ use yii\helpers\Url;
         $classMargin = 'p-0';
     }
     $className[] = $classMargin;
-
+    $route = $model->route;
+    if ($model->content instanceof \fractalCms\models\Content) {
+        $route = $model->content->getRoute();
+    }
     echo Html::tag('div', ucfirst($model->name), ['class' => implode(' ', $className)]);
-    echo Html::tag('div', $model->content->getRoute(), ['class' => 'col-sm-3']);
+    echo Html::tag('div', $route, ['class' => 'col-sm-3']);
 
     echo Html::beginTag('div', ['class' => 'col-sm-3']);
     echo Html::beginTag('div', ['class' => 'row align-items-center']);

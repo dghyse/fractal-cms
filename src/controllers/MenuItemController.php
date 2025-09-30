@@ -72,6 +72,7 @@ class MenuItemController extends Controller
             $model->scenario = MenuItem::SCENARIO_CREATE;
             $request = Yii::$app->request;
             $contents = Cms::getStructure();
+            $routes = Cms::getControllerStructure();
             $menusItems = Cms::getMenuItemStructure($menuId);
 
             if ($request->isPost === true) {
@@ -89,7 +90,8 @@ class MenuItemController extends Controller
                 $response =  $this->render('manage', [
                     'model' => $model,
                     'menusItems' => $menusItems,
-                    'contents' => $contents
+                    'contents' => $contents,
+                    'routes' => $routes,
                 ]);
             }
             return  $response;
@@ -118,6 +120,7 @@ class MenuItemController extends Controller
             }
             $model->scenario = MenuItem::SCENARIO_UPDATE;
             $contents = Cms::getStructure();
+            $routes = Cms::getControllerStructure();
             $request = Yii::$app->request;
             if ($request->isPost === true) {
                 $body = $request->getBodyParams();
@@ -136,7 +139,8 @@ class MenuItemController extends Controller
                 $response = $this->render('manage', [
                     'model' => $model,
                     'menusItems' => $menusItems,
-                    'contents' => $contents
+                    'contents' => $contents,
+                    'routes' => $routes,
                 ]);
             }
             return $response;
