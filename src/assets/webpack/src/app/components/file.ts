@@ -15,6 +15,7 @@ interface UploadedFile {
 @customElement('cms-file-upload')
 export class File
 {
+    public inProgress:boolean = false;
     private resumable:Resumable;
     private browse:HTMLDivElement;
     private drop:HTMLDivElement;
@@ -251,19 +252,14 @@ export class File
     };
     protected onFileAdded = (file:Resumable.ResumableFile, event:DragEvent) => {
         this.logger.debug('onFileAdded', file, event);
-
-        /*
-        const message:IImportMessage = {
-            name:this.name,
-        };
-        this.ea.publish(ImportChannels.FILE_ADDED, message);
-         */
+        this.inProgress = true;
         this.resumable.upload();
     };
     // File upload completed
     protected onFileSuccess = (file:Resumable.ResumableFile, serverMessage:string) => {
         const message:any = JSON.parse(serverMessage);
         const finalFilename = message.hasOwnProperty('finalFilename') ? message['finalFilename'] : null;
+        this.inProgress = false;
         if (this.multiple === false) {
             this.setFile('@webapp/runtime/uploads/' + finalFilename, file);
         } else {
@@ -277,45 +273,29 @@ export class File
     };
     protected onFilesAdded = (filesAdded:Resumable.ResumableFile[], filesSkipped:Resumable.ResumableFile[]) => {
         this.logger.debug('onFilesAdded', filesAdded, filesSkipped);
-        /*
-        const loaderMessage: ILoaderEvent = {
-            action: LoaderAction.OPEN
-        };
-        this.ea.publish(LoaderChannels.MAIN, loaderMessage);
-
-         */
+        this.inProgress = false;
     };
     protected onFileRetry = (file:Resumable.ResumableFile) => {
         this.logger.debug('onFileRetry', file);
     };
     protected onFileError = (file:Resumable.ResumableFile, serverMessage:string) => {
         this.logger.debug('onFileError', file, serverMessage);
+        this.inProgress = false;
     };
     protected onUploadStart = () => {
         this.logger.debug('onUploadStart');
+        this.inProgress = true;
     };
     protected onComplete = () => {
         this.logger.debug('onComplete');
-        /*
-        const loaderMessage: ILoaderEvent = {
-            action: LoaderAction.CLOSE
-        };
-        this.ea.publish(LoaderChannels.MAIN, loaderMessage);
-
-         */
+        this.inProgress = false;
     };
     protected onProgress = () => {
         this.logger.debug('onProgress');
+        this.inProgress = true;
     };
     protected onError = (serverMessage:string, file:Resumable.ResumableFile) => {
         this.logger.debug('onError', file, serverMessage);
-        /*
-        const loaderMessage: ILoaderEvent = {
-            action: LoaderAction.CLOSE
-        };
-        this.ea.publish(LoaderChannels.MAIN, loaderMessage);
-
-         */
     };
     protected onPause = () => {
         this.logger.debug('onPause');
@@ -325,13 +305,7 @@ export class File
     };
     protected onCancel = () => {
         this.logger.debug('onCancel');
-        /*
-        const loaderMessage: ILoaderEvent = {
-            action: LoaderAction.CLOSE
-        };
-        this.ea.publish(LoaderChannels.MAIN, loaderMessage);
-
-         */
+        this.inProgress = false;
     };
     protected onChunkingStart = (file:Resumable.ResumableFile) => {
         this.logger.debug('onChunkingStart', file);
