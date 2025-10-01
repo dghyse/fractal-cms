@@ -14,6 +14,9 @@ namespace fractalCms\controllers\api;
 use Exception;
 use fractalCms\components\Constant;
 use fractalCms\models\Content;
+use fractalCms\models\Item;
+use fractalCms\models\Seo;
+use fractalCms\models\Slug;
 use fractalCms\models\User;
 use Yii;
 use yii\db\Expression;
@@ -64,6 +67,19 @@ class ContentController extends BaseController
             $model = Content::findOne(['id' => $id]);
             if ($model === null) {
                 throw new NotFoundHttpException('content not found');
+            }
+            $seo = $model->getSeo()->one();
+            $slug = $model->getSlug()->one();
+            $itemQuery = $model->getItems();
+            /** @var Item $item */
+            foreach ($itemQuery->each() as $item) {
+                $item->delete();
+            }
+            if( $seo instanceof Seo) {
+                $seo->delete();
+            }
+            if ($slug instanceof Slug) {
+                $slug->delete();
             }
             $model->delete();
             $response->statusCode = 204;

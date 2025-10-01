@@ -222,7 +222,7 @@ class Html extends \yii\helpers\Html
             // Sauvegarder selon le format
             switch ($type) {
                 case IMAGETYPE_JPEG:
-                    imagejpeg($dst, $destPath, 90); // qualité 90%
+                    imagejpeg($dst, $destPath, 80); // qualité 80%
                     break;
                 case IMAGETYPE_PNG:
                     imagepng($dst, $destPath, 6);

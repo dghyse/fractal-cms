@@ -38,7 +38,10 @@ class ItemAction extends Action
             $request = Yii::$app->request;
             if ($request->isPost === true) {
                 $body = $request->getBodyParams();
+                //Load current model
                 $model->load($body);
+                //Load content data if there are update in front
+                $content->load($body);
                 if (isset($body['addItem']) === true) {
                     if ($model->validate() === true) {
                         $model->save();
@@ -50,13 +53,13 @@ class ItemAction extends Action
                         $contentItem->save();
                         $contentItem->refresh();
                     }
-                } if (isset($body['upItem']) === true) {
+                } elseif (isset($body['upItem']) === true) {
                     $itemId = $body['upItem'];
                     if (empty($itemId)  === false) {
                         $model->move($contentId, $itemId);
 
                     }
-                } if (isset($body['downItem']) === true) {
+                } elseif (isset($body['downItem']) === true) {
                     $itemId = $body['downItem'];
                     if (empty($itemId)  === false) {
                         $model->move($contentId, $itemId, 'down');
@@ -74,6 +77,9 @@ class ItemAction extends Action
                         }
                     }
                 }
+                //Save current updated
+                $content->manageItems();
+
             }
             $itemsQuery = $content->getItems();
 

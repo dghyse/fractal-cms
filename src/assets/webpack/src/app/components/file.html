@@ -25,7 +25,23 @@
                     </div>
                     <div class="row">
                         <div class="col-sm-2 m-0">
-                            <div class="card"  repeat.for="handledFile of handledFiles">
+                            <span class="loader" if.bind="inProgress">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="60" height="40" viewBox="0 0 100 100" fill="#0d6efd">
+                                    <rect x="15" y="40" width="10" height="20">
+                                        <animate attributeName="height" values="20;60;20" begin="0s" dur="0.6s" repeatCount="indefinite"/>
+                                        <animate attributeName="y" values="40;20;40" begin="0s" dur="0.6s" repeatCount="indefinite"/>
+                                    </rect>
+                                    <rect x="35" y="40" width="10" height="20">
+                                        <animate attributeName="height" values="20;60;20" begin="0.2s" dur="0.6s" repeatCount="indefinite"/>
+                                        <animate attributeName="y" values="40;20;40" begin="0.2s" dur="0.6s" repeatCount="indefinite"/>
+                                    </rect>
+                                    <rect x="55" y="40" width="10" height="20">
+                                        <animate attributeName="height" values="20;60;20" begin="0.4s" dur="0.6s" repeatCount="indefinite"/>
+                                        <animate attributeName="y" values="40;20;40" begin="0.4s" dur="0.6s" repeatCount="indefinite"/>
+                                    </rect>
+                                </svg>
+                            </span>
+                            <div class="card" repeat.for="handledFile of handledFiles">
                                 <div class="card-header">
                                     <div class="row align-items-center">
                                         <div  class="col-sm-8 fs-6 text-truncate">
