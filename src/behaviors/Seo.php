@@ -34,6 +34,11 @@ class Seo extends Behavior
                             'name' => 'description',
                             'content' => $seo->description
                         ]);
+                        //<link rel="canonical" href="https://portfolio.webcraftdg.fr/accueil">
+                        $view->registerLinkTag([
+                            'rel' => 'canonical',
+                            'href' => Url::toRoute($content->getRoute(), true)
+                        ]);
                         if ((boolean)$seo->ogMeta === true) {
                             /**
                              * <meta property="og:title" content="Portfolio de David Ghyse – Développeur Web">
@@ -45,7 +50,7 @@ class Seo extends Behavior
                              * <meta property="og:type" content="website">
                              */
                             $view->registerMetaTag(['property' => 'og:title', 'content' => $seo->title]);
-                            $view->registerMetaTag(['property' => 'og:description', 'content' => $seo->description]);
+                            $view->registerMetaTag(['property' => 'og:description', 'content' => strip_tags($seo->description)]);
                             if (empty($seo->imgPath) === false) {
                                 $imageCacheUrl = Html::getImgCache($seo->imgPath, ['width' => 1200, 'height' => 630]);
                                 $imageCacheUrl = Url::to('/', true).trim($imageCacheUrl, '/');
@@ -53,7 +58,28 @@ class Seo extends Behavior
                             }
                             $view->registerMetaTag(['property' => 'og:url', 'content' => Url::toRoute($content->getRoute(), true)]);
                             $view->registerMetaTag(['property' => 'og:type', 'content' => 'website']);
-
+                        }
+                        if((boolean)$seo->twitterMeta === true) {
+                            /**
+                             * <meta name="twitter:card" content="summary_large_image">
+                             * <meta name="twitter:title" content="Portfolio de David Ghyse – Développeur Web Full-Stack">
+                             * <meta name="twitter:description" content="Développeur web polyvalent, intéressé par des projets où la technique et l'humain se rencontrent. Découvrez mes réalisations.">
+                             * <meta name="twitter:image" content="https://portfolio.webcraftdg.fr/images/hero.jpg">
+                             */
+                            $view->registerMetaTag(['name' => 'twitter:title', 'content' => $seo->title]);
+                            $view->registerMetaTag(['name' => 'twitter:description', 'content' => strip_tags($seo->description)]);
+                            if (empty($seo->imgPath) === false) {
+                                $imageCacheUrl = Html::getImgCache($seo->imgPath, ['width' => 1200, 'height' => 630]);
+                                $imageCacheUrl = Url::to('/', true).trim($imageCacheUrl, '/');
+                                $view->registerMetaTag(['name' => 'twitter:card', 'content' => 'summary_large_image']);
+                                $view->registerMetaTag(['name' => 'twitter:image', 'content' => $imageCacheUrl]);
+                            }
+                        }
+                        if((boolean)$seo->noFollow === true) {
+                            /**
+                             * <meta name="robots" content="noindex, nofollow">
+                             */
+                            $view->registerMetaTag(['name' => 'robots', 'content' => 'noindex, nofollow']);
                         }
 
                     }
