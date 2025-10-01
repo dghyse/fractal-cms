@@ -34,3 +34,10 @@ Release v1.3.0 01/10/2025 <david.ghyse@free.fr>
 ----------------------------------------------
 
 * Update SEO
+
+Release v1.3.1 01/10/2025 <david.ghyse@free.fr>
+----------------------------------------------
+
+* Fix item from no load in content update
+* Add loader in file upload
+* Update cache image quality
