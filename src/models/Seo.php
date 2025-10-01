@@ -28,6 +28,7 @@ use Exception;
  * @property float $priority
  * @property int $noFollow
  * @property int $ogMeta
+ * @property int $twitterMeta
  * @property int $addJsonLd
  * @property int $imgPath
  * @property int|null $active
@@ -74,12 +75,12 @@ class Seo extends \yii\db\ActiveRecord
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = [
             'title', 'description', 'dateCreate', 'dateUpdate','active', 'priority', 'changefreq',
-            'noFollow', 'ogMeta', 'addJsonLd', 'imgPath'
+            'noFollow', 'ogMeta', 'addJsonLd', 'imgPath', 'twitterMeta'
         ];
 
         $scenarios[self::SCENARIO_UPDATE] = [
             'title', 'description', 'dateCreate', 'dateUpdate','active', 'priority', 'changefreq',
-            'noFollow', 'ogMeta', 'addJsonLd', 'imgPath'
+            'noFollow', 'ogMeta', 'addJsonLd', 'imgPath', 'twitterMeta'
         ];
         return $scenarios;
     }
@@ -92,11 +93,11 @@ class Seo extends \yii\db\ActiveRecord
         return [
             [['title', 'description', 'dateCreate', 'dateUpdate'], 'default', 'value' => null],
             [['active', 'noFollow'], 'default', 'value' => 0],
-            [['ogMeta', 'addJsonLd'], 'default', 'value' => 1],
+            [['ogMeta', 'addJsonLd', 'twitterMeta'], 'default', 'value' => 1],
             [['description', 'title', 'imgPath'], 'filter', 'filter' => function ($value) {
                 return HtmlPurifier::process($value);
             }],
-            [['active',  'noFollow', 'ogMeta', 'addJsonLd'], 'integer'],
+            [['active',  'noFollow', 'ogMeta', 'addJsonLd', 'twitterMeta'], 'integer'],
             [['dateCreate', 'dateUpdate', ], 'safe'],
             [['description'], 'string', 'max' => 512, 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE], 'message' => 'La description SEO doit avoir au maximum 160 caractères'],
             [['priority'], 'number', 'min' => 0, 'max' => 1, 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE],'message' =>  'la Priorité doit-être comprise entre 0 <=> 1.0'],
