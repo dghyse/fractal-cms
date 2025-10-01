@@ -27,3 +27,10 @@ Release v1.2.0 30/09/2025 <david.ghyse@free.fr>
 * update SEO
 * update Menu
 * Add sitemap
+
+*  Fix parse url
+
+Release v1.3.0 01/10/2025 <david.ghyse@free.fr>
+----------------------------------------------
+
+* Update SEO
