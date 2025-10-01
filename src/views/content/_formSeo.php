@@ -128,6 +128,12 @@ use fractalCms\models\Seo;
                         </div>
                         <div class="form-check form-check-inline">
                             <?php
+                            echo Html::activeCheckbox($seo, 'twitterMeta', ['label' =>  null, 'class' => 'form-check-input']);
+                            echo Html::activeLabel($seo, 'twitterMeta', ['label' => 'Générer les Metas Twitter:*', 'class' => 'form-check-label']);
+                            ?>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <?php
                             echo Html::activeCheckbox($seo, 'addJsonLd', ['label' =>  null, 'class' => 'form-check-input']);
                             echo Html::activeLabel($seo, 'addJsonLd', ['label' => 'Générer le Meta JSONLD', 'class' => 'form-check-label']);
                             ?>

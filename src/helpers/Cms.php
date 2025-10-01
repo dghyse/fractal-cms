@@ -142,8 +142,20 @@ class Cms
             Yii::error($e->getMessage(), __METHOD__);
             throw  $e;
         }
-
     }
+
+    public static function insertIndivisibleSpace($string, $separator = '&nbsp;') : string
+    {
+        try {
+            $pattern = '/(\s+)/';
+            $string = preg_replace($pattern, $separator, $string);
+            return $string;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw  $e;
+        }
+    }
+
 
     public static function buildStructure(ActiveQuery $contentsQuery) : array
     {
