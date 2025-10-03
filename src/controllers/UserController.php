@@ -28,7 +28,7 @@ class UserController extends Controller
         $behaviors = parent::behaviors();
         $behaviors['access'] = [
             'class' => AccessControl::class,
-            'only' => ['index'],
+            'only' => ['index', 'update', 'create'],
             'rules' => [
                 [
                     'allow' => true,

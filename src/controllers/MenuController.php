@@ -40,7 +40,7 @@ class MenuController extends Controller
             'rules' => [
                 [
                     'allow' => true,
-                    'actions' => ['index'],
+                    'actions' => ['index', 'update', 'create'],
                     'roles' => [Constant::PERMISSION_MAIN_MENU.Constant::PERMISSION_ACTION_LIST],
                     'denyCallback' => function ($rule, $action) {
                         return $this->redirect(['default/index']);
