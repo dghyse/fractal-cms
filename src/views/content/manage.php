@@ -22,8 +22,7 @@ use yii\helpers\Url;
 
 $configItems = ($configItems) ?? [];
 ?>
-
-<div class="row mt-3 align-items-center">
+<div class="row mt-3 align-items-center" cms-alert="">
     <div class="col-sm-8">
         <h2>Création d'un article</h2>
     </div>

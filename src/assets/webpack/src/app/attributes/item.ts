@@ -2,11 +2,15 @@ import {bindable, customAttribute, ILogger, INode, resolve, IPlatform, IEventAgg
 import {ApiServices} from "../services/api-services";
 import {IActionEvent} from "../interfaces/events";
 import {EEvents} from "../enums/events";
+import {IAlertMessage} from "../interfaces/alert";
+import {getTextAlert} from "../helpers/alert";
+import * as crypto from "node:crypto";
 
 @customAttribute('cms-item')
 export class Item {
 
     @bindable() id: number;
+    @bindable() contentId: number;
 
     private actionButtons:NodeList;
     public constructor(
@@ -62,8 +66,14 @@ export class Item {
                     action:elementName,
                     value:elemenValue
                 };
+                const messageAlert:IAlertMessage = {
+                    id:window.crypto.randomUUID(),
+                    text:getTextAlert(elementName),
+                    color:'alert-warning'
+                }
                 this.platform.taskQueue.queueTask(() => {
                     this.ea.publish(EEvents.ACTION_BUTTON, message);
+                    this.ea.publish(EEvents.ACTION_ELEMENT_UPDATE, messageAlert);
                 });
             }
         }
