@@ -24,8 +24,6 @@ use yii\helpers\ArrayHelper;
 ?>
 <div class="row">
     <div class="col-sm-12">
-
-
         <?php echo Html::beginForm('', 'post', ['enctype' => 'multipart/form-data']); ?>
         <div class="row  justify-content-center">
             <div class="col form-check p-0">

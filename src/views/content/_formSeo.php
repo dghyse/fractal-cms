@@ -16,18 +16,26 @@ use fractalCms\helpers\Html;
 use fractalCms\models\Seo;
 ?>
 <div class="card">
-    <div class="card-header uppercase">
-        SEO
-    </div>
-    <div class="card-body">
-        <div class="row  justify-content-center">
-            <div class="col form-check ">
+    <?php
+    $class = [];
+    $class[] = 'card-header uppercase';
+     echo Html::beginTag('div', ['class' => implode(' ', $class)]);
+    ?>
+        <div class="row">
+            <div class="col-sm-10">
+                SEO
+            </div>
+            <div class="col-sm-2 form-check ">
                 <?php
                 echo Html::activeCheckbox($seo, 'active', ['label' =>  null, 'class' => 'form-check-input']);
                 echo Html::activeLabel($seo, 'active', ['label' => 'Actif', 'class' => 'form-check-label']);
                 ?>
             </div>
         </div>
+    <?php
+        echo Html::endTag('div');
+    ?>
+    <div class="card-body">
         <div class="row justify-content-center">
             <div class="col-sm-6">
                 <div class="col form-group p-0">

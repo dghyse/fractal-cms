@@ -22,7 +22,7 @@ use fractalCms\helpers\Cms;
 ?>
 <?php echo Html::beginTag('div', [
     'class' => 'row mt-1',
-    'cms-item' => 'id.bind='.$model->id
+    'cms-item' => 'id.bind:'.$model->id.';content-id.bind:'.$content->id,
 ]);?>
     <div class="card">
         <div class="card-header row align-items-center">
