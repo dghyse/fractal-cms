@@ -41,3 +41,8 @@ Release v1.3.1 01/10/2025 <david.ghyse@free.fr>
 * Fix item from no load in content update
 * Add loader in file upload
 * Update cache image quality
+
+Release v1.3.2 01/10/2025 <david.ghyse@free.fr>
+----------------------------------------------
+
+* Add Alert JS
