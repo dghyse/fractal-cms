@@ -5,6 +5,7 @@ import {EApi} from "../enums/api";
 import {EEvents} from "../enums/events";
 import {ApiServices} from "../services/api-services";
 import {ConfigService} from "../services/config-service";
+import {IAlertAddMessage} from "../interfaces/alert";
 interface UploadedFile {
     name:string,
     shortname:string|undefined,
@@ -99,6 +100,14 @@ export class File
             }
             this.handledFiles.splice(fileIndex, 1);
            this.apiServices.delete(handledFile.deleteUrl);
+           this.platform.taskQueue.queueTask(() => {
+               const messageAlert:IAlertAddMessage = {
+                   id:window.crypto.randomUUID(),
+                   message:'Le fichier a été supprimé',
+                   color:'alert-warning'
+               }
+               this.ea.publish(EEvents.ACTION_ADD_ALERT, messageAlert);
+           }, {delay:150})
 
             // should call WS delete
         }
@@ -265,6 +274,14 @@ export class File
         } else {
             this.appendFile('@webapp/runtime/uploads/' + finalFilename, file);
         }
+        this.platform.taskQueue.queueTask(() => {
+            const messageAlert:IAlertAddMessage = {
+                id:window.crypto.randomUUID(),
+                message:'Le fichier a été ajouté',
+                color:'alert-success'
+            }
+            this.ea.publish(EEvents.ACTION_ADD_ALERT, messageAlert);
+        }, {delay:150})
         this.logger.debug('onFileSuccess', file, file);
     };
     // File upload progress

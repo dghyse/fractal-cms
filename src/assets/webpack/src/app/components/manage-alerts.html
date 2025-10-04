@@ -1,0 +1,5 @@
+<template>
+    <div class="row sticky-top" repeat.for="alert of alerts">
+        <cms-alert repeat.for="alert of alerts" id.bind="alert.id" message.bind="alert.message" color.bind="alert.color"></cms-alert>
+    </div>
+</template>

@@ -64,9 +64,6 @@ class FileController extends BaseController
                         Constant::PERMISSION_MAIN_ITEM.Constant::PERMISSION_ACTION_LIST,
                         Constant::PERMISSION_MAIN_ITEM.Constant::PERMISSION_ACTION_CREATE,
                         ],
-                    'denyCallback' => function ($rule, $action) {
-                        throw new ForbiddenHttpException();
-                    }
                 ],
                 [
                     'allow' => true,
@@ -75,11 +72,11 @@ class FileController extends BaseController
                     'roles' => [
                         Constant::PERMISSION_MAIN_ITEM.Constant::PERMISSION_ACTION_DELETE
                     ],
-                    'denyCallback' => function ($rule, $action) {
-                        throw new ForbiddenHttpException();
-                    }
                 ]
-            ]
+            ],
+            'denyCallback' => function ($rule, $action) {
+                throw new ForbiddenHttpException();
+            }
         ];
         return $behaviors;
     }
