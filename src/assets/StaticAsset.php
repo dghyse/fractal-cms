@@ -4,11 +4,9 @@
  *
  * PHP version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
- * @package application\assets
+ * @author David Ghyse <davidg@webcraftdg.fr>
  *
- * @link http://www.ibitux.com
- * @package application\assets
+ * @package app\assets
  */
 
 namespace fractalCms\assets;
@@ -19,9 +17,8 @@ use yii\web\View;
 /**
  * Base application assets
  *
- * @author David Ghyse <david.ghysefree.fr>
- * @package application\assets
- * @since 1.0.0
+ * @author David Ghyse <davidg@webcraftdg.fr>
+ * @package app\assets
  */
 class StaticAsset extends AssetBundle
 {

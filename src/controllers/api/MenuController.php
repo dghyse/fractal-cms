@@ -4,16 +4,15 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers\api
  */
 
 namespace fractalCms\controllers\api;
 
 use Exception;
 use fractalCms\components\Constant;
-use fractalCms\models\Content;
 use fractalCms\models\Menu;
 use fractalCms\models\User;
 use Yii;
@@ -27,6 +26,9 @@ class MenuController extends BaseController
 {
 
 
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -55,6 +57,15 @@ class MenuController extends BaseController
     }
 
 
+    /**
+     * Delete menu
+     *
+     * @param $id
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function actionDelete($id) : Response
     {
         try {
@@ -72,6 +83,14 @@ class MenuController extends BaseController
         }
     }
 
+    /**
+     * Active menu
+     *
+     * @param $id
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \yii\db\Exception
+     */
     public function actionActivate($id) : Response
     {
         try {

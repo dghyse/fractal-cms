@@ -4,36 +4,27 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers\api
  */
 
 namespace fractalCms\controllers\api;
 
-use Exception;
-use fractalCms\actions\ItemAction;
 use fractalCms\actions\ResumableDeleteAction;
 use fractalCms\actions\ResumablePreviewAction;
 use fractalCms\actions\ResumableUploadAction;
 use fractalCms\components\Constant;
-use fractalCms\helpers\Html;
-use fractalCms\models\ConfigItem;
-use fractalCms\models\Content;
-use fractalCms\models\ElasticModel;
-use fractalCms\models\User;
-use Yii;
-use yii\db\Expression;
 use yii\filters\AccessControl;
-use yii\helpers\Json;
 use yii\web\ForbiddenHttpException;
-use yii\web\NotFoundHttpException;
-use yii\web\Response;
 
 class FileController extends BaseController
 {
 
 
+    /**
+     * @inheritDoc
+     */
     public function actions()
     {
         $actions = parent::actions();
@@ -49,6 +40,9 @@ class FileController extends BaseController
         return $actions;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();

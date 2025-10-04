@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\models
  */
@@ -51,6 +51,9 @@ class Content extends \yii\db\ActiveRecord
     const SCENARIO_INIT = 'init';
     public $items;
 
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -73,6 +76,9 @@ class Content extends \yii\db\ActiveRecord
         return 'contents';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function scenarios() : array
     {
         $scenarios = parent::scenarios();
@@ -110,7 +116,6 @@ class Content extends \yii\db\ActiveRecord
             [['parentPathKey'], 'required', 'on' => [self::SCENARIO_UPDATE, self::SCENARIO_CREATE], 'when' => function() {
                 return $this->pathKey !== '1';
             }],
-            [['items'], 'validateItems', 'on' => [self::SCENARIO_UPDATE]],
         ];
     }
 
@@ -132,6 +137,9 @@ class Content extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function afterFind()
     {
         parent::afterFind();
@@ -141,6 +149,12 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Manage items before save
+     *
+     * @return void
+     * @throws \yii\db\Exception
+     */
     public function manageItems()
     {
         try {
@@ -168,15 +182,6 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
-    public function validateItems($attributes, $params) :bool
-    {
-        try {
-            return true;
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw  $e;
-        }
-    }
 
     /**
      * Gets query for [[ConfigType]].
@@ -198,6 +203,12 @@ class Content extends \yii\db\ActiveRecord
         return $this->hasOne(Slug::class, ['id' => 'slugId']);
     }
 
+    /**
+     * Gets query for [[Seo]].
+     *
+     * @return ActiveQuery
+     *
+     */
     public function getSeo()
     {
         return $this->hasOne(Seo::class, ['id' => 'seoId']);
@@ -220,13 +231,19 @@ class Content extends \yii\db\ActiveRecord
      */
     public function getItems()
     {
-        //$query =  $this->hasMany(Item::class, ['id' => 'itemId'])->viaTable('contentItems', ['contentId' => 'id']);
         $query = Item::find()->andWhere(['contentId' => $this->id])
             ->innerJoin(ContentItem::tableName(), 'contentId='.$this->id.' and itemId=items.id');
         $query->orderBy(['order' => SORT_ASC]);
         return $query;
     }
 
+    /**
+     * Get items by config item Id
+     *
+     * @param $configItemId
+     * @return array|\yii\db\ActiveRecord|\yii\db\T|null
+     * @throws Exception
+     */
     public function getItemByConfigId($configItemId)
     {
         try {
@@ -237,7 +254,12 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
-
+    /**
+     * Reorder items
+     *
+     * @return void
+     * @throws \yii\db\Exception
+     */
     public function reOrderItems() : void
     {
         try {
@@ -259,6 +281,12 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Get deep
+     *
+     * @return int|null
+     * @throws Exception
+     */
     public function getDeep() :int | null
     {
         try {
@@ -278,6 +306,14 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Get children
+     *
+     * @param $isActive
+     * @param $withSubSection
+     * @return ActiveQuery
+     * @throws Exception
+     */
     public function getChildrens($isActive = false, $withSubSection = false)
     {
         try {
@@ -298,6 +334,13 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Get children type article
+     *
+     * @param $isActive
+     * @return ActiveQuery
+     * @throws Exception
+     */
     public function getArticles($isActive = false)
     {
         try {
@@ -316,6 +359,12 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Get parent
+     *
+     * @return array|\yii\db\ActiveRecord|\yii\db\T|null
+     * @throws Exception
+     */
     public function getParent()
     {
         try {
@@ -335,6 +384,12 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Get parents
+     *
+     * @return ActiveQuery
+     * @throws Exception
+     */
     public function getParents() : ActiveQuery
     {
         try {
@@ -354,6 +409,13 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * Find first item by Id
+     *
+     * @param $itemId
+     * @return Item|null
+     * @throws Exception
+     */
     public function findFirstItemById($itemId) : Item | null
     {
         try {
@@ -364,7 +426,12 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
-
+    /**
+     * Attach Content
+     *
+     * @return void
+     * @throws Exception
+     */
     public function attach() : void
     {
         try {
@@ -386,7 +453,7 @@ class Content extends \yii\db\ActiveRecord
                     }
                     if ($brothersCount !== null) {
                         $newPathKey = $parent->pathKey .'.'.($brothersCount + 1);
-                        $newPathKey = $this->checkPAthKey($newPathKey, $parent->pathKey, ($brothersCount + 1));
+                        $newPathKey = $this->checkPathKey($newPathKey, $parent->pathKey, ($brothersCount + 1));
                         $this->pathKey = $newPathKey;
                     }
                 }
@@ -397,14 +464,23 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
-    public function checkPAthKey($newPathKey, $parentPathKey, $brothersCount) : string
+    /**
+     * Check path key
+     *
+     * @param $newPathKey
+     * @param $parentPathKey
+     * @param $brothersCount
+     * @return string
+     * @throws Exception
+     */
+    public function checkPathKey($newPathKey, $parentPathKey, $brothersCount) : string
     {
         try {
             $computePathKey = $newPathKey;
             $pathCount = static::find()->andWhere(['pathKey' => $newPathKey, 'type' => $this->type])->count();
             if ($pathCount > 0) {
                 $computePathKey = $parentPathKey.'.'.($brothersCount + 1);
-                $computePathKey = $this->checkPAthKey($computePathKey, $parentPathKey, $brothersCount);
+                $computePathKey = $this->checkPathKey($computePathKey, $parentPathKey, $brothersCount);
             }
             return $computePathKey;
         } catch (Exception $e) {
@@ -413,6 +489,12 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * get route
+     *
+     * @return string|false
+     * @throws Exception
+     */
     public function getRoute() : string | false
     {
         try {
@@ -465,6 +547,11 @@ class Content extends \yii\db\ActiveRecord
         return $this->type === self::TYPE_ARTICLE;
     }
 
+    /**
+     * set type article
+     *
+     * @return void
+     */
     public function setTypeToArticle()
     {
         $this->type = self::TYPE_ARTICLE;

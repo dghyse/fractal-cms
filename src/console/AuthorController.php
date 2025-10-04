@@ -4,9 +4,9 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\console
  */
 namespace fractalCms\console;
 
@@ -19,6 +19,13 @@ use yii\console\ExitCode;
 
 class AuthorController extends Controller
 {
+    /**
+     * Create Author
+     *
+     * @return int|void
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
     public function actionCreate()
     {
         try {

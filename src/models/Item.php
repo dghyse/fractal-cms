@@ -4,14 +4,13 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\models
  */
 namespace fractalCms\models;
 
 use Exception;
-use fractalCms\interfaces\ElasticInterface;
 use fractalCms\traits\Elastic;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -32,7 +31,7 @@ use yii\helpers\Json;
  * @property ContentItem[] $contentItems
  * @property Content[] $contents
  */
-class Item extends \yii\db\ActiveRecord implements ElasticInterface
+class Item extends \yii\db\ActiveRecord
 {
 
     use Elastic;
@@ -91,21 +90,6 @@ class Item extends \yii\db\ActiveRecord implements ElasticInterface
                 'targetClass' => ConfigItem::class, 'targetAttribute' => ['configItemId' => 'id']
             ],
         ];
-    }
-
-    public function getConfig()
-    {
-        try {
-            $config = [];
-            $configItem = $this->getConfigItem()->one();
-            if ($configItem !== null) {
-                $config = $configItem->configArray;
-            }
-            return $config;
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw $e;
-        }
     }
 
     public function afterFind()

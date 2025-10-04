@@ -1,12 +1,18 @@
 <?php
-
+/**
+ * UrlRule.php
+ *
+ * PHP Version 8.2+
+ *
+ * @author David Ghyse <davidg@webcraftdg.fr>
+ * @version XXX
+ * @package app\components
+ */
 namespace fractalCms\components;
 
 use fractalCms\models\Content;
 use fractalCms\models\Slug;
-use fractalCms\Module;
 use yii\base\BaseObject;
-use yii\web\UrlRule as BaseUrl;
 use Exception;
 use Yii;
 use yii\web\UrlRuleInterface;

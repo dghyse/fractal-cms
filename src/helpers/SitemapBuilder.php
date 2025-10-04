@@ -4,14 +4,13 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\helpers
  */
 namespace fractalCms\helpers;
 
 use fractalCms\models\Content;
-use fractalCms\models\Menu;
 use fractalCms\models\Seo;
 use yii\base\Component;
 use DOMDocument;
@@ -26,6 +25,12 @@ class SitemapBuilder extends Component
 
     public $xml = null;
 
+    /**
+     * Get xml
+     *
+     * @return DOMDocument
+     * @throws Exception
+     */
     public function get() : DOMDocument
     {
         try {
@@ -43,6 +48,13 @@ class SitemapBuilder extends Component
 
     }
 
+    /**
+     * Build Xml
+     *
+     * @param ActiveQuery $seoQuery
+     * @return DOMDocument
+     * @throws \DOMException
+     */
     protected function initXml(ActiveQuery $seoQuery) : DOMDocument
     {
         try {
@@ -61,6 +73,16 @@ class SitemapBuilder extends Component
     }
 
 
+    /**
+     * Add element in Xml
+     *
+     * @param ActiveQuery $seoQuery
+     * @param DOMDocument $domXml
+     * @param DOMElement $parent
+     * @return DOMElement
+     * @throws \DOMException
+     * @throws \yii\base\InvalidConfigException
+     */
     protected function addElement(ActiveQuery $seoQuery, DOMDocument $domXml, DOMElement $parent) : DOMElement
     {
         try {

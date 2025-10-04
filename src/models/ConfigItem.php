@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\models
  */
@@ -33,6 +33,9 @@ class ConfigItem extends \yii\db\ActiveRecord
 
     public $configArray = [];
 
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();

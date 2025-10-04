@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package cms/helpers
  */
@@ -23,6 +23,13 @@ use Yii;
 class ConfigType extends Component
 {
 
+    /**
+     * Get Cms routes
+     * @param $targetClass
+     * @param $group
+     * @return array
+     * @throws Exception
+     */
     public function getCmsRoutes($targetClass, $group = null) : array
     {
         try {
@@ -36,8 +43,12 @@ class ConfigType extends Component
 
 
     /**
+     * Build array with all routes
+     *
+     * @param $targetClass
+     * @param string|null $customGroup
      * @return array
-     * @throws Exception
+     * @throws \ReflectionException
      */
     protected function getRoutes($targetClass, string $customGroup = null) : array
     {

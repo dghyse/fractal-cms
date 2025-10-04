@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\models
  */
@@ -31,6 +31,9 @@ class ConfigType extends \yii\db\ActiveRecord
     const SCENARIO_CREATE = 'create';
     const SCENARIO_UPDATE = 'update';
 
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -51,6 +54,9 @@ class ConfigType extends \yii\db\ActiveRecord
         return 'configTypes';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function scenarios() : array
     {
         $scenarios = parent::scenarios();

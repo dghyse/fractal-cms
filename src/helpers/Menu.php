@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package cms/helpers
  */
@@ -19,6 +19,12 @@ use yii\helpers\Url;
 class Menu extends Component
 {
 
+    /**
+     * Get Cms menu
+     *
+     * @return array
+     * @throws Exception
+     */
     public function get() : array
     {
         try {
@@ -31,6 +37,8 @@ class Menu extends Component
     }
 
     /**
+     * Build Cms menu
+     *
      * Items => [
      *   [
      *      'title' => string,

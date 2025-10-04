@@ -4,9 +4,9 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\console
  */
 namespace fractalCms\console;
 
@@ -20,6 +20,12 @@ use yii\rbac\Role;
 
 class RbacController extends Controller
 {
+    /**
+     * Init Rabc permissions
+     *
+     * @return int
+     * @throws \yii\base\Exception
+     */
     public function actionIndex()
     {
         try {
