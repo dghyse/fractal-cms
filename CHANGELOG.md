@@ -42,7 +42,13 @@ Release v1.3.1 01/10/2025 <david.ghyse@free.fr>
 * Add loader in file upload
 * Update cache image quality
 
-Release v1.3.2 01/10/2025 <david.ghyse@free.fr>
+Release v1.3.2 03/10/2025 <david.ghyse@free.fr>
 ----------------------------------------------
 
 * Add Alert JS
+
+Release v1.3.3 04/10/2025 <david.ghyse@free.fr>
+----------------------------------------------
+
+* fix api access
+* Update Alert info
