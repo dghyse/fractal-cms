@@ -7,7 +7,6 @@ import {IAlertAddMessage, IAlertDeleteMessage} from "../interfaces/alert";
 
 export class ManageAlerts
 {
-    @bindable() public contactId:number;
     public alerts:IAlertAddMessage[] = [];
     private eaAddDispose:IDisposable;
     private eaDeleteDispose:IDisposable;
@@ -33,8 +32,8 @@ export class ManageAlerts
 
     public bound() {
         this.logger.trace('bound');
-        this.eaAddDispose = this.ea.subscribe(EEvents.ACTION_ELEMENT_UPDATE, this.onAdd);
-        this.eaDeleteDispose = this.ea.subscribe(EEvents.ACTION_ALERT_DELETE, this.onDelete);
+        this.eaAddDispose = this.ea.subscribe(EEvents.ACTION_ADD_ALERT, this.onAdd);
+        this.eaDeleteDispose = this.ea.subscribe(EEvents.ACTION_DELETE_ALERT, this.onDelete);
     }
 
 

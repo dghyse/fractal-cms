@@ -49,6 +49,8 @@ $this->title = $moduleInstance->name;
 if (Yii::$app->user->isGuest === false) {
     echo \fractalCms\widgets\Header::widget();
 }
+echo Html::tag('cms-manage-alerts', '');
+
 ?>
                     <?php echo $content; ?>
                 <?php echo Html::endTag('div'); ?>

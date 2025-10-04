@@ -42,7 +42,7 @@ export class Alert
             const alert = this.element.querySelector('div.alert');
             if(alert) {
                 alert.remove();
-                this.ea.publish(EEvents.ACTION_ALERT_DELETE, {id:this.id});
+                this.ea.publish(EEvents.ACTION_DELETE_ALERT, {id:this.id});
             }
         }
     }

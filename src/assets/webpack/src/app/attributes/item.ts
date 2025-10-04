@@ -73,7 +73,7 @@ export class Item {
                 }
                 this.platform.taskQueue.queueTask(() => {
                     this.ea.publish(EEvents.ACTION_BUTTON, message);
-                    this.ea.publish(EEvents.ACTION_ELEMENT_UPDATE, messageAlert);
+                    this.ea.publish(EEvents.ACTION_ADD_ALERT, messageAlert);
                 });
             }
         }

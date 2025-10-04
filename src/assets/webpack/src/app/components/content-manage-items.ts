@@ -3,7 +3,7 @@ import {ApiServices} from "../services/api-services";
 import {EEvents} from "../enums/events";
 import {IActionEvent} from "../interfaces/events";
 import {IAlertAddMessage} from "../interfaces/alert";
-import {EALert} from "../enums/alert";
+import {EAlert} from "../enums/alert";
 
 @customElement('cms-content-manage-items')
 
@@ -84,13 +84,13 @@ export class ContentManageItems
             const formData = new FormData(this.form);
             formData.append(name, value);
             this.apiServices.manageItems(this.id, formData).then((html) => {
-                if (name ! == EALert.ADD_ITEM) {
+                if (name ! == EAlert.ADD_ITEM) {
                     const message:IAlertAddMessage = {
                         id:window.crypto.randomUUID(),
                         message:'Un item a été ajouté',
                         color:'alert-success'
                     };
-                    this.ea.publish(EEvents.ACTION_ELEMENT_UPDATE, message);
+                    this.ea.publish(EEvents.ACTION_ADD_ALERT, message);
                 }
                 this.view = html;
                 this.prepare();
@@ -101,7 +101,7 @@ export class ContentManageItems
                     message:'Un erreur c\'est produite',
                     color:'alert-danger'
                 };
-                this.ea.publish(EEvents.ACTION_ELEMENT_UPDATE, message);
+                this.ea.publish(EEvents.ACTION_ADD_ALERT, message);
             });
         }
     }
