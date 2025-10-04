@@ -42,42 +42,4 @@ class BaseController extends Controller
         unset($behaviors['rateLimiter']);
         return $behaviors;
     }
-
-
-    public function actionDelete($id) : Response
-    {
-        try {
-            $response = Yii::$app->getResponse();
-            $model = User::findOne(['id' => $id]);
-            if ($model === null) {
-                throw new NotFoundHttpException('user not found');
-            }
-            $model->delete();
-            $response->statusCode = 204;
-            return $response;
-        } catch (Exception $e)  {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw  $e;
-        }
-    }
-
-    public function actionActivate($id) : Response
-    {
-        try {
-            $response = Yii::$app->getResponse();
-            /** @var User $model */
-            $model = User::findOne(['id' => $id]);
-            if ($model === null) {
-                throw new NotFoundHttpException('user not found');
-            }
-            $model->active = true;
-            $model->dateUpdate = new Expression('NEW()');
-            $model->save();
-            $response->statusCode = 204;
-            return $response;
-        } catch (Exception $e)  {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw  $e;
-        }
-    }
 }

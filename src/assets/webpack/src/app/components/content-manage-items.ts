@@ -2,8 +2,7 @@ import {bindable, customElement, IDisposable, IEventAggregator, ILogger, INode, 
 import {ApiServices} from "../services/api-services";
 import {EEvents} from "../enums/events";
 import {IActionEvent} from "../interfaces/events";
-import {IAlertMessage} from "../interfaces/alert";
-import * as crypto from "node:crypto";
+import {IAlertAddMessage} from "../interfaces/alert";
 import {EALert} from "../enums/alert";
 
 @customElement('cms-content-manage-items')
@@ -86,9 +85,9 @@ export class ContentManageItems
             formData.append(name, value);
             this.apiServices.manageItems(this.id, formData).then((html) => {
                 if (name ! == EALert.ADD_ITEM) {
-                    const message:IAlertMessage = {
+                    const message:IAlertAddMessage = {
                         id:window.crypto.randomUUID(),
-                        text:'Un item a été ajouté',
+                        message:'Un item a été ajouté',
                         color:'alert-success'
                     };
                     this.ea.publish(EEvents.ACTION_ELEMENT_UPDATE, message);
@@ -97,9 +96,9 @@ export class ContentManageItems
                 this.prepare();
             }).catch((error) => {
                 this.logger.error(error.text());
-                const message:IAlertMessage = {
+                const message:IAlertAddMessage = {
                     id:window.crypto.randomUUID(),
-                    text:'Un erreur c\'est produite',
+                    message:'Un erreur c\'est produite',
                     color:'alert-danger'
                 };
                 this.ea.publish(EEvents.ACTION_ELEMENT_UPDATE, message);

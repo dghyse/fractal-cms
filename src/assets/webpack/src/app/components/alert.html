@@ -1,0 +1,9 @@
+<template>
+    <div class="alert p-2 row align-items-center mb-2" class.bind="color" role="alert"
+         aria-label="notification de modification" id.bind="id">
+        <div class="col-sm-11">${message}</div>
+        <div class="col-sm-1 m-0 text-center">
+            <button class="btn btn-close" type="button" click.trigger="onClose($event)"></button>
+        </div>
+    </div>
+</template>

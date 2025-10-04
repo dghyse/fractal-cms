@@ -2,7 +2,7 @@ import {bindable, customAttribute, ILogger, INode, resolve, IPlatform, IEventAgg
 import {ApiServices} from "../services/api-services";
 import {IActionEvent} from "../interfaces/events";
 import {EEvents} from "../enums/events";
-import {IAlertMessage} from "../interfaces/alert";
+import {IAlertAddMessage} from "../interfaces/alert";
 import {getTextAlert} from "../helpers/alert";
 import * as crypto from "node:crypto";
 
@@ -66,9 +66,9 @@ export class Item {
                     action:elementName,
                     value:elemenValue
                 };
-                const messageAlert:IAlertMessage = {
+                const messageAlert:IAlertAddMessage = {
                     id:window.crypto.randomUUID(),
-                    text:getTextAlert(elementName),
+                    message:getTextAlert(elementName),
                     color:'alert-warning'
                 }
                 this.platform.taskQueue.queueTask(() => {

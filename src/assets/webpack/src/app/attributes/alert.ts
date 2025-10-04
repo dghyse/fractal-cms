@@ -1,5 +1,5 @@
 import {customAttribute, ILogger, resolve, IPlatform, IDisposable, IEventAggregator, INode} from "aurelia";
-import {IAlertMessage} from "../interfaces/alert";
+import {IAlertAddMessage} from "../interfaces/alert";
 import {EEvents} from "../enums/events";
 
 @customAttribute('cms-alert')
@@ -35,7 +35,7 @@ export class Alert {
         this.logger.trace('detaching');
     }
 
-    private readonly addAlert = (message:IAlertMessage) => {
+    private readonly addAlert = (message:IAlertAddMessage) => {
         this.logger.trace('addAlert');
         this.pushAlert(message);
     }
@@ -52,7 +52,7 @@ export class Alert {
         }
     }
 
-    public pushAlert(alert:IAlertMessage)
+    public pushAlert(alert:IAlertAddMessage)
     {
         this.logger.trace('pushAlert');
         /**
@@ -74,7 +74,7 @@ export class Alert {
         alertHtml.id = alert.id;
         const alertText:HTMLElement = this.platform.document.createElement('div');
         alertText.classList.add('col-sm-11');
-        alertText.append(alert.text);
+        alertText.append(alert.message);
         const alertButton:HTMLElement = this.platform.document.createElement('div');
         alertButton.classList.add('col-sm-1', 'm-0', 'text-center');
         const button:HTMLButtonElement = this.platform.document.createElement('button');
@@ -91,9 +91,9 @@ export class Alert {
             this.platform.setTimeout(() => {
                 const domAlert = this.platform.document.getElementById(alert.id);
                 if (domAlert) {
-                  domAlert.remove();
+                    domAlert.remove();
                 }
-            }, 2250);
+            }, 1500);
         }, {delay:250});
 
     }

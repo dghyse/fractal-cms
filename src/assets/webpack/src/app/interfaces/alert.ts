@@ -1,7 +1,11 @@
 /** Interface modal**/
 
-export interface IAlertMessage {
+export interface IAlertAddMessage {
     id:string;
     color:string;
-    text:string;
+    message:string;
+}
+
+export interface IAlertDeleteMessage {
+    id:string;
 }
