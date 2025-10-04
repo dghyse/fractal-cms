@@ -22,9 +22,9 @@ Il s’agit avant tout d’un projet personnel, pensé comme un terrain d’exp�
 ## 🔧 Stack utilisée
 
 * Backend : PHP (API REST) + MySQL
-* Frontend : Aurelia 2 + TailwindCSS
+* Frontend : Aurelia 2 + BootstrapCSS
 * Éditeur : JSONEditor / QuillJS pour la gestion des contenus
-* Accessibilité : SEO
+* Accessibilité : Gestion du SEO
 
 # Initialisation
 
