@@ -45,7 +45,7 @@ class ItemController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['access'] = [
             'class' => AccessControl::class,
-            'only' => ['index'],
+            'only' => ['manage-items'],
             'rules' => [
                 [
                     'allow' => true,
@@ -55,12 +55,12 @@ class ItemController extends BaseController
                         Constant::PERMISSION_MAIN_ITEM.Constant::PERMISSION_ACTION_LIST,
                         Constant::PERMISSION_MAIN_ITEM.Constant::PERMISSION_ACTION_CREATE,
                         Constant::PERMISSION_MAIN_ITEM.Constant::PERMISSION_ACTION_DELETE
-                        ],
-                    'denyCallback' => function ($rule, $action) {
-                        throw new ForbiddenHttpException();
-                    }
+                    ],
                 ]
-            ]
+            ],
+            'denyCallback' => function ($rule, $action) {
+                throw new ForbiddenHttpException();
+            }
         ];
         return $behaviors;
     }

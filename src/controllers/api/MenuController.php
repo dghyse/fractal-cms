@@ -32,27 +32,24 @@ class MenuController extends BaseController
         $behaviors = parent::behaviors();
         $behaviors['access'] = [
             'class' => AccessControl::class,
-            'only' => ['index'],
+            'only' => ['delete', 'activate'],
             'rules' => [
                 [
                     'allow' => true,
                     'actions' => ['delete'],
                     'verbs' => ['delete'],
                     'roles' => [Constant::PERMISSION_MAIN_MENU.Constant::PERMISSION_ACTION_DELETE],
-                    'denyCallback' => function ($rule, $action) {
-                        throw new ForbiddenHttpException();
-                    }
                 ],
                 [
                     'allow' => true,
                     'actions' => ['activate'],
                     'verbs' => ['get'],
                     'roles' => [Constant::PERMISSION_MAIN_MENU.Constant::PERMISSION_ACTION_ACTIVATION],
-                    'denyCallback' => function ($rule, $action) {
-                        throw new ForbiddenHttpException();
-                    }
                 ],
-            ]
+            ],
+            'denyCallback' => function ($rule, $action) {
+                throw new ForbiddenHttpException();
+            }
         ];
         return $behaviors;
     }

@@ -36,11 +36,11 @@ class ConfigTypeController extends BaseController
                     'actions' => ['delete'],
                     'verbs' => ['delete'],
                     'roles' => [Constant::PERMISSION_MAIN_CONFIG_TYPE.Constant::PERMISSION_ACTION_DELETE],
-                    'denyCallback' => function ($rule, $action) {
-                        throw new ForbiddenHttpException();
-                    }
                 ],
-            ]
+            ],
+            'denyCallback' => function ($rule, $action) {
+                throw new ForbiddenHttpException();
+            }
         ];
         return $behaviors;
     }
