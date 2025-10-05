@@ -39,6 +39,12 @@ Il s’agit avant tout d’un projet personnel, pensé comme un terrain d’exp�
 * Nodejs :v24.8.0
 * Nmp :11.6.0
 
+## Composer
+
+``
+comopser require dghyse\fractal-cms
+``
+
 ### build dist
 
 ### init node modules
@@ -108,3 +114,52 @@ php yii.php fractalCms:init/index
     ],
 ```
 
+### CMS Front
+
+``
+https://localhost/fractal-cms
+``
+
+## Préparer l'application
+
+Afin de permettre à FractalCms de définir les contrôler/action à attacher aux éléments "Content".
+Au moins un contrôler doit être créé qui étend la classe "CmsController"
+
+```php
+
+<?php
+
+use fractalCms\controllers\CmsController;
+use Yii;
+use Exception;
+
+class ContentController extends CmsController
+{
+      public function actionIndex()
+    {
+        try {
+            Yii::debug('Trace :'.__METHOD__, __METHOD__);
+            /**
+             * La fonction public getContent() permet de récupérer le model Content lié à cette action du controller
+             */
+            $content = $this->getContent();
+    
+            /**
+            * On récupére la Query de items du model Content
+            */
+            $itemsQuery = $content->getItems();
+            
+            /** on envoi tout à la vue **/
+            return $this->render('index',
+                [
+                    'content' => $content,
+                    'itemsQuery' => $itemsQuery
+                    ]);
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+}
+
+```
