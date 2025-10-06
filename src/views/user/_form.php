@@ -13,6 +13,7 @@
  */
 
 use fractalCms\helpers\Html;
+use fractalCms\components\Constant;
 ?>
 <div class="row">
     <div class="col-sm-12">
@@ -106,7 +107,12 @@ use fractalCms\helpers\Html;
                                     <div class="form-check form-switch form-check-reverse">
                                         <?php
                                         echo Html::activeCheckbox($model, 'authRules['.$item['id'].'][value]',
-                                            ['label' =>  null, 'class' => 'form-check-input main-check', 'checked' =>(boolean) $item['value'], 'disabled' => Yii::$app->user->getIdentity()->id == $model->id]);
+                                            [
+                                                'label' =>  null,
+                                                'class' => 'form-check-input main-check',
+                                                'checked' =>(boolean) $item['value'],
+                                                'disabled' => Yii::$app->user->getIdentity()->id == $model->id && Yii::$app->user->can(Constant::PERMISSION_MAIN_USER.Constant::PERMISSION_ACTION_UPDATE)
+                                            ]);
                                         echo Html::activeLabel($model, 'authRules['.$item['id'].'][value]', ['label' => $item['title'], 'class' => 'form-check-label']);
                                         ?>
                                     </div>
@@ -121,7 +127,12 @@ use fractalCms\helpers\Html;
                                             <div class="form-check form-switch">
                                                 <?php
                                                 echo Html::activeCheckbox($model, 'authRules['.$item['id'].'][children]['.$child['id'].'][value]',
-                                                    ['label' =>  null, 'class' => 'form-check-input sub-check', 'checked' =>(boolean)$child['value'], 'disabled' => Yii::$app->user->getIdentity()->id == $model->id]);
+                                                    [
+                                                        'label' =>  null,
+                                                        'class' => 'form-check-input sub-check',
+                                                        'checked' =>(boolean)$child['value'],
+                                                        'disabled' => Yii::$app->user->getIdentity()->id == $model->id  && Yii::$app->user->can(Constant::PERMISSION_MAIN_USER.Constant::PERMISSION_ACTION_UPDATE)
+                                                    ]);
                                                 echo Html::activeLabel($model, 'authRules['.$item['id'].'][children]['.$child['id'].'][value]', ['label' => $child['title'], 'class' => 'form-check-label']);
                                                 ?>
                                             </div>

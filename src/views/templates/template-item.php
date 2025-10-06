@@ -148,18 +148,16 @@ use fractalCms\helpers\Cms;
                                 echo Html::activeRadioList($content, 'items['.$model->id.']['.$attribute.']', $values, ['value' => $model->$attribute]);
                             }
                             break;
-                        case Html::CONFIG_TYPE_LIST:
-                            if ($attribute === 'target') {
-                                $contents = Cms::getStructure(true, 'Cms');
-                                $routesIntern = Cms::getInternCmsRoutes();
-                                $contents = ArrayHelper::merge($contents, $routesIntern);
-                                echo Html::activeLabel($content, 'items['.$model->id.']['.$attribute.']', ['label' => $title, 'class' => 'form-label']);
-                                echo Html::activeDropDownList($content, 'items['.$model->id.']['.$attribute.']', ArrayHelper::map($contents, 'route', 'name', 'group'), [
-                                    'prompt' => 'Sélectionner une cible',
-                                    'value' => $model->$attribute,
-                                    'class' => 'form-control',
-                                ]);
-                            }
+                        case Html::CONFIG_TYPE_LIST_CMS:
+                            $contents = Cms::getStructure(true, 'Cms');
+                            $routesIntern = Cms::getInternCmsRoutes();
+                            $contents = ArrayHelper::merge($contents, $routesIntern);
+                            echo Html::activeLabel($content, 'items['.$model->id.']['.$attribute.']', ['label' => $title, 'class' => 'form-label']);
+                            echo Html::activeDropDownList($content, 'items['.$model->id.']['.$attribute.']', ArrayHelper::map($contents, 'route', 'name', 'group'), [
+                                'prompt' => 'Sélectionner une cible',
+                                'value' => $model->$attribute,
+                                'class' => 'form-control',
+                            ]);
                             break;
                         case Html::CONFIG_TYPE_FORMS:
                                 $forms = Cms::getForms();

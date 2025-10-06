@@ -213,7 +213,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function beforeSave($insert) : bool
     {
-        $this->hashPassword();
         if (empty($this->authKey) === true) {
             $this->authKey = Yii::$app->getSecurity()->generateRandomString();
         }

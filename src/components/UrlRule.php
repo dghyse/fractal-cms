@@ -26,7 +26,6 @@ class UrlRule extends BaseObject implements UrlRuleInterface
             $prettyUrl = $route;
             $matches = [];
             if ( preg_match('/(content)-(\d+)$/', $route, $matches) === 1) {
-                $elementName = $matches[1];
                 $elementId = $matches[2];
                 $content = Content::findOne($elementId);
                 if ($content instanceof Content) {
@@ -59,7 +58,7 @@ class UrlRule extends BaseObject implements UrlRuleInterface
             $slug = Slug::find()->andWhere(['path' => $pathInfo, 'active' => 1])->one();
             if ($slug instanceof Slug) {
                 $content = $slug->getContent()->andWhere(['active' => 1])->one();
-                if ($content instanceof Content) {
+                if ($content instanceof Content && $content->configType !== null) {
                     $result= [
                         $content->configType->config,
                         $params
