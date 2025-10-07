@@ -74,7 +74,7 @@ php yii.php fractalCms:init/index
 
 ### Add module fractal-cms in config file
 
-```php 
+````php 
     'bootstrap' => [
         'fractal-cms',
         //../..
@@ -85,4 +85,4 @@ php yii.php fractalCms:init/index
         ],
         //../..
     ],
-```
+````
