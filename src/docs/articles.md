@@ -90,11 +90,13 @@ Chaque élément est basé sur une configuration voir : [Gestion de la configura
 
 #### Ajout d'un élément
 
-Dans la liste en bas à droite, il faut sélectionner l'élément choisi et cliquer sur "+".
+Dans la liste en bas à droite, il faut sélectionner l'élément choisi et cliquer sur **+**.
 
 La liste contient les *configurations éléments* précédemment créés [Gestion de la configuration des éléménts](configurationItemType.md).
 
-![Ajouter un élément](./images/article_add_item.png).
+![Ajouter un élément](./images/article_add_item.png)
 
+![Ajoute entête](./images/item_entet_ajout.png)
 
+L'élément peut-être valorisé. Les informations enregistrées pourront être utilisées sur le _FRONT_.
 

@@ -16,7 +16,7 @@
 
 <div class="row mt-3 align-items-center">
     <div class="col-sm-6">
-        <p>Ajouter une configuration</p>
+        <h2>Ajouter une configuration</h2>
     </div>
 </div>
 <div class="row m-3">
