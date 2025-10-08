@@ -1,4 +1,4 @@
-# Configuration du type d'élément
+# Configuration du type des articles
 
 Le configuration du type d'élément faite partie des concepts important de FractalCMS. C'est grâce à cette configuration qu'un
 élément (Content) pourra être dirigé vers le bon **Controller** et la bonne  **Action** et permettre

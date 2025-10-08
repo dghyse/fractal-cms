@@ -76,7 +76,7 @@ class Menu extends Component
                 }
 
                 $data[] = [
-                    'title' => 'Configuration article type',
+                    'title' => 'Configuration article',
                     'url' => Url::to(['config-type/index']),
                     'optionsClass' => $optionsClass,
                     'children' => [],
