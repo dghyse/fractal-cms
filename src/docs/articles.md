@@ -92,7 +92,9 @@ Chaque élément est basé sur une configuration voir : [Gestion de la configura
 
 Dans la liste en bas à droite, il faut sélectionner l'élément choisi et cliquer sur "+".
 
-La liste contient les *configuration élément* précédemment créés [Gestion de la configuration des éléménts](configurationItemType.md).
+La liste contient les *configurations éléments* précédemment créés [Gestion de la configuration des éléménts](configurationItemType.md).
 
-![Ajouter un élément](./images/article_add_item.png)
+![Ajouter un élément](./images/article_add_item.png).
+
+
 
