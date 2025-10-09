@@ -28,4 +28,4 @@ Il s’agit avant tout d’un projet personnel, pensé comme un terrain d’exp�
 
 ### Documentation
 
-* Voir la [Documentation](src/docs/documentation.md)
+* Voir la [Documentation](src/docs/index.md)

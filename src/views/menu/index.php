@@ -8,11 +8,15 @@
  * @version XXX
  * @package app\config
  *
+ * @var \yii\web\View $this
  * @var \yii\db\ActiveQuery $modelsQuery
  */
 use fractalCms\components\Constant;
 use yii\helpers\Html;
 use yii\helpers\Url;
+
+$title = $this->title;
+$this->title = $title.' : liste des menus';
 ?>
 
 

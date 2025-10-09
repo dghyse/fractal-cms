@@ -39,23 +39,26 @@ class Cms
         try {
             $sections = [];
             $main = Content::find()->where(['id' => 1])->one();
-            $children = $main->getChildrens($isActive, $withSubSection);
-            $sections[] = [
-                'id' => $main->id,
-                'name' => $main->name,
-                'pathKey' => $main->pathKey,
-            ];
-
-            /** @var Content $child */
-            foreach ($children->each() as $child) {
-                $deep = $child->getDeep();
-                $prefix = str_pad('', $deep, '-');
+            if ($main instanceof Content) {
+                $children = $main->getChildrens($isActive, $withSubSection);
                 $sections[] = [
-                    'id' => $child->id,
-                    'name' => $prefix.' '.$child->name,
-                    'pathKey' => $child->pathKey,
+                    'id' => $main->id,
+                    'name' => $main->name,
+                    'pathKey' => $main->pathKey,
                 ];
+
+                /** @var Content $child */
+                foreach ($children->each() as $child) {
+                    $deep = $child->getDeep();
+                    $prefix = str_pad('', $deep, '-');
+                    $sections[] = [
+                        'id' => $child->id,
+                        'name' => $prefix.' '.$child->name,
+                        'pathKey' => $child->pathKey,
+                    ];
+                }
             }
+
             return $sections;
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);

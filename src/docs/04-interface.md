@@ -28,9 +28,4 @@ Ce menu est généré en fonction des droits accessible par l'utilisateur, l'uti
 droits.
 Lors de la création d'un nouvel utilisateur les droits associés peuvent être paramétré.
 
-* [Utilisateurs - Gestion des utilisateurs](utilisateurs.md)
-* [Configuration article type](configurationContentType.md)
-* [Configuration élément](configurationItemType.md)
-* [Articles](articles.md)
-* [Menu](menu.md)
-* [Paramètres](parameters.md)
+[<- Précédent](03-configuration.md) | [Suivant ->](05-content.md)
