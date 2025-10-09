@@ -1,6 +1,6 @@
 # Gestion des utilisateurs
 
-## Régle de modification
+## Règle de modification
 
 * Un utilisateur ne peut modifier ses droits et permissions 
 

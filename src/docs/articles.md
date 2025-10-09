@@ -98,5 +98,86 @@ La liste contient les *configurations éléments* précédemment créés [Gestio
 
 ![Ajoute entête](./images/item_entet_ajout.png)
 
-L'élément peut-être valorisé. Les informations enregistrées pourront être utilisées sur le _FRONT_.
+L'élément peut-être valorisé. Les informations enregistrées pourront être utilisées sur le _FRONT_ de votre site.
+
+#### Récupération des données dans la vue
+
+##### Action Contrôleur (ContentController)
+
+```
+    public function actionIndex()
+    {
+        try {
+            Yii::debug('Trace :'.__METHOD__, __METHOD__);
+            $content = $this->getContent();
+            //Recherche du premier élément "entete" du "Content"
+            $itemEntete = $content->getItems()
+                ->andWhere(['configItemId' => Cms::getParameter('ITEM', 'ENTETE')])
+                ->one();
+            return $this->render('index',
+                [
+                    'content' => $content,
+                    'entete' => $itemEntete,
+                    ]);
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+```
+
+##### Vue HTML
+
+```
+<?php
+/**
+ * main.php
+ *
+ * PHP Version 8.2+
+ *
+ * @version XXX
+ * @package webapp\views\layouts
+ *
+ * @var $this yii\web\View
+ * @var $content \fractalCms\models\Content
+ * @var $entete \fractalCms\models\Item
+ *
+ */
+use fractalCms\helpers\Html;
+
+$title = ($entete instanceof \fractalCms\models\Item) ? $entete->title : $content->name;
+$subtitle = ($entete instanceof \fractalCms\models\Item) ? $entete->subtitle : null;
+$banner = ($entete instanceof \fractalCms\models\Item) ? $entete->banner : null;
+$description = ($entete instanceof \fractalCms\models\Item) ? $entete->description : null;
+$this->title = $title;
+
+?>
+<main id="main" role="main"  tabindex="-1" portfolio-focus="main">
+    <!-- Hero avec image -->
+    <section id="home" class="relative text-white">
+        <!-- Image de fond -->
+        <div class="absolute inset-0 h-72">
+            <?php
+            if (empty($banner) === false) {
+                echo Html::img($banner, [
+                    'width' => 1200, 'height' => 300,
+                    'alt' => 'Image hero',
+                    'class' => 'w-full h-full object-cover'
+                ]);
+            }
+            ?>
+            <!-- Overlay -->
+            <div class="absolute inset-0 bg-blue-800 opacity-70"></div>
+        </div>
+
+        <!-- Contenu -->
+        <div class="relative container mx-auto px-6 h-72 flex flex-col justify-center items-center text-center">
+            <h1 class="text-3xl md:text-5xl font-extrabold"><?php echo $title;?></h1>
+            <div class="mt-2 text-lg text-blue-100">
+                <?php echo $description;?>
+            </div>
+        </div>
+    </section>
+</main>
+```
 

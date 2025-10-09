@@ -215,6 +215,9 @@ class Html extends \yii\helpers\Html
                 case IMAGETYPE_GIF:
                     $src = imagecreatefromgif($sourcePath);
                     break;
+                case IMAGETYPE_WEBP:
+                    $src = imagecreatefromwebp($sourcePath);
+                    break;
                 default:
                     throw new HttpException(404, 'Format d\'image non supporté');
             }
@@ -252,6 +255,9 @@ class Html extends \yii\helpers\Html
                     break;
                 case IMAGETYPE_GIF:
                     imagegif($dst, $destPath);
+                    break;
+                case IMAGETYPE_WEBP:
+                    imagewebp($dst, $destPath);
                     break;
             }
             imagedestroy($src);
