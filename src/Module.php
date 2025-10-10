@@ -94,7 +94,6 @@ class Module extends \yii\base\Module implements BootstrapInterface
                         $app->controllerMap['migrate']['migrationPath'] = ['@yii/rbac/migrations'];
                     }
                 }
-                $app->controllerNamespace = 'fractalCms\console';
                 $app->controllerMap[$this->commandNameSpace.'rbac'] = [
                     'class' => RbacController::class,
                 ];
