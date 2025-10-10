@@ -34,7 +34,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
 
 
     public $layoutPath = '@fractalCms/views/layouts';
-    public $viewItemPath = '@data/admin';
+    public $viewItemPath = '@webapp/views/fractal-cms';
     public $layout = 'main';
     public $defaultRoute = 'default/index';
     public $filePath = '@webroot/data';

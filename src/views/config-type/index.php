@@ -15,7 +15,11 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 ?>
 
-
+<div class="row mt-3 align-items-center">
+    <div class="col-sm-6">
+        <h2>Liste des Configurations des articles</h2>
+    </div>
+</div>
 <div class="row mt-3">
     <div class="col" >
         <?php

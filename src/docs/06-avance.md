@@ -96,4 +96,35 @@ protected function build(ActiveQuery $menuItemsQuery)
 
 }
 ```
+
+## Personnaliser les vues des éléments de l'article
+
+Dans FractalCMS, nous pouvons personnaliser la vue qui sera utilisée pour générer
+le HTML de l'élément dans la partie **Gestion des éléments** du formulaire de création
+d'un article.
+
+### Propriété
+
+La propriété public **viewItemPath** de FractalCMS peut-être valorisé dans le fichier de 
+configuration. La propriété est valorisée par défaut par  **@webapp/views/fractal-cms**.
+
+### Régle de nommage des vues
+
+Le nom doit correspondre à la valeur de la propriété **name** de la **Configuration de l'élément**. Les noms
+comportant des **-** seront automatiquement remplacés par des **_**.
+
+#### Exemples
+
+##### Entête
+
+* Nom : **entete**
+* Valeur de la propriété **name** de la configuration : **entete**
+* Nom de la vue : **entete.php**
+
+##### Image HTML
+
+* Nom : **image-html**
+* Valeur de la propriété **name** de la configuration : **image-html**
+* Nom de la vue : **image_html.php**
+
 [<- Précédent](05-content.md) | [Accueil](index.md)

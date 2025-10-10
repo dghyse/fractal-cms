@@ -21,7 +21,7 @@ use yii\helpers\Html;
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" cms-menu="">
                 <?php
                 echo $data;
                 ?>

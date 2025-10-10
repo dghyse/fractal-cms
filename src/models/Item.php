@@ -11,6 +11,8 @@
 namespace fractalCms\models;
 
 use Exception;
+use fractalCms\helpers\Cms;
+use fractalCms\Module;
 use fractalCms\traits\Elastic;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -35,6 +37,13 @@ class Item extends \yii\db\ActiveRecord
 {
 
     use Elastic;
+
+    /**
+     * Path of custom view
+     *
+     * @var string
+     */
+    public string $viewPath;
 
     const SCENARIO_CREATE = 'create';
     const SCENARIO_UPDATE = 'update';
@@ -95,12 +104,19 @@ class Item extends \yii\db\ActiveRecord
     public function afterFind()
     {
         parent::afterFind();
+        $module = Module::getInstance();
         if (is_string($this->data) === true && empty($this->data) === false) {
             $this->data = Json::decode($this->data);
         }
         if ($this->elasticModel === null) {
             $this->elasticModel = Yii::createObject(ElasticModel::class, ['jsonConfig' => $this->configItem->configArray, 'config' => []]);
             $this->elasticModel->attributes = $this->data;
+        }
+        $viewName = strtolower(str_replace('-', '_', $this->configItem->name));
+        $viewPathAlias = trim($module->viewItemPath, '/').'/'.$viewName.'.php';
+        $viewPath = Yii::getAlias($viewPathAlias);
+        if(file_exists($viewPath) === true) {
+            $this->viewPath = $viewPathAlias;
         }
     }
 

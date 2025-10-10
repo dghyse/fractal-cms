@@ -14,6 +14,7 @@ namespace fractalCms\controllers\api;
 use Exception;
 use fractalCms\components\Constant;
 use fractalCms\models\ConfigType;
+use fractalCms\models\Content;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
@@ -66,6 +67,11 @@ class ConfigTypeController extends BaseController
             if ($model === null) {
                 throw new NotFoundHttpException('user not found');
             }
+            $updated = Content::updateAll(
+                ['configTypeId' => null],
+                'configTypeId=:configId',
+                [':configId' => $id]
+            );
             $model->delete();
             $response->statusCode = 204;
             return $response;

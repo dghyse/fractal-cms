@@ -38,7 +38,7 @@ class Cms
     {
         try {
             $sections = [];
-            $main = Content::find()->where(['id' => 1])->one();
+            $main = Content::find()->where(['pathKey' => '1'])->one();
             if ($main instanceof Content) {
                 $children = $main->getChildrens($isActive, $withSubSection);
                 $sections[] = [

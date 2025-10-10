@@ -27,7 +27,7 @@ $baseUrl = StaticAsset::register($this)->baseUrl;
             <?php
             echo Html::img($baseUrl.'/img/logo.png', ['alt' => 'logo Fractal CMS', 'width' => 32, 'height' => 32]);
 
-            echo Html::a($moduleInstance->name.' : '.$moduleInstance->version, ['content/index'], ['class' => 'fw-bold no-underline']);
+            echo Html::a($moduleInstance->name.' : '.$moduleInstance->version, ['default/index'], ['class' => 'fw-bold no-underline']);
             ?>
         </div>
         <div class="col-sm-7">

@@ -65,7 +65,7 @@ $parentDeep = (isset($parentDeep) === true) ? $parentDeep : 0;
         echo Html::endTag('span');
         // echo Html::endTag('a');
     }
-    if (Yii::$app->user->can(Constant::PERMISSION_MAIN_CONTENT.Constant::PERMISSION_ACTION_DELETE) === true && $model->name !== 'main' && $model->id !== 1)  {
+    if (Yii::$app->user->can(Constant::PERMISSION_MAIN_CONTENT.Constant::PERMISSION_ACTION_DELETE) === true && $model->pathKey !== '1')  {
         echo Html::beginTag('a', ['href' => Url::to(['api/content/delete', 'id' => $model->id]), 'class' => 'icon-link col user-button-delete', 'title' => 'Supprimer']);
         ?>
         <svg width="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

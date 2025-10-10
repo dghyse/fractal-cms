@@ -19,46 +19,41 @@ class m251009_154758_updateTableContent extends Migration
 
         $this->dropForeignKey('contents_configTypeId_fk', '{{%contents}}');
         $this->dropForeignKey('contents_seoId_fk', '{{%contents}}');
+        $this->dropForeignKey('contents_slugId_fk', '{{%contents}}');
 
         $this->addForeignKey(
             'contents_configTypeId_fk',
             '{{%contents}}',
             'configTypeId',
             '{{%configTypes}}',
-            'id');
+            'id',
+        'NO ACTION',
+        'NO ACTION'
+        );
 
         $this->addForeignKey(
             'contents_seoId_fk',
             '{{%contents}}',
             'seoId',
             '{{%seos}}',
-            'id');
+            'id',
+            'NO ACTION',
+            'NO ACTION');
+
+        $this->addForeignKey(
+            'contents_slugId_fk',
+            '{{%contents}}',
+            'slugId',
+            '{{%slugs}}',
+            'id',
+            'NO ACTION',
+            'NO ACTION');
 
         return true;
     }
 
     public function down()
     {
-
-        $this->dropForeignKey('contents_configTypeId_fk', '{{%contents}}');
-        $this->dropForeignKey('contents_seoId_fk', '{{%contents}}');
-        $this->addForeignKey(
-            'contents_configTypeId_fk',
-            '{{%contents}}',
-            'configTypeId',
-            '{{%configTypes}}',
-            'id',
-            'CASCADE',
-            'CASCADE');
-
-        $this->addForeignKey(
-            'contents_seoId_fk',
-            '{{%contents}}',
-            'seoId',
-            '{{%seos}}',
-            'id',
-            'CASCADE',
-            'CASCADE');
         return true;
     }
 }
