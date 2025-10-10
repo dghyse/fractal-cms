@@ -4,9 +4,9 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers\api
  */
 
 namespace fractalCms\controllers\api;
@@ -28,6 +28,9 @@ class ParameterController extends BaseController
 {
 
 
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -50,6 +53,15 @@ class ParameterController extends BaseController
     }
 
 
+    /**
+     * Delete Parameter
+     *
+     * @param $id
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function actionDelete($id) : Response
     {
         try {

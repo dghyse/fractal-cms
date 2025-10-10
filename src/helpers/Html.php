@@ -4,17 +4,15 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\helpers
  */
 namespace fractalCms\helpers;
 
 use Exception;
-use fractalCms\models\ElasticModel;
 use fractalCms\Module;
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\web\HttpException;
 
 class Html extends \yii\helpers\Html
@@ -27,11 +25,14 @@ class Html extends \yii\helpers\Html
     const CONFIG_TYPE_RADIO = 'radio';
     const CONFIG_TYPE_CHECKBOX = 'checkbox';
     const CONFIG_TYPE_WYSIWYG = 'wysiwyg';
-    const CONFIG_TYPE_LIST = 'list';
+    const CONFIG_TYPE_LIST_CMS = 'listcms';
     const CONFIG_TYPE_FORMS = 'forms';
 
     public $cachePath = 'cache';
 
+    /**
+     * @inheritDoc
+     */
     public static function activeInput($type, $model, $attribute, $options = [])
     {
         if ($model->hasErrors($attribute) === true) {
@@ -42,6 +43,9 @@ class Html extends \yii\helpers\Html
         return parent::activeInput($type, $model, $attribute, $options);
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function activeDropDownList($model, $attribute, $items, $options = [])
     {
         if ($model->hasErrors($attribute) === true) {
@@ -52,6 +56,9 @@ class Html extends \yii\helpers\Html
         return parent::activeDropDownList($model, $attribute, $items, $options);
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function activeTextarea($model, $attribute, $options = [])
     {
         if ($model->hasErrors($attribute) === true) {
@@ -62,6 +69,9 @@ class Html extends \yii\helpers\Html
         return parent::activeTextarea($model, $attribute, $options );
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function img($src, $options = [])
     {
         $relative = $src;
@@ -76,19 +86,15 @@ class Html extends \yii\helpers\Html
         return parent::img($relative, $options);
     }
 
-    public static function buildTemplateView($config, ElasticModel $model)
-    {
-        try {
-            return yii::$app->controller->renderPartial(
-                '@fractalCms/views/templates/template-item',
-                ['model' => $model, 'config' => $config]
-            );
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw $e;
-        }
-    }
 
+    /**
+     * Create and return image cache url
+     *
+     * @param $src
+     * @param $options
+     * @return false|string
+     * @throws HttpException
+     */
     public static function getImgCache($src, $options = [])
     {
         try {
@@ -143,6 +149,14 @@ class Html extends \yii\helpers\Html
         }
     }
 
+    /**
+     * Prepare image cache dir
+     *
+     * @param $relativeDirName
+     * @param $target
+     * @return false|string
+     * @throws Exception
+     */
     protected static function prepareCacheDir($relativeDirName, $target = null)
     {
         try {
@@ -174,7 +188,16 @@ class Html extends \yii\helpers\Html
         }
     }
 
-
+    /**
+     * Resize image
+     *
+     * @param $sourcePath
+     * @param $destPath
+     * @param $newWidth
+     * @param $newHeight
+     * @return void
+     * @throws HttpException
+     */
     protected static function resizeImage($sourcePath, $destPath, $newWidth, $newHeight = null)
     {
         try {
@@ -191,6 +214,9 @@ class Html extends \yii\helpers\Html
                     break;
                 case IMAGETYPE_GIF:
                     $src = imagecreatefromgif($sourcePath);
+                    break;
+                case IMAGETYPE_WEBP:
+                    $src = imagecreatefromwebp($sourcePath);
                     break;
                 default:
                     throw new HttpException(404, 'Format d\'image non supporté');
@@ -229,6 +255,9 @@ class Html extends \yii\helpers\Html
                     break;
                 case IMAGETYPE_GIF:
                     imagegif($dst, $destPath);
+                    break;
+                case IMAGETYPE_WEBP:
+                    imagewebp($dst, $destPath);
                     break;
             }
             imagedestroy($src);

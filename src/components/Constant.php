@@ -1,12 +1,12 @@
 <?php
 /**
- * main.php
+ * Constant.php
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\components
  */
 namespace fractalCms\components;
 

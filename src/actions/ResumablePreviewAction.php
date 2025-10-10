@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\actions
  */
@@ -23,7 +23,11 @@ class ResumablePreviewAction extends Action
     public $filetypeIconAlias = '@fractalCms/assets/static/icons/';
 
     /**
-     * @inheritdoc
+     * Preview files
+     *
+     * @return \yii\console\Response|\yii\web\Response
+     * @throws NotFoundHttpException
+     * @throws \yii\web\RangeNotSatisfiableHttpException
      */
     public function run()
     {
@@ -44,6 +48,7 @@ class ResumablePreviewAction extends Action
     }
 
     /**
+     * Prepare preview path file
      * @param string $filename
      * @return bool|string
      */

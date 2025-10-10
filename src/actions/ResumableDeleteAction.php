@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\actions
  */
@@ -19,7 +19,10 @@ use Yii;
 class ResumableDeleteAction extends Action
 {
     /**
-     * @inheritdoc
+     * Delete file
+     *
+     * @return mixed
+     * @throws HttpException
      */
     public function run()
     {

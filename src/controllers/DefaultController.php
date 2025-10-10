@@ -1,10 +1,10 @@
 <?php
 /**
- * main.php
+ * DefaultController.php
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\config
  *
@@ -21,7 +21,9 @@ use Yii;
 
 class DefaultController extends Controller
 {
-
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -43,6 +45,12 @@ class DefaultController extends Controller
     }
 
 
+    /**
+     * Dashboard
+     *
+     * @return string
+     * @throws \Throwable
+     */
     public function actionIndex()
     {
         try {

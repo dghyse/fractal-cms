@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\models
  */
@@ -213,7 +213,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function beforeSave($insert) : bool
     {
-        $this->hashPassword();
         if (empty($this->authKey) === true) {
             $this->authKey = Yii::$app->getSecurity()->generateRandomString();
         }

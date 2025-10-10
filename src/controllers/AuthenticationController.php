@@ -4,9 +4,9 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers
  */
 
 namespace fractalCms\controllers;
@@ -20,6 +20,9 @@ use yii\web\Controller;
 class AuthenticationController extends Controller
 {
 
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -48,6 +51,12 @@ class AuthenticationController extends Controller
         return $behaviors;
     }
 
+    /**
+     * Login
+     *
+     * @return string|\yii\web\Response|null
+     * @throws \yii\base\InvalidConfigException
+     */
     public function actionLogin()
     {
         try {
@@ -77,6 +86,12 @@ class AuthenticationController extends Controller
         }
     }
 
+    /**
+     * Logout
+     *
+     * @return \yii\web\Response
+     * @throws Exception
+     */
     public function actionLogout()
     {
         try {

@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\config
  *
@@ -17,7 +17,7 @@
 
 <div class="row mt-3 align-items-center">
     <div class="col-sm-6">
-        <p>Création d'une config</p>
+        <h2>Création d'une config</h2>
     </div>
 </div>
 <div class="row m-3">
