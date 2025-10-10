@@ -4,18 +4,15 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers
  */
 
 namespace fractalCms\controllers;
 
 use fractalCms\components\Constant;
 use fractalCms\models\ConfigItem;
-use fractalCms\models\ConfigType;
-use fractalCms\models\User;
-use fractalCms\helpers\ConfigType as ConfigTypeHelpers;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use Exception;
@@ -26,6 +23,9 @@ class ConfigItemController extends Controller
 {
 
 
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -63,6 +63,12 @@ class ConfigItemController extends Controller
     }
 
 
+    /**
+     * Liste
+     *
+     * @return string
+     * @throws Exception
+     */
     public function actionIndex() : string
     {
         try {
@@ -77,6 +83,13 @@ class ConfigItemController extends Controller
     }
 
 
+    /**
+     * Create
+     *
+     * @return string|Response
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
     public function actionCreate() : string | Response
     {
         try {
@@ -107,6 +120,14 @@ class ConfigItemController extends Controller
         }
     }
 
+    /**
+     * Update
+     *
+     * @param $id
+     * @return string|Response
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
     public function actionUpdate($id) : string | Response
     {
         try {

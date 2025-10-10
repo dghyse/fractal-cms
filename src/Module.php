@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\config
  */
@@ -34,6 +34,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
 
 
     public $layoutPath = '@fractalCms/views/layouts';
+    public $viewItemPath = '@webapp/views/fractal-cms';
     public $layout = 'main';
     public $defaultRoute = 'default/index';
     public $filePath = '@webroot/data';

@@ -1,29 +1,23 @@
 <?php
 /**
- * MenuController.php
+ * MenuItemController.php
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers
  */
 
 namespace fractalCms\controllers;
 
 use Exception;
 use fractalCms\components\Constant;
-use fractalCms\controllers\api\ItemController;
 use fractalCms\helpers\Cms;
-use fractalCms\models\ConfigType;
-use fractalCms\models\Content;
-use fractalCms\models\Item;
 use fractalCms\models\Menu;
 use fractalCms\models\MenuItem;
-use fractalCms\models\Slug;
 use Yii;
 use yii\filters\AccessControl;
-use yii\filters\ContentNegotiator;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -31,7 +25,9 @@ use yii\web\Response;
 class MenuItemController extends Controller
 {
 
-
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -60,6 +56,15 @@ class MenuItemController extends Controller
         return $behaviors;
     }
 
+    /**
+     * Create
+     *
+     * @param $menuId
+     * @return string|Response
+     * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
     public function actionCreate($menuId) : string | Response
     {
         try {
@@ -101,8 +106,16 @@ class MenuItemController extends Controller
         }
     }
 
-
-
+    /**
+     * Update
+     *
+     * @param $menuId
+     * @param $id
+     * @return string|Response
+     * @throws NotFoundHttpException
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
     public function actionUpdate($menuId, $id) : string | Response
     {
         try {

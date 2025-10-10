@@ -4,9 +4,9 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers
  */
 
 namespace fractalCms\controllers;
@@ -14,11 +14,9 @@ namespace fractalCms\controllers;
 use fractalCms\interfaces\ControllerInterface;
 use fractalCms\models\Content;
 use fractalCms\models\Slug;
-use yii\filters\AccessControl;
 use yii\web\Controller;
 use Exception;
 use Yii;
-use yii\web\Request;
 
 class CmsController extends Controller implements ControllerInterface
 {
@@ -30,6 +28,10 @@ class CmsController extends Controller implements ControllerInterface
      */
     private Content $content;
 
+    /**
+     * @inheritDoc
+     * @throws \yii\base\InvalidConfigException
+     */
     public function init()
     {
         try {
@@ -54,6 +56,12 @@ class CmsController extends Controller implements ControllerInterface
         }
     }
 
+    /**
+     * Get content in context
+     *
+     * @return Content|null
+     * @throws Exception
+     */
     public function getContent() : Content | null
     {
         try {

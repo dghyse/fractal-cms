@@ -4,9 +4,9 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\helpers
  */
 namespace fractalCms\helpers;
 
@@ -26,34 +26,54 @@ use ReflectionMethod;
 class Cms
 {
 
+    /**
+     * Build Content list
+     *
+     * @param $isActive
+     * @param $withSubSection
+     * @return array
+     * @throws Exception
+     */
     public static function buildSections($isActive = false, $withSubSection = false) : array
     {
         try {
             $sections = [];
-            $main = Content::find()->where(['id' => 1])->one();
-            $children = $main->getChildrens($isActive, $withSubSection);
-            $sections[] = [
-                'id' => $main->id,
-                'name' => $main->name,
-                'pathKey' => $main->pathKey,
-            ];
-
-            /** @var Content $child */
-            foreach ($children->each() as $child) {
-                $deep = $child->getDeep();
-                $prefix = str_pad('', $deep, '-');
+            $main = Content::find()->where(['pathKey' => '1'])->one();
+            if ($main instanceof Content) {
+                $children = $main->getChildrens($isActive, $withSubSection);
                 $sections[] = [
-                    'id' => $child->id,
-                    'name' => $prefix.' '.$child->name,
-                    'pathKey' => $child->pathKey,
+                    'id' => $main->id,
+                    'name' => $main->name,
+                    'pathKey' => $main->pathKey,
                 ];
+
+                /** @var Content $child */
+                foreach ($children->each() as $child) {
+                    $deep = $child->getDeep();
+                    $prefix = str_pad('', $deep, '-');
+                    $sections[] = [
+                        'id' => $child->id,
+                        'name' => $prefix.' '.$child->name,
+                        'pathKey' => $child->pathKey,
+                    ];
+                }
             }
+
             return $sections;
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;
         }
     }
+
+    /**
+     * Build structure list
+     *
+     * @param $isActive
+     * @param $group
+     * @return array
+     * @throws Exception
+     */
     public static function getStructure($isActive = false, $group = null) : array
     {
         try {
@@ -86,6 +106,12 @@ class Cms
         }
     }
 
+    /**
+     * Build structure controllers list
+     *
+     * @return array
+     * @throws \ReflectionException
+     */
     public static function getControllerStructure() : array
     {
         try {
@@ -132,6 +158,14 @@ class Cms
         }
     }
 
+    /**
+     * Camel case to Id
+     *
+     * @param $camelCase
+     * @param $separator
+     * @return string
+     * @throws Exception
+     */
     public static function camelToId($camelCase, $separator = '-') : string
     {
         try {
@@ -144,6 +178,14 @@ class Cms
         }
     }
 
+    /**
+     * transforme space to insecable space
+     *
+     * @param $string
+     * @param $separator
+     * @return string
+     * @throws Exception
+     */
     public static function insertIndivisibleSpace($string, $separator = '&nbsp;') : string
     {
         try {
@@ -156,7 +198,13 @@ class Cms
         }
     }
 
-
+    /**
+     * Build structure with content query
+     *
+     * @param ActiveQuery $contentsQuery
+     * @return array
+     * @throws Exception
+     */
     public static function buildStructure(ActiveQuery $contentsQuery) : array
     {
         try {
@@ -194,6 +242,12 @@ class Cms
         }
     }
 
+    /**
+     * Get Aurelia Form
+     *
+     * @return array[]
+     * @throws Exception
+     */
     public static function getForms() : array
     {
         try {
@@ -209,6 +263,13 @@ class Cms
         }
     }
 
+    /**
+     * Get interne CMS Route
+     *
+     * @return array
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\di\NotInstantiableException
+     */
     public static function getInternCmsRoutes()
     {
         try {
@@ -224,7 +285,14 @@ class Cms
         }
     }
 
-
+    /**
+     * Get menu item structure
+     *
+     * @param $menuId
+     * @param $menuItemId
+     * @return array
+     * @throws Exception
+     */
     public static function getMenuItemStructure($menuId, $menuItemId = null) : array
     {
         try {
@@ -251,7 +319,12 @@ class Cms
         }
     }
 
-
+    /**
+     * Get config item list
+     *
+     * @return array
+     * @throws Exception
+     */
     public static function getConfigItems() : array
     {
         try {
@@ -271,6 +344,14 @@ class Cms
         }
     }
 
+    /**
+     * Get parameter
+     *
+     * @param $group
+     * @param $name
+     * @return string|null
+     * @throws Exception
+     */
     public static function getParameter($group, $name) : string | null
     {
         try {
@@ -286,6 +367,13 @@ class Cms
         }
     }
 
+    /**
+     * Clean Html to view
+     *
+     * @param $text
+     * @return string|null
+     * @throws Exception
+     */
     public static function cleanHtml($text) : string | null
     {
         try {
@@ -299,7 +387,5 @@ class Cms
             throw $e;
         }
     }
-
-
 
 }

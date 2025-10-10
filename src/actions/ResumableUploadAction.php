@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\actions
  */
@@ -12,7 +12,6 @@ namespace fractalCms\actions;
 
 
 
-use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 use yii\web\ViewAction;
@@ -56,7 +55,10 @@ class ResumableUploadAction extends ViewAction
     protected $finalFilename = null;
 
     /**
-     * @inheritdoc
+     * Upload file
+     *
+     * @return string|\yii\console\Response|Response
+     * @throws ServerErrorHttpException
      */
     public function run()
     {

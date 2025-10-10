@@ -4,9 +4,8 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
- * @version XXX
- * @package app\config
+ * @author David Ghyse <davidg@webcraftdg.fr>
+ * @package app\assets
  */
 
 namespace fractalCms\assets;
@@ -24,10 +23,8 @@ use Exception;
 /**
  * Base webpack assets
  *
- * @author David Ghyse <david.ghysefree.fr>
- * @version XXX
- * @package app\config
- * @since XXX
+ * @author David Ghyse <davidg@webcraftdg.fr>
+ * @package app\assets
  */
 class WebpackAsset extends AssetBundle
 {

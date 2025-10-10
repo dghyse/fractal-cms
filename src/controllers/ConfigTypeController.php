@@ -4,9 +4,9 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers
  */
 
 namespace fractalCms\controllers;
@@ -25,6 +25,9 @@ class ConfigTypeController extends Controller
 {
 
 
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();

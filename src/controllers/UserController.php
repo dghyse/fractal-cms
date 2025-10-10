@@ -1,12 +1,12 @@
 <?php
 /**
- * main.php
+ * UserController.php
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers
  */
 
 namespace fractalCms\controllers;
@@ -22,7 +22,9 @@ use yii\web\Response;
 class UserController extends Controller
 {
 
-
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -60,6 +62,12 @@ class UserController extends Controller
     }
 
 
+    /**
+     * Liste
+     *
+     * @return string
+     * @throws Exception
+     */
     public function actionIndex() : string
     {
         try {
@@ -73,7 +81,13 @@ class UserController extends Controller
         }
     }
 
-
+    /**
+     * Create
+     *
+     * @return string|Response
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
     public function actionCreate() : string | Response
     {
         try {
@@ -107,6 +121,14 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Update
+     *
+     * @param $id
+     * @return string|Response
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
     public function actionUpdate($id) : string | Response
     {
         try {

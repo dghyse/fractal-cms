@@ -4,14 +4,15 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\models
  */
 namespace fractalCms\models;
 
 use Exception;
-use fractalCms\interfaces\ElasticInterface;
+use fractalCms\helpers\Cms;
+use fractalCms\Module;
 use fractalCms\traits\Elastic;
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -32,10 +33,17 @@ use yii\helpers\Json;
  * @property ContentItem[] $contentItems
  * @property Content[] $contents
  */
-class Item extends \yii\db\ActiveRecord implements ElasticInterface
+class Item extends \yii\db\ActiveRecord
 {
 
     use Elastic;
+
+    /**
+     * Path of custom view
+     *
+     * @var string
+     */
+    public string $viewPath;
 
     const SCENARIO_CREATE = 'create';
     const SCENARIO_UPDATE = 'update';
@@ -93,30 +101,22 @@ class Item extends \yii\db\ActiveRecord implements ElasticInterface
         ];
     }
 
-    public function getConfig()
-    {
-        try {
-            $config = [];
-            $configItem = $this->getConfigItem()->one();
-            if ($configItem !== null) {
-                $config = $configItem->configArray;
-            }
-            return $config;
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw $e;
-        }
-    }
-
     public function afterFind()
     {
         parent::afterFind();
+        $module = Module::getInstance();
         if (is_string($this->data) === true && empty($this->data) === false) {
             $this->data = Json::decode($this->data);
         }
         if ($this->elasticModel === null) {
             $this->elasticModel = Yii::createObject(ElasticModel::class, ['jsonConfig' => $this->configItem->configArray, 'config' => []]);
             $this->elasticModel->attributes = $this->data;
+        }
+        $viewName = strtolower(str_replace('-', '_', $this->configItem->name));
+        $viewPathAlias = trim($module->viewItemPath, '/').'/'.$viewName.'.php';
+        $viewPath = Yii::getAlias($viewPathAlias);
+        if(file_exists($viewPath) === true) {
+            $this->viewPath = $viewPathAlias;
         }
     }
 

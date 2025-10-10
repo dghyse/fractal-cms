@@ -4,26 +4,24 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers\api
  */
 
 namespace fractalCms\controllers\api;
 
-use Exception;
-use fractalCms\models\User;
-use Yii;
-use yii\db\Expression;
 use yii\filters\ContentNegotiator;
 use yii\rest\Controller;
-use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 class BaseController extends Controller
 {
 
 
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();

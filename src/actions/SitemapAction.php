@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\actions
  */
@@ -18,6 +18,13 @@ use Yii;
 class SitemapAction extends Action
 {
 
+    /**
+     * Generate sitemap.xml
+     *
+     * @param SitemapBuilder $sitemapBuilder
+     * @return false|string
+     * @throws Exception
+     */
     public function run(SitemapBuilder $sitemapBuilder)
     {
         try {

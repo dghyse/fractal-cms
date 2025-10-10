@@ -22,26 +22,10 @@ Il s’agit avant tout d’un projet personnel, pensé comme un terrain d’exp�
 ## 🔧 Stack utilisée
 
 * Backend : PHP (API REST) + MySQL
-* Frontend : Aurelia 2 + TailwindCSS
+* Frontend : Aurelia 2 + BootstrapCSS
 * Éditeur : JSONEditor / QuillJS pour la gestion des contenus
-* Accessibilité : SEO
+* Accessibilité : Gestion du SEO
 
-# Initialisation
+### Documentation
 
-## Init FractalCMS
-
-### Create Rbac
-
-``
-php yii.php fractalCms:rbac/index
-``
-
-### Create Admin
-``
-php yii.php fractalCms:admin/create
-``
-### INIT content
-
-``
-php yii.php fractalCms:init/index
-``
+* Voir la [Documentation](src/docs/index.md)

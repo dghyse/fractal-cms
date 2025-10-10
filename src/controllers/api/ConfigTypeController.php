@@ -1,12 +1,12 @@
 <?php
 /**
- * ConfigTypeApiController.php
+ * ConfigTypeController.php
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\controllers\api
  */
 
 namespace fractalCms\controllers\api;
@@ -14,6 +14,7 @@ namespace fractalCms\controllers\api;
 use Exception;
 use fractalCms\components\Constant;
 use fractalCms\models\ConfigType;
+use fractalCms\models\Content;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\ForbiddenHttpException;
@@ -24,6 +25,9 @@ class ConfigTypeController extends BaseController
 {
 
 
+    /**
+     * @inheritDoc
+     */
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -46,6 +50,15 @@ class ConfigTypeController extends BaseController
     }
 
 
+    /**
+     * Delete Config Type
+     *
+     * @param $id
+     * @return Response
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function actionDelete($id) : Response
     {
         try {
@@ -54,6 +67,11 @@ class ConfigTypeController extends BaseController
             if ($model === null) {
                 throw new NotFoundHttpException('user not found');
             }
+            $updated = Content::updateAll(
+                ['configTypeId' => null],
+                'configTypeId=:configId',
+                [':configId' => $id]
+            );
             $model->delete();
             $response->statusCode = 204;
             return $response;

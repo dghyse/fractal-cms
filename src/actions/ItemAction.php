@@ -4,7 +4,7 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
  * @package app\actions
  */
@@ -23,6 +23,18 @@ use yii\web\NotFoundHttpException;
 class ItemAction extends Action
 {
 
+    /**
+     * Function To add, move and delete item in Content form
+     *
+     * @param $contentId
+     * @return string
+     *
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     * @throws \yii\db\StaleObjectException
+     */
     public function run($contentId)
     {
         try {

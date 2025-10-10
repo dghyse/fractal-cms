@@ -4,9 +4,9 @@
  *
  * PHP Version 8.2+
  *
- * @author David Ghyse <david.ghysefree.fr>
+ * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package app\console
  */
 namespace fractalCms\console;
 
@@ -20,6 +20,13 @@ use yii\helpers\Json;
 
 class AdminController extends Controller
 {
+    /**
+     * Create Administrateur
+     *
+     * @return int|void
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
     public function actionCreate()
     {
         try {
