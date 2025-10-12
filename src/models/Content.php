@@ -155,7 +155,7 @@ class Content extends \yii\db\ActiveRecord
      * @return void
      * @throws \yii\db\Exception
      */
-    public function manageItems()
+    public function manageItems($deleteSource = true)
     {
         try {
             $models =  $this->items;
@@ -164,7 +164,7 @@ class Content extends \yii\db\ActiveRecord
                     $dbModel = Item::findOne($id);
                     if ($dbModel !== null) {
                         $dbModel->scenario = Item::SCENARIO_UPDATE;
-                        $newData = $dbModel->prepareData($data);
+                        $newData = $dbModel->prepareData($data, $deleteSource);
                         $dbModel->elasticModel->load($newData, '');
                         $dbModel->data = $dbModel->elasticModel->toJson();
                         $dbModel->active = 1;
@@ -176,6 +176,52 @@ class Content extends \yii\db\ActiveRecord
                     }
                 }
             }
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw  $e;
+        }
+    }
+
+
+    /**
+     * Attach Item in Content
+     *
+     * @param Item $item
+     * @return array|ConfigItem|ContentItem|object|\yii\db\ActiveRecord|\yii\db\T|null
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
+    public function attachItem(Item $item)
+    {
+        try {
+            $contentItem = ContentItem::find()
+                ->andWhere(['contentId' => $this->id, 'itemId' => $item->id])->one();
+            if ($contentItem === null) {
+                $itemsCount = $this->getItems()->count();
+                $contentItem = Yii::createObject(ContentItem::class);
+                $contentItem->contentId = $this->id;
+                $contentItem->itemId = $item->id;
+                $contentItem->order = $itemsCount;
+                $contentItem->save();
+            }
+            return $contentItem;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw  $e;
+        }
+    }
+
+    /**
+     * Detach Item of Content
+     *
+     * @param Item $item
+     * @return int
+     * @throws Exception
+     */
+    public function detachItem(Item $item)
+    {
+        try {
+            return ConfigItem::deleteAll(['contentId' => $this->id, 'itemId' => $item->id]);
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw  $e;

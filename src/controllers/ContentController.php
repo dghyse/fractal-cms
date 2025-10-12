@@ -211,7 +211,6 @@ class ContentController extends Controller
                     }
 
                     if ($model->save() === true) {
-                        $model->save();
                         $model->refresh();
                         $dbTransation->commit();
                     } else {

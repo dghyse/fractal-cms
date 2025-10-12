@@ -82,7 +82,7 @@ trait Elastic
         }
     }
 
-    public function prepareData($data) : array
+    public function prepareData($data, $deleteSource = true) : array
     {
         try {
             $dataFile = Module::getInstance()->filePath;
@@ -90,7 +90,7 @@ trait Elastic
             if($this->elasticModel !== null && is_array($this->elasticModel->filesAttributes) === true) {
                 foreach ($this->elasticModel->filesAttributes as $attribute => $options) {
                     if (key_exists($attribute, $data) === true && empty($data[$attribute]) === false) {
-                        $data[$attribute] = $this->saveFile($dataFile, $relativeDirName, $data[$attribute]);
+                        $data[$attribute] = $this->saveFile($dataFile, $relativeDirName, $data[$attribute], $deleteSource);
                     }
                 }
             }
