@@ -43,7 +43,7 @@ use yii\helpers\ArrayHelper;
         <div class="row mt-3">
             <div class="card">
                 <div class="card-header">
-                    Gestion des éléments
+                    Gestion des éléments du menu
                 </div>
                 <?php
                     echo Html::beginTag(

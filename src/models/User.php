@@ -205,6 +205,47 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return parent::load($data, $formName);
     }
 
+    /**
+     * Create user
+     *
+     * @param $roleName
+     * @param $email
+     * @param $password
+     * @param $firstname
+     * @param $lastname
+     * @return bool
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
+    public static function createUser($roleName, $email, $password, $firstname, $lastname) : User
+    {
+        try {
+            $administrator = Yii::createObject(User::class);
+            if ($roleName === Constant::ROLE_ADMIN) {
+                $administrator->scenario = User::SCENARIO_CREATE_ADMIN;
+            } else {
+                $administrator->scenario = User::SCENARIO_CREATE;
+            }
+            $administrator->email = $email;
+            $administrator->tmpPassword = $password;
+            $administrator->firstname = $firstname;
+            $administrator->lastname = $lastname;
+            $administrator->active = true;
+            if ($administrator->validate() === true) {
+                $administrator->hashPassword();
+                $administrator->save();
+                $role = Yii::$app->authManager->getRole($roleName);
+                if ($role !== null) {
+                    Yii::$app->authManager->assign($role, $administrator->id);
+                }
+            }
+            return $administrator;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
     public function beforeValidate()
     {
         $this->active = (empty($this->active) === false) ? intval($this->active) : 0;
