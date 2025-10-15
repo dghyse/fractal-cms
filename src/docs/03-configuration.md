@@ -10,7 +10,7 @@ Exemple : Identifiant technique différent entre la **production** et la **pré-
 
 ### Interface
 
-![Gestion des paramètres](./images/parameter_interface.png)
+![Gestion des paramètres](./images/parametre_interface.png)
 
 ### Editer / Ajouter
 
@@ -154,7 +154,7 @@ ainsi de construire une vue adapté à vos besoin.
 
 ### Interface
 
-![Configuration du type d'élément](./images/contentType.png)
+![Configuration du type d'élément](./images/interface_config_element.png)
 
 ### Principe
 
@@ -212,7 +212,7 @@ class ContentController extends CmsController
 
 Afin d'ajouter une configuration, il suffit de cliquer sur "Ajouter", le formulaire de création apparait.
 
-![Formulaire de création](./images/contentType_creer.png)
+![Formulaire de création](./images/config_article_creer.png)
 
 A ce stade, nous voyons apparaitre la liste des types qui ont été ajoutés dans l'application.
 Nous allons créé le type **home** que nous allons diriger vers le contrôleur **ContentController** et l'action **actionIndex**.
@@ -223,7 +223,7 @@ Nous allons créé le type **home** que nous allons diriger vers le contrôleur 
 
 Le type **home** est maintenant créé et est visible dans l'interface.
 
-![Liste des types](./images/contentType_list.png)
+![Liste des types](./images/config_article_list.png)
 
 ### Conclusion
 

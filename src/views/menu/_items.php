@@ -19,14 +19,58 @@ use yii\helpers\ArrayHelper;
 
 <div class="row m-1">
     <?php if ($itemsQuery !== null):?>
-        <?php
+        <ul class="list-none" cms-menu-item-list="">
+            <?php
+            $parentItem = null;
+            $lastItem = null;
+            $lastLine = null;
+            $open = false;
+            /**
+             * @var  int $index
+             * @var \fractalCms\models\MenuItem $item
+             */
             foreach ($itemsQuery->each() as $index => $item) {
-                echo $this->render('_line', [
+                $className = [];
+                if($lastItem !== null) {
+                    $deep = $lastItem->getDeep();
+                    if ($deep !== null && $deep !== 1) {
+                        $classMargin = 'ps-'.$deep;
+                    } else {
+                        $classMargin = 'p-0';
+                    }
+                    if ($open === true) {
+                        $className[] = $classMargin;
+                    }
+                }
+
+                $line = $this->render('_line', [
                     'model' => $item,
                     'menu' => $menu
                 ]);
+                if ($parentItem !== null && $item->menuItemId === $parentItem->id && $open === false) {
+                    echo Html::beginTag('ul', ['class' => 'list-none p-0']);
+                    echo Html::tag('li', $lastLine, ['class'=> 'p-0']);
+                    $open = true;
+                } elseif ($parentItem !== null && $item->menuItemId !== $parentItem->id && $open === true) {
+                    echo Html::tag('li', $lastLine, ['class' => implode(' ', $className),]);
+                    echo Html::endTag('ul');
+                    $open = false;
+                } elseif ($lastLine !== null) {
+                    echo Html::tag('li', $lastLine, ['class' => implode(' ', $className),]);
+                }
+
+                if ($open === false) {
+                    $parentItem = $item;
+                }
+                $lastLine = $line;
+                $lastItem = $item;
             }
-        ?>
+            if ($lastLine !== null) {
+                echo Html::tag('li', $lastLine);
+            }
+            ?>
+        </ul>
+
     <?php endif;?>
 </div>
 <div class="row">

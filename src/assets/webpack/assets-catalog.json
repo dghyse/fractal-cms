@@ -3,13 +3,13 @@
     "js": "js/manifest.fc930ed8.js"
   },
   "main": {
-    "css": "css/main.6aaeee14.css",
-    "js": "js/main.6aaeee14.js"
+    "css": "css/main.133657de.css",
+    "js": "js/main.133657de.js"
   },
   "app": {
-    "js": "js/app.099d3611.js"
+    "js": "js/app.ca790e1e.js"
   },
   "vendors": {
-    "js": "js/vendors.58a32d2e.js"
+    "js": "js/vendors.34d772de.js"
   }
 }

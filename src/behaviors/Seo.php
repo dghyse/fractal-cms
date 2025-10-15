@@ -41,12 +41,12 @@ class Seo extends Behavior
                         ]);
                         if ((boolean)$seo->ogMeta === true) {
                             /**
-                             * <meta property="og:title" content="Portfolio de David Ghyse – Développeur Web">
+                             * <meta property="og:title" content="Exemple titre">
                              * <meta property="og:description" content="Développeur Full-Stack spécialisé Yii2, Aurelia et Tailwind. Découvrez mes projets et réalisations.">
-                             * <meta property="og:image" content="https://portfolio.webcraftdg.fr/images/hero.jpg">
+                             * <meta property="og:image" content="https://mon-site.fr/images/hero.jpg">
                              * <meta property="og:image:width" content="1200">
                              * <meta property="og:image:height" content="630">
-                             * <meta property="og:url" content="https://portfolio.webcraftdg.fr/accueil">
+                             * <meta property="og:url" content="https://mon-site.fr/accueil">
                              * <meta property="og:type" content="website">
                              */
                             $view->registerMetaTag(['property' => 'og:title', 'content' => $seo->title]);
@@ -62,9 +62,9 @@ class Seo extends Behavior
                         if((boolean)$seo->twitterMeta === true) {
                             /**
                              * <meta name="twitter:card" content="summary_large_image">
-                             * <meta name="twitter:title" content="Portfolio de David Ghyse – Développeur Web Full-Stack">
+                             * <meta name="twitter:title" content="Exemple titre">
                              * <meta name="twitter:description" content="Développeur web polyvalent, intéressé par des projets où la technique et l'humain se rencontrent. Découvrez mes réalisations.">
-                             * <meta name="twitter:image" content="https://portfolio.webcraftdg.fr/images/hero.jpg">
+                             * <meta name="twitter:image" content="https://mon-site.fr/images/hero.jpg">
                              */
                             $view->registerMetaTag(['name' => 'twitter:title', 'content' => $seo->title]);
                             $view->registerMetaTag(['name' => 'twitter:description', 'content' => strip_tags($seo->description)]);
