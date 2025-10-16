@@ -10,7 +10,7 @@
  *
  * @var \yii\web\View $this
  * @var \fractalCms\models\Menu $model
- * @var \yii\redis\ActiveQuery $itemsQuery
+ * @var string $menuItemHtml
  */
 
 ?>
@@ -23,8 +23,8 @@
 <div class="row m-3">
     <?php
         echo $this->render('_form', [
-                'model' => $model,
-            'itemsQuery' => $itemsQuery
+            'model' => $model,
+            'menuItemHtml' => $menuItemHtml
         ]);
     ?>
 </div>

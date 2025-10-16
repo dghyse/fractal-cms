@@ -10,7 +10,7 @@
  *
  * @var \yii\web\View $this
  * @var \fractalCms\models\Menu $model
- * @var \yii\redis\ActiveQuery $itemsQuery
+ * @var string $menuItemHtml
  */
 
 use fractalCms\helpers\Html;
@@ -53,7 +53,7 @@ use yii\helpers\ArrayHelper;
                         ]);
                     echo $this->render('_items',
                         [
-                            'itemsQuery' => $itemsQuery,
+                            'menuItemHtml' => $menuItemHtml,
                             'menu' => $model
                         ]);
                 ?>

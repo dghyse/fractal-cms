@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Elastic.php
+ *
+ * PHP Version 8.2+
+ *
+ * @author David Ghyse <davidg@webcraftdg.fr>
+ * @version XXX
+ * @package fractalCms\traits
+ */
 namespace fractalCms\traits;
 
 use Exception;
@@ -14,7 +22,13 @@ trait Elastic
     public ?ElasticModel $elasticModel = null;
 
 
-
+    /**
+     * Get attribute
+     *
+     * @param $name
+     * @return mixed|null
+     * @throws \yii\base\UnknownPropertyException
+     */
     public function __get($name)
     {
         try {
@@ -29,6 +43,14 @@ trait Elastic
     }
 
 
+    /**
+     * Set Attribute
+     *
+     * @param $name
+     * @param $value
+     * @return void
+     * @throws \yii\base\UnknownPropertyException
+     */
     public function __set($name, $value)
     {
         try {
@@ -43,6 +65,14 @@ trait Elastic
         }
     }
 
+    /**
+     * Set Attribute
+     *
+     * @param $attribute
+     * @param $value
+     * @return void
+     * @throws \yii\base\UnknownPropertyException
+     */
     public function setAttribute($attribute, $value)
     {
         try {
@@ -57,6 +87,12 @@ trait Elastic
         }
     }
 
+    /**
+     * Return attributes
+     *
+     * @return array
+     * @throws Exception
+     */
     public function attributes()
     {
         try {
@@ -72,6 +108,12 @@ trait Elastic
         }
     }
 
+    /**
+     * Return safe attributes
+     *
+     * @return array
+     * @throws Exception
+     */
     public function safeAttributes()
     {
         try {
@@ -82,6 +124,14 @@ trait Elastic
         }
     }
 
+    /**
+     * Prepare Data before save
+     *
+     * @param $data
+     * @param $deleteSource
+     * @return array
+     * @throws Exception
+     */
     public function prepareData($data, $deleteSource = true) : array
     {
         try {
@@ -101,6 +151,12 @@ trait Elastic
         }
     }
 
+    /**
+     * Delete old file directory
+     *
+     * @return void
+     * @throws Exception
+     */
     public function deleteFilesDir() : void
     {
         try {

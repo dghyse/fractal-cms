@@ -1,5 +1,13 @@
 <?php
-
+/**
+ * Upload.php
+ *
+ * PHP Version 8.2+
+ *
+ * @author David Ghyse <davidg@webcraftdg.fr>
+ * @version XXX
+ * @package fractalCms\traits
+ */
 namespace fractalCms\traits;
 
 use Exception;
@@ -56,6 +64,14 @@ trait Upload
         }
     }
 
+    /**
+     * Delete Dir fil
+     *
+     * @param $dataFile
+     * @param $relativeDirName
+     * @return void
+     * @throws Exception
+     */
     public function deleteDir($dataFile, $relativeDirName) : void
     {
         try {

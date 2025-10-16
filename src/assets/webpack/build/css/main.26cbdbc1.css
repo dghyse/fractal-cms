@@ -638,7 +638,6 @@
 .contents{display:contents}
 .hidden{display:none}
 .cursor-pointer{cursor:pointer}
-.list-none{list-style-type:none}
 .grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}
 .content-center{-ms-flex-line-pack:center;align-content:center}
 .justify-items-center{justify-items:center}
@@ -937,6 +936,8 @@ div.jsoneditor-statusbar>.jsoneditor-curserinfo-label,div.jsoneditor-statusbar>.
 .jsoneditor-treepath .jsoneditor-treepath-seperator{margin:2px;font-size:9pt;font-family:arial,sans-serif}
 .jsoneditor-treepath span.jsoneditor-treepath-element:hover,.jsoneditor-treepath span.jsoneditor-treepath-seperator:hover{cursor:pointer;text-decoration:underline}
 .form-textarea{width:100%}
+.dragging{opacity:.5}
+.over{border:2px dashed #007bff}
 @media (min-width: 768px){
 .md\:col-span-2{grid-column:span 2 / span 2}
 .md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}

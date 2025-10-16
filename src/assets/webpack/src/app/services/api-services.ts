@@ -2,6 +2,7 @@ import { HttpClientConfiguration, IHttpClient } from '@aurelia/fetch-client';
 import {ILogger, resolve} from 'aurelia';
 import {EApi} from "../enums/api";
 import {ConfigService} from "./config-service";
+import {IMenuItem} from "../interfaces/menu-item";
 
 export class ApiServices {
 
@@ -55,6 +56,21 @@ export class ApiServices {
     {
         return this.httpClient.fetch(url, {
             method: 'DELETE',
+        })
+            .then((response:Response) => {
+                return response.text();
+            });
+    }
+
+    public manageMenuItems(id:number, data:IMenuItem): Promise<string>
+    {
+        const url:string = this.configService.getApiBaseUrl()+EApi.ITEM_MANAGE_MENU_ITEM.replace('{menuId}', id.toString());
+        return this.httpClient.fetch(url, {
+            method: 'POST',
+            body:JSON.stringify(data),
+            headers : {
+                Accept: 'text/html'
+            }
         })
             .then((response:Response) => {
                 return response.text();

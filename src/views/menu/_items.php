@@ -9,7 +9,7 @@
  * @package app\config
  *
  * @var \yii\web\View $this
- * @var \yii\db\ActiveQuery $itemsQuery
+ * @var string $menuItemHtml
  * @var \fractalCms\models\Menu $menu
  */
 
@@ -17,61 +17,10 @@ use fractalCms\helpers\Html;
 use yii\helpers\ArrayHelper;
 ?>
 
-<div class="row m-1">
-    <?php if ($itemsQuery !== null):?>
-        <ul class="list-none" cms-menu-item-list="">
+<div class="row m-1" cms-menu-item-list="">
             <?php
-            $parentItem = null;
-            $lastItem = null;
-            $lastLine = null;
-            $open = false;
-            /**
-             * @var  int $index
-             * @var \fractalCms\models\MenuItem $item
-             */
-            foreach ($itemsQuery->each() as $index => $item) {
-                $className = [];
-                if($lastItem !== null) {
-                    $deep = $lastItem->getDeep();
-                    if ($deep !== null && $deep !== 1) {
-                        $classMargin = 'ps-'.$deep;
-                    } else {
-                        $classMargin = 'p-0';
-                    }
-                    if ($open === true) {
-                        $className[] = $classMargin;
-                    }
-                }
-
-                $line = $this->render('_line', [
-                    'model' => $item,
-                    'menu' => $menu
-                ]);
-                if ($parentItem !== null && $item->menuItemId === $parentItem->id && $open === false) {
-                    echo Html::beginTag('ul', ['class' => 'list-none p-0']);
-                    echo Html::tag('li', $lastLine, ['class'=> 'p-0']);
-                    $open = true;
-                } elseif ($parentItem !== null && $item->menuItemId !== $parentItem->id && $open === true) {
-                    echo Html::tag('li', $lastLine, ['class' => implode(' ', $className),]);
-                    echo Html::endTag('ul');
-                    $open = false;
-                } elseif ($lastLine !== null) {
-                    echo Html::tag('li', $lastLine, ['class' => implode(' ', $className),]);
-                }
-
-                if ($open === false) {
-                    $parentItem = $item;
-                }
-                $lastLine = $line;
-                $lastItem = $item;
-            }
-            if ($lastLine !== null) {
-                echo Html::tag('li', $lastLine);
-            }
+                echo $this->render('_menu_item_lines', ['menuItemHtml' => $menuItemHtml]);
             ?>
-        </ul>
-
-    <?php endif;?>
 </div>
 <div class="row">
     <div class="col-sm-3  justify-content-end">
