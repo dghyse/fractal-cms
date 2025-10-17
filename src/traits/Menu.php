@@ -33,7 +33,6 @@ trait Menu
     public function moveMenuItem():bool
     {
         try {
-            $success = true;
             $sourceMenuItem= MenuItem::findOne($this->sourceMenuItemId);
             if ($sourceMenuItem === null) {
                 throw new NotFoundHttpException('Menu item source not found');
@@ -42,6 +41,7 @@ trait Menu
             if ($destMenuItem === null) {
                 throw new NotFoundHttpException('Menu item dest not found');
             }
+            $success = $destMenuItem->insertChild($sourceMenuItem, $this->destIndex);
 
             return $success;
         } catch (Exception $e) {

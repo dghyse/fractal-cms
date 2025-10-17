@@ -102,6 +102,69 @@ class Menu extends \yii\db\ActiveRecord
     }
 
     /**
+     * This function insert in other level 2 menu item
+     * @param MenuItem $dest
+     * @param MenuItem $source
+     *
+     * @return bool
+     * @throws \yii\db\Exception
+     */
+    public function insertChild(MenuItem $dest, MenuItem $source) : bool
+    {
+        try {
+            $transaction = yii::$app->db->beginTransaction();
+            $countChild = $this->getMenuItems(true)->count();
+            $destPathKey = $dest->pathKey;
+            $sourcePathKey = $source->pathKey;
+            //Simulate new pathKey for temp
+            $dest->scenario = MenuItem::SCENARIO_UPDATE;
+            $dest->pathKey = $this->findValidPathKey($countChild);
+            $updated = false;
+            if ($dest->validate() === true) {
+                $dest->save(false, ['pathKey']);
+                $updated = true;
+            }
+            if ($updated === true) {
+                $source->scenario = MenuItem::SCENARIO_UPDATE;
+                $source->pathKey = $this->findValidPathKey($countChild);
+                if ($source->validate() === true) {
+                    $source->save(false, ['pathKey', 'menuItemId']);
+                    $updated = true;
+                } else {
+                    $updated = false;
+                }
+            }
+            if ($updated === true) {
+                //Reinit pathKey with initial changed
+                $dest->scenario = MenuItem::SCENARIO_UPDATE;
+                if (empty($source->menuItemId) === false) {
+                    $source->menuItemId = null;
+                    $sourcePathKey = $this->findValidPathKey($countChild);
+                }
+                $dest->pathKey = $sourcePathKey;
+                $source->scenario = MenuItem::SCENARIO_UPDATE;
+                $source->pathKey = $destPathKey;
+                if ($dest->validate() === true && $source->validate() === true) {
+                    $dest->save(false, ['pathKey']);
+                    $source->save(false, ['pathKey']);
+                } else {
+                    $updated = false;
+                }
+            }
+
+            if ($updated === true) {
+                $transaction->commit();
+            } else {
+                $transaction->rollBack();
+            }
+            return $updated;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
+    /**
      * Gets query for [[MenuItems]].
      *
      * @return \yii\db\ActiveQuery
@@ -113,6 +176,28 @@ class Menu extends \yii\db\ActiveRecord
             $query->andWhere([MenuItem::tableName().'.menuItemId' => null]);
         }
         return $query;
+    }
+
+    /**
+     * Check path key
+     *
+     * @param $level
+     * @return string
+     * @throws Exception
+     */
+    public function findValidPathKey($level) : string
+    {
+        try {
+            $pathKey = $this->id.'.'.$level;
+            $itemQuery = MenuItem::find()->where(['pathKey' => $pathKey]);
+            if ($itemQuery->count() > 0) {
+                $pathKey = $this->findValidPathKey($level + 1);
+            }
+            return $pathKey;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
     }
 
     /**
@@ -152,7 +237,7 @@ class Menu extends \yii\db\ActiveRecord
     public function getMenuItemStructure() : array
     {
         try {
-            return $this->buildStructure($this->getMenuItems(true));
+            return $this->buildStructure($this->getMenuItems(true)->orderBy(['pathKey' => SORT_ASC]));
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;

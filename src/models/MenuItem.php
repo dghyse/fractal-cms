@@ -30,7 +30,7 @@ use Exception;
  * @property string|null $dateUpdate
  *
  * @property Menu $menu
- * @property MenuItem $menuItem
+ * @property MenuItem $parentMenuItem
  * @property Content $content
  * @property MenuItem[] $menuItems
  */
@@ -214,6 +214,36 @@ class MenuItem extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * InsertChild
+     *
+     * @param MenuItem $source
+     * @param $targetIndex
+     * @return bool
+     * @throws \yii\db\Exception
+     */
+    public function insertChild(MenuItem $source, $targetIndex) : bool
+    {
+        try {
+            $updated = false;
+            if (empty($this->menuItemId) === true) {
+                /** @var Menu $menu */
+                $menu = $this->getMenu()->one();
+                if ($menu !== null) {
+                    $updated = $menu->insertChild($this, $source);
+                }
+            } else {
+
+            }
+            return $updated;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
+
+
 
     /**
      * {@inheritdoc}
@@ -246,7 +276,7 @@ class MenuItem extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getMenuItem()
+    public function getParentMenuItem()
     {
         return $this->hasOne(MenuItem::class, ['id' => 'menuItemId']);
     }
