@@ -23,7 +23,6 @@ use Exception;
  * @property int|null $menuItemId
  * @property int|null $contentId
  * @property string $route
- * @property string $pathKey
  * @property string $name
  * @property int|null $order
  * @property string|null $dateCreate
@@ -64,11 +63,11 @@ class MenuItem extends \yii\db\ActiveRecord
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = [
-            'menuId', 'menuItemId', 'order', 'dateCreate', 'dateUpdate', 'name', 'contentId', 'pathKey', 'route'
+            'menuId', 'menuItemId', 'order', 'dateCreate', 'dateUpdate', 'name', 'contentId', 'route'
         ];
 
         $scenarios[self::SCENARIO_UPDATE] = [
-            'menuId', 'menuItemId', 'order', 'dateCreate', 'dateUpdate', 'name', 'contentId', 'pathKey', 'route'
+            'menuId', 'menuItemId', 'order', 'dateCreate', 'dateUpdate', 'name', 'contentId', 'route'
         ];
 
         return $scenarios;
@@ -81,11 +80,11 @@ class MenuItem extends \yii\db\ActiveRecord
     {
         return [
             [['menuId', 'menuItemId', 'order', 'dateCreate', 'dateUpdate'], 'default', 'value' => null],
-            [['menuId', 'menuItemId', 'order', 'contentId'], 'integer'],
+            [['menuId', 'menuItemId', 'contentId'], 'integer'],
+            [['order'], 'number'],
             [['dateCreate', 'dateUpdate'], 'safe'],
             [['name', 'route'], 'string', 'max' => 255],
-            [['pathKey'], 'unique'],
-            [['name',  'pathKey'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE]],
+            [['name'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE]],
             [['contentId'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_UPDATE], 'message' => 'Sélectionné une cible CMS', 'when' => function() {
                 return empty($this->route);
             }],
@@ -98,116 +97,29 @@ class MenuItem extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * Attach menu item
+     *
+     * @return void
+     * @throws Exception
+     */
     public function attach() : void
     {
         try {
-            $brothersCount = false;
+            $nbChild = false;
             if (empty($this->menuItemId) === false) {
-                $parentMenutItem = self::findOne($this->menuItemId);
-                if ($parentMenutItem !== null) {
-                    $parentPathKey = $parentMenutItem->pathKey;
-                    if (empty($parentPathKey) === false) {
-                        $brothersCount = $parentMenutItem->getMenuItems()
-                            ->andWhere(['not', ['id' => $this->id]])->count();
-                    }
-                }
+                $parent = self::findOne($this->menuItemId);
+                $nbChild = $parent->getMenuItems()->count();
             } else {
-                $parentMenu = Menu::findOne($this->menuId);
-                if ($parentMenu !== null) {
-                    $parentPathKey = $this->menuId;
-                    $brothersCount = $parentMenu->getMenuItems(true)
+                $parent = Menu::findOne($this->menuId);
+                if ($parent !== null) {
+                    $nbChild = $parent->getMenuItems(true)
                         ->andWhere(['not', ['id' => $this->id]])->count();
                 }
             }
-
-            if ($brothersCount !== false) {
-                $newPathKey = $parentPathKey.'.'.($brothersCount + 1);
-                $newPathKey = $this->checkPAthKey($newPathKey, $parentPathKey, ($brothersCount + 1));
-                $this->pathKey = $newPathKey;
+            if ($nbChild !== false) {
+                $this->order = $nbChild + 1;
             }
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw $e;
-        }
-    }
-
-    public function checkPAthKey($newPathKey, $parentPathKey, $brothersCount) : string
-    {
-        try {
-            $computePathKey = $newPathKey;
-            $pathCount = static::find()->andWhere(['pathKey' => $newPathKey])->count();
-            if ($pathCount > 0) {
-                $computePathKey = $parentPathKey.'.'.($brothersCount + 1);
-                $computePathKey = $this->checkPAthKey($computePathKey, $parentPathKey, $brothersCount += 1);
-            }
-            return $computePathKey;
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw $e;
-        }
-    }
-
-    public function detach() : void
-    {
-        try {
-            $parentPAthKey = $this->menuId.'.';
-            if (empty($this->menuItemId) === false) {
-                $parentMenutItem = self::findOne($this->menuItemId);
-                $brothersQuery = $parentMenutItem->getMenuItems();
-                $parentPAthKey = $parentMenutItem->pathKey.'.';
-            } else {
-                $parentMenu = Menu::findOne($this->menuId);
-                if ($parentMenu !== null) {
-                    $brothersQuery = $parentMenu->getMenuItems()->andWhere(['menuItemId' => null]);
-                }
-            }
-            $index = 1;
-
-            /** @var MenuItem $menuITem */
-            foreach ($brothersQuery->each() as $menuITem) {
-                $menuITem->pathKey = $parentPAthKey.($index);
-                $menuITem->dateUpdate = new Expression('NOW()');
-                $menuITem->save(false, ['pathKey', 'dateUpdate']);
-                //If has sub items reoder
-                $subIndex = $this->rebuildPathKey($menuITem, $menuITem->pathKey);
-                $index += 1;
-            }
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw $e;
-        }
-    }
-
-    public function rebuildPathKey(MenuItem $menuItem, $parentPathKey)
-    {
-        try {
-            $subMenuItems = $menuItem->getMenuItems();
-            $subItemIndex = 1;
-            /** @var MenuItem $subMenuItem */
-            foreach ($subMenuItems->each() as $subMenuItem) {
-                $subMenuItem->pathKey = $parentPathKey.'.'.$subItemIndex;
-                $subMenuItem->dateUpdate = new Expression('NOW()');
-                $subMenuItem->save(false, ['pathKey', 'dateUpdate']);
-                $newIndex = $this->rebuildPathKey($subMenuItem, $subMenuItem->pathKey);
-                $subItemIndex += 1;
-            }
-            return $subItemIndex;
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw $e;
-        }
-    }
-
-    public function getDeep() :int | null
-    {
-        try {
-            $pathKey = $this->pathKey;
-            $deep = null;
-            if (empty($pathKey) === false) {
-                $splitKey = explode('.', $pathKey);
-                $deep = count($splitKey);
-            }
-            return $deep;
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;
@@ -218,22 +130,44 @@ class MenuItem extends \yii\db\ActiveRecord
      * InsertChild
      *
      * @param MenuItem $source
-     * @param $targetIndex
      * @return bool
      * @throws \yii\db\Exception
      */
-    public function insertChild(MenuItem $source, $targetIndex) : bool
+    public function move(MenuItem $source) : bool
     {
         try {
+            $command = Yii::$app->db->createCommand();
             $updated = false;
             if (empty($this->menuItemId) === true) {
                 /** @var Menu $menu */
                 $menu = $this->getMenu()->one();
                 if ($menu !== null) {
-                    $updated = $menu->insertChild($this, $source);
+                    $updated = $menu->move($this, $source);
+                    if ($updated === true) {
+                        $menu->reorder();
+                    }
                 }
             } else {
+                //Update Source
+                $command->update(
+                    static::tableName(),
+                    [
+                        'menuItemId' => $this->menuItemId,
+                        'order' => $this->order
+                    ],
+                    'id=:id',
+                    [':id' => $source->id]
+                )->execute();
 
+                $command->update(
+                    static::tableName(),
+                    [
+                        'order' => $this->order + 0.1
+                    ],
+                    'id=:id',
+                    [':id' => $this->id]
+                )->execute();
+                $updated = true;
             }
             return $updated;
         } catch (Exception $e) {

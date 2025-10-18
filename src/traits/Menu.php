@@ -41,7 +41,7 @@ trait Menu
             if ($destMenuItem === null) {
                 throw new NotFoundHttpException('Menu item dest not found');
             }
-            $success = $destMenuItem->insertChild($sourceMenuItem, $this->destIndex);
+            $success = $destMenuItem->move($sourceMenuItem, $this->destIndex);
 
             return $success;
         } catch (Exception $e) {

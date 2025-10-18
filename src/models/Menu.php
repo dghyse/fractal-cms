@@ -102,56 +102,37 @@ class Menu extends \yii\db\ActiveRecord
     }
 
     /**
-     * This function insert in other level 2 menu item
+     * Move source in place of destination
+     *
      * @param MenuItem $dest
      * @param MenuItem $source
      *
      * @return bool
      * @throws \yii\db\Exception
      */
-    public function insertChild(MenuItem $dest, MenuItem $source) : bool
+    public function move(MenuItem $dest, MenuItem $source) : bool
     {
         try {
             $transaction = yii::$app->db->beginTransaction();
-            $countChild = $this->getMenuItems(true)->count();
-            $destPathKey = $dest->pathKey;
-            $sourcePathKey = $source->pathKey;
+            $destOrder = $dest->order;
+            $sourceOrder = $source->order;
             //Simulate new pathKey for temp
             $dest->scenario = MenuItem::SCENARIO_UPDATE;
-            $dest->pathKey = $this->findValidPathKey($countChild);
+            $source->scenario = MenuItem::SCENARIO_UPDATE;
+            $attributesToSave = ['order'];
+            if (empty($source->menuItemId) === false) {
+                $source->menuItemId = null;
+                $attributesToSave[] = 'menuItemId';
+                $sourceOrder = $destOrder + 0.1;
+            }
+            $dest->order = $sourceOrder;
+            $source->order = $destOrder;
             $updated = false;
-            if ($dest->validate() === true) {
-                $dest->save(false, ['pathKey']);
+            if ($dest->validate() === true && $source->validate() === true) {
+                $dest->save(false, ['order']);
+                $source->save(false, $attributesToSave);
                 $updated = true;
             }
-            if ($updated === true) {
-                $source->scenario = MenuItem::SCENARIO_UPDATE;
-                $source->pathKey = $this->findValidPathKey($countChild);
-                if ($source->validate() === true) {
-                    $source->save(false, ['pathKey', 'menuItemId']);
-                    $updated = true;
-                } else {
-                    $updated = false;
-                }
-            }
-            if ($updated === true) {
-                //Reinit pathKey with initial changed
-                $dest->scenario = MenuItem::SCENARIO_UPDATE;
-                if (empty($source->menuItemId) === false) {
-                    $source->menuItemId = null;
-                    $sourcePathKey = $this->findValidPathKey($countChild);
-                }
-                $dest->pathKey = $sourcePathKey;
-                $source->scenario = MenuItem::SCENARIO_UPDATE;
-                $source->pathKey = $destPathKey;
-                if ($dest->validate() === true && $source->validate() === true) {
-                    $dest->save(false, ['pathKey']);
-                    $source->save(false, ['pathKey']);
-                } else {
-                    $updated = false;
-                }
-            }
-
             if ($updated === true) {
                 $transaction->commit();
             } else {
@@ -176,28 +157,6 @@ class Menu extends \yii\db\ActiveRecord
             $query->andWhere([MenuItem::tableName().'.menuItemId' => null]);
         }
         return $query;
-    }
-
-    /**
-     * Check path key
-     *
-     * @param $level
-     * @return string
-     * @throws Exception
-     */
-    public function findValidPathKey($level) : string
-    {
-        try {
-            $pathKey = $this->id.'.'.$level;
-            $itemQuery = MenuItem::find()->where(['pathKey' => $pathKey]);
-            if ($itemQuery->count() > 0) {
-                $pathKey = $this->findValidPathKey($level + 1);
-            }
-            return $pathKey;
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw $e;
-        }
     }
 
     /**
@@ -237,7 +196,7 @@ class Menu extends \yii\db\ActiveRecord
     public function getMenuItemStructure() : array
     {
         try {
-            return $this->buildStructure($this->getMenuItems(true)->orderBy(['pathKey' => SORT_ASC]));
+            return $this->buildStructure($this->getMenuItems(true)->orderBy(['order' => SORT_ASC]));
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;
@@ -267,6 +226,34 @@ class Menu extends \yii\db\ActiveRecord
         }
     }
 
-
-
+    /**
+     * Reorder Menu Items
+     *
+     * @param $filterMainItem
+     * @param $startIndex
+     * @return void
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function reorder($filterMainItem = false, $startIndex = 1) : void
+    {
+        try {
+            $command = Yii::$app->db->createCommand();
+            $index = $startIndex;
+            $menuItemId = null;
+            $menuItemQuery = $this->getMenuItems($filterMainItem)->orderBy(['menuItemId' => SORT_ASC, 'order' => SORT_ASC]);
+            /** @var MenuItem $menuItem */
+            foreach ($menuItemQuery->each() as $menuItem) {
+                if ($menuItem->menuItemId !== null && $menuItem->menuItemId != $menuItemId) {
+                    $menuItemId = $menuItem->menuItemId;
+                    $index = $startIndex;
+                }
+                $command->update('{{%menuItems}}',['order' => $index], 'id=:id', [':id' => $menuItem->id]);
+                $index += 1;
+            }
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
 }

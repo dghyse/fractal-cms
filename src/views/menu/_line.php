@@ -22,7 +22,7 @@ use yii\helpers\Url;
     $classes[] = 'border-primary';
 
     echo Html::beginTag('div', ['class' => implode(' ', $classes), 'cms-list-line' => $model->id]);
-    $deep = $model->getDeep();
+    $deep = $model->order;
     $className = [];
     $className[] = 'col-sm-6';
     if ($deep !== null && $deep !== 1) {

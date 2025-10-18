@@ -49,7 +49,7 @@ class MenuItemBuilder extends Component
         }
     }
 
-    protected function buildHtml($structure, Menu $menu, $parent = null, $lastParent = null)
+    protected function buildHtml($structure, Menu $menu, MenuItem $parent = null, MenuItem $lastParent = null)
     {
         try {
             Yii::debug(Constant::TRACE_DEBUG, __METHOD__, __METHOD__);
@@ -58,7 +58,7 @@ class MenuItemBuilder extends Component
             $classLi[] = 'menu-item';
             $classMargin = 'p-0';
             if($parent !== null) {
-                $deep = $parent->getDeep();
+                $deep = $parent->order;
                 if ($deep !== null && $deep !== 1) {
                     $classMargin = 'ps-'.$deep;
                 }
@@ -70,7 +70,7 @@ class MenuItemBuilder extends Component
             ];
 
             if ($lastParent !== null) {
-                $deep = $lastParent->getDeep();
+                $deep = $lastParent->order;
                 if ($deep !== null && $deep !== 1) {
                     $classMargin = 'ps-'.$deep;
                     $options['class'] = $options['class'] .= $classMargin;
@@ -84,7 +84,6 @@ class MenuItemBuilder extends Component
                     $html .= Html::beginTag('li', [
                         'class' => $classMargin,
                         'data-id' => $currentItem->id,
-                        'data-path-key' => $currentItem->pathKey,
                         'data-menu-id' => $menu->id,
                         'data-index' => $index,
                         'draggable' => 'true',
@@ -98,7 +97,6 @@ class MenuItemBuilder extends Component
                         [
                             'class' => implode(' ', $classLi),
                             'data-id' => $currentItem->id,
-                            'data-path-key' => $currentItem->pathKey,
                             'data-menu-id' => $menu->id,
                             'data-index' => $index,
                             'draggable' => 'true',

@@ -305,7 +305,7 @@ class Cms
             $query->orderBy(['pathKey' => SORT_ASC]);
             /** @var MenuItem $menuItem */
             foreach ($query->each() as $menuItem) {
-                $deep = $menuItem->getDeep();
+                $deep = $menuItem->order;
                 $prefix = str_pad('', $deep, '-');
                 $structure[] = [
                     'id' => $menuItem->id,
