@@ -13,6 +13,7 @@ namespace fractalCms\controllers\api;
 
 use Exception;
 use fractalCms\components\Constant;
+use fractalCms\models\Menu;
 use fractalCms\models\MenuItem;
 use Yii;
 use yii\filters\AccessControl;
@@ -66,8 +67,12 @@ class MenuItemController extends BaseController
             if ($model === null) {
                 throw new NotFoundHttpException('MenuItem not found');
             }
+            /** @var Menu $menu */
+            $menu = $model->getMenu()->one();
             $model->delete();
-            $model->detach();
+            if ($menu !== null) {
+                $menu->reorder();
+            }
             $response->statusCode = 204;
             return $response;
         } catch (Exception $e)  {

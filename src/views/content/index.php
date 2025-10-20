@@ -50,7 +50,7 @@ use yii\helpers\Url;
         $children = ($itemStructure['children']) ?? [];
         echo $this->render('_line', ['model' => $model]);
         foreach ($children as $child) {
-            echo $this->render('_line', ['model' => $child, 'parentDeep' => $model->getDeep()]);
+            echo $this->render('_line', ['model' => $child, 'parentDeep' => $model->getLevel()]);
         }
     }
     ?>

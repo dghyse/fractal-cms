@@ -22,6 +22,7 @@ Il s’agit avant tout d’un projet personnel, pensé comme un terrain d’exp�
 ## 🔧 Stack utilisée
 
 * Backend : PHP (API REST) + MySQL
+* [YiiFramework 2.0](https://www.yiiframework.com)
 * Frontend : Aurelia 2 + BootstrapCSS
 * Éditeur : JSONEditor / QuillJS pour la gestion des contenus
 * Accessibilité : Gestion du SEO
@@ -29,3 +30,8 @@ Il s’agit avant tout d’un projet personnel, pensé comme un terrain d’exp�
 ### Documentation
 
 * Voir la [Documentation](src/docs/index.md)
+
+## Licence
+
+Ce projet est distribué sous la licence MIT.  
+Voir le fichier [LICENSE](LICENSE) pour plus d’informations.

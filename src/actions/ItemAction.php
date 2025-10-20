@@ -45,8 +45,6 @@ class ItemAction extends Action
             $content->scenario = Content::SCENARIO_UPDATE;
             $model = Yii::createObject(Item::class);
             $model->scenario = Item::SCENARIO_CREATE;
-            $itemsCount = $content->getItems()->count();
-
             $request = Yii::$app->request;
             if ($request->isPost === true) {
                 $body = $request->getBodyParams();
@@ -58,11 +56,7 @@ class ItemAction extends Action
                     if ($model->validate() === true) {
                         $model->save();
                         $model->refresh();
-                        $contentItem = Yii::createObject(ContentItem::class);
-                        $contentItem->contentId = $contentId;
-                        $contentItem->itemId = $model->id;
-                        $contentItem->order = $itemsCount;
-                        $contentItem->save();
+                        $contentItem = $content->attachItem($model);
                         $contentItem->refresh();
                     }
                 } elseif (isset($body['upItem']) === true) {

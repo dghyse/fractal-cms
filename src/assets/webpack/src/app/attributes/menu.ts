@@ -53,6 +53,7 @@ export class Menu {
         if (target) {
             const idControls:string = target.getAttribute('aria-controls');
             if (idControls) {
+                this.closeOthers(idControls);
                 const nav:HTMLElement = this.element.querySelector('#'+idControls);
                 if (nav) {
                     if (nav.classList.contains('show')) {
@@ -67,5 +68,16 @@ export class Menu {
                 }
             }
         }
+    }
+
+    private closeOthers(id:string)
+    {
+        this.logger.trace('closeOthers');
+        const dropdownMenu:NodeListOf<HTMLElement> = this.element.querySelectorAll('.dropdown-menu');
+        dropdownMenu.forEach((element:HTMLElement, key) => {
+            if (element.id != id) {
+                element.classList.remove('show');
+            }
+        });
     }
 }

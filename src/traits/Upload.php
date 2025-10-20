@@ -1,17 +1,32 @@
 <?php
-
+/**
+ * Upload.php
+ *
+ * PHP Version 8.2+
+ *
+ * @author David Ghyse <davidg@webcraftdg.fr>
+ * @version XXX
+ * @package fractalCms\traits
+ */
 namespace fractalCms\traits;
 
 use Exception;
-use fractalCms\models\ElasticModel;
-use fractalCms\Module;
 use Yii;
-use yii\helpers\ArrayHelper;
 
 trait Upload
 {
 
-    public function saveFile($dataFile, $relativeDirName, $value) : string
+    /**
+     * Save file in webroot
+     *
+     * @param $dataFile
+     * @param $relativeDirName
+     * @param $value
+     * @param $deleteSource
+     * @return string
+     * @throws Exception
+     */
+    public function saveFile($dataFile, $relativeDirName, $value, $deleteSource = true) : string
     {
         try {
             $result = $value;
@@ -32,7 +47,9 @@ trait Upload
                         $newPath = Yii::getAlias($dataFile.'/'.$relativeDirName.'/'.$this->id.'/'.$fileName);
                         $success = copy($filePatch, $newPath);
                         if ($success === true) {
-                            unlink($filePatch);
+                            if ($deleteSource === true) {
+                                unlink($filePatch);
+                            }
                             $result = $dataFile.'/'.$relativeDirName.'/'.$this->id.'/'.$fileName;
                         }
                     }
@@ -47,6 +64,14 @@ trait Upload
         }
     }
 
+    /**
+     * Delete Dir fil
+     *
+     * @param $dataFile
+     * @param $relativeDirName
+     * @return void
+     * @throws Exception
+     */
     public function deleteDir($dataFile, $relativeDirName) : void
     {
         try {

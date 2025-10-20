@@ -38,7 +38,7 @@ $this->title = $moduleInstance->name;
                 <?php echo $this->title; ?>
             </title>
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <?php echo Html::tag('link', '', ['rel' => 'icon', 'href' => $baseUrl.'/img/favicon.ico', 'sizes' => 'any']);?>
+            <?php echo Html::tag('link', '', ['rel' => 'icon', 'type' => 'image/x-icon', 'href' => $baseUrl.'/img/favicon-64.ico']);?>
             <?php echo Html::tag('meta', '', ['name' => 'X-Version', 'content' => Yii::$app->version]); ?>
             <?php $this->head(); ?>
         </head>

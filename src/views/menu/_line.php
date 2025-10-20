@@ -17,12 +17,12 @@ use fractalCms\helpers\Html;
 use fractalCms\components\Constant;
 use yii\helpers\Url;
 ?>
-<?php
+    <?php
     $classes = ['row align-items-center  p-1 border mt-1'];
     $classes[] = 'border-primary';
 
     echo Html::beginTag('div', ['class' => implode(' ', $classes), 'cms-list-line' => $model->id]);
-    $deep = $model->getDeep();
+    $deep = $model->order;
     $className = [];
     $className[] = 'col-sm-6';
     if ($deep !== null && $deep !== 1) {
@@ -30,7 +30,7 @@ use yii\helpers\Url;
     } else {
         $classMargin = 'p-0';
     }
-    $className[] = $classMargin;
+    //$className[] = $classMargin;
     $route = $model->route;
     if ($model->content instanceof \fractalCms\models\Content) {
         $route = $model->content->getRoute();
@@ -65,4 +65,5 @@ use yii\helpers\Url;
     echo Html::endTag('div');
     echo Html::endTag('div');
     echo Html::endTag('div');
-?>
+    ?>
+

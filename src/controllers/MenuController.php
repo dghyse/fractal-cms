@@ -13,6 +13,7 @@ namespace fractalCms\controllers;
 
 use Exception;
 use fractalCms\components\Constant;
+use fractalCms\helpers\MenuItemBuilder;
 use fractalCms\models\Content;
 use fractalCms\models\Menu;
 use Yii;
@@ -23,6 +24,8 @@ use yii\web\Response;
 
 class MenuController extends Controller
 {
+
+    protected MenuItemBuilder $menuItemBuilder;
 
     /**
      * @inheritDoc
@@ -63,6 +66,11 @@ class MenuController extends Controller
         return $behaviors;
     }
 
+    public function __construct($id, $module, MenuItemBuilder $menuItemBuilder, $config = [])
+    {
+        parent::__construct($id, $module, $config);
+        $this->menuItemBuilder = $menuItemBuilder;
+    }
 
     /**
      * Liste
@@ -108,10 +116,14 @@ class MenuController extends Controller
                     $response = $this->redirect(['menu/update', 'id' => $model->id]);
                 }
             }
+            $menuItemHtml = null;
+            if ($this->menuItemBuilder !== null) {
+                $menuItemHtml = $this->menuItemBuilder->build($model);
+            }
             if ($response === null) {
                 $response =  $this->render('manage', [
                     'model' => $model,
-                    'itemsQuery' => $model->getMenuItems()->orderBy(['pathKey' => SORT_ASC]),
+                    'menuItemHtml' => $menuItemHtml,
                 ]);
             }
             return  $response;
@@ -148,11 +160,13 @@ class MenuController extends Controller
                     $model->refresh();
                 }
             }
-            $itemsQuery = $model->getMenuItems()->orderBy(['pathKey' => SORT_ASC]);
-
+            $menuItemHtml = null;
+            if ($this->menuItemBuilder !== null) {
+                $menuItemHtml = $this->menuItemBuilder->build($model);
+            }
             return $this->render('manage', [
                 'model' => $model,
-                'itemsQuery' => $itemsQuery,
+                'menuItemHtml' => $menuItemHtml,
             ]);
         } catch (Exception $e)  {
             Yii::error($e->getMessage(), __METHOD__);

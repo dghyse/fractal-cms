@@ -49,7 +49,7 @@ class Cms
 
                 /** @var Content $child */
                 foreach ($children->each() as $child) {
-                    $deep = $child->getDeep();
+                    $deep = $child->getLevel();
                     $prefix = str_pad('', $deep, '-');
                     $sections[] = [
                         'id' => $child->id,
@@ -85,7 +85,7 @@ class Cms
             $query->orderBy(['pathKey' => SORT_ASC]);
             /** @var Content $content */
             foreach ($query->each() as $content) {
-                $deep = $content->getDeep();
+                $deep = $content->getLevel();
                 $prefix = str_pad('', $deep, '-');
                 $sufix = $content->displayType();
                 $options = [
@@ -305,7 +305,7 @@ class Cms
             $query->orderBy(['pathKey' => SORT_ASC]);
             /** @var MenuItem $menuItem */
             foreach ($query->each() as $menuItem) {
-                $deep = $menuItem->getDeep();
+                $deep = $menuItem->order;
                 $prefix = str_pad('', $deep, '-');
                 $structure[] = [
                     'id' => $menuItem->id,
