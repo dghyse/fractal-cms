@@ -64,7 +64,7 @@ class Menu extends \yii\db\ActiveRecord
         ];
 
         $scenarios[self::SCENARIO_MOVE_MENU_ITEM] = [
-            'sourceMenuItemId', 'destMenuItemId', 'sourceIndex', 'destIndex'
+            'sourceMenuItemId', 'destMenuItemId'
         ];
         return $scenarios;
     }
@@ -82,7 +82,7 @@ class Menu extends \yii\db\ActiveRecord
             [['name'], 'string', 'max' => 255],
             [['name'], 'required', 'on' => [self::SCENARIO_CREATE, self::SCENARIO_CREATE]],
             [['name'], 'unique'],
-            [[ 'sourceMenuItemId', 'destMenuItemId', 'sourceIndex', 'destIndex'], 'required', 'on' => [self::SCENARIO_MOVE_MENU_ITEM]],
+            [[ 'sourceMenuItemId', 'destMenuItemId'], 'required', 'on' => [self::SCENARIO_MOVE_MENU_ITEM]],
 
         ];
     }
@@ -116,7 +116,6 @@ class Menu extends \yii\db\ActiveRecord
             $transaction = yii::$app->db->beginTransaction();
             $destOrder = $dest->order;
             $sourceOrder = $source->order;
-            //Simulate new pathKey for temp
             $dest->scenario = MenuItem::SCENARIO_UPDATE;
             $source->scenario = MenuItem::SCENARIO_UPDATE;
             $attributesToSave = ['order'];
@@ -159,17 +158,6 @@ class Menu extends \yii\db\ActiveRecord
         return $query;
     }
 
-    /**
-     * Get menu item child
-     *
-     * @return \yii\db\ActiveQuery
-     */
-    public function getMenuItemChild()
-    {
-        $query =  $this->hasMany(MenuItem::class, ['menuId' => 'id']);
-        $regex = '^'.$this->id.'\.\w$';
-        return $query->andWhere(MenuItem::tableName().'.pathKey regexp :regex', [':regex' => $regex]);
-    }
 
     /**
      * Build menu item structure
@@ -227,15 +215,14 @@ class Menu extends \yii\db\ActiveRecord
     }
 
     /**
-     * Reorder Menu Items
+     * Reorder menu items
      *
-     * @param $filterMainItem
-     * @param $startIndex
+     * @param boolean $filterMainItem
+     * @param integer $startIndex
      * @return void
-     * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws Exception
      */
-    public function reorder($filterMainItem = false, $startIndex = 1) : void
+    public function reorder(bool $filterMainItem = false, int $startIndex = 1) : void
     {
         try {
             $command = Yii::$app->db->createCommand();

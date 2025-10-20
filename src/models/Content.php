@@ -328,24 +328,21 @@ class Content extends \yii\db\ActiveRecord
     }
 
     /**
-     * Get deep
+     * Get Level of element
      *
      * @return int|null
      * @throws Exception
      */
-    public function getDeep() :int | null
+    public function getLevel() :int | null
     {
         try {
             $pathKey = $this->pathKey;
-            $deep = null;
+            $level = null;
             if (empty($pathKey) === false) {
                 $splitKey = explode('.', $pathKey);
-                $deep = count($splitKey);
-                if ($this->type === static::TYPE_ARTICLE) {
-                    $deep += 1;
-                }
+                $level = count($splitKey);
             }
-            return $deep;
+            return $level;
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;

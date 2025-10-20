@@ -27,7 +27,7 @@ $parentDeep = (isset($parentDeep) === true) ? $parentDeep : 0;
     }
 
     echo Html::beginTag('div', ['class' => implode(' ', $classes), 'cms-list-line' => $model->id]);
-    $deep = $model->getDeep();
+    $deep = $model->getLevel();
     $className = [];
     $className[] = 'col-sm-6';
     $prefix = '';

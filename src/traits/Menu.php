@@ -20,13 +20,11 @@ trait Menu
     const SCENARIO_MOVE_MENU_ITEM = 'moveMenuItem';
 
     public $sourceMenuItemId;
-    public $sourceIndex;
     public $destMenuItemId;
-    public $destIndex;
 
 
     /**
-     * Move item
+     * Move menu item
      *
      * @return bool
      */
@@ -41,9 +39,7 @@ trait Menu
             if ($destMenuItem === null) {
                 throw new NotFoundHttpException('Menu item dest not found');
             }
-            $success = $destMenuItem->move($sourceMenuItem, $this->destIndex);
-
-            return $success;
+            return $destMenuItem->move($sourceMenuItem);
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
         }

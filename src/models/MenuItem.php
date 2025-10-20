@@ -232,7 +232,7 @@ class MenuItem extends \yii\db\ActiveRecord
      */
     public function getMenuItems()
     {
-        return $this->hasMany(MenuItem::class, ['menuItemId' => 'id']);
+        return $this->hasMany(MenuItem::class, ['menuItemId' => 'id'])->orderBy(['menuItemId' => SORT_ASC, 'order' => SORT_ASC]);
     }
 
 }

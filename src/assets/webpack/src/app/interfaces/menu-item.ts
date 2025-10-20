@@ -1,8 +1,11 @@
 /** Interface modal**/
+import {EMenuItemAction} from "../enums/menu";
 
 export interface IMenuItem {
     sourceMenuItemId:number;
-    sourceIndex:number;
     destMenuItemId:number;
-    destIndex:number
+}
+export interface IMoveMenuItem {
+    name:string;
+    action:EMenuItemAction
 }

@@ -123,7 +123,7 @@ class MenuItemBuilder extends Component
     {
         try {
 
-            $line =  Html::beginTag('div', ['class' => 'row align-items-center  p-1 border mt-1 border-primary', 'cms-list-line' => $model->id]);
+            $line =  Html::beginTag('div', ['class' => 'row align-items-center  p-1 border mt-1 border-primary']);
             $className = [];
             $className[] = 'col-sm-6';
             $route = $model->route;

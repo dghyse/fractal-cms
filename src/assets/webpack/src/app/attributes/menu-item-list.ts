@@ -1,10 +1,15 @@
-import {bindable, customAttribute, ILogger, INode, resolve, IPlatform, IEventAggregator} from "aurelia";
+import {customAttribute, IEventAggregator, ILogger, INode, IPlatform, resolve} from "aurelia";
 import {ApiServices} from "../services/api-services";
-import {IMenuItem} from "../interfaces/menu-item";
+import {IMenuItem, IMoveMenuItem} from "../interfaces/menu-item";
+import {EEvents} from "../enums/events";
+import {EMenuItemAction} from "../enums/menu";
+import {$RecognizedRoute} from "@aurelia/router/dist/types/route-context";
+
 @customAttribute('cms-menu-item-list')
 export class MenuItemList {
 
     private items:NodeListOf<HTMLLIElement>;
+    private deleteLinks:NodeListOf<HTMLLinkElement>;
     private dragItem:HTMLLIElement;
     public constructor(
         private readonly logger: ILogger = resolve(ILogger).scopeTo('MenuItemList'),
@@ -20,6 +25,7 @@ export class MenuItemList {
     {
         this.logger.trace('attached');
         this.items = this.element.querySelectorAll('li');
+        this.deleteLinks = this.element.querySelectorAll('.user-button-delete');
         this.init();
     }
     public detached()
@@ -32,6 +38,11 @@ export class MenuItemList {
                 item.removeEventListener('dragover', this.dragover);
                 item.removeEventListener('dragleave', this.dragleave);
                 item.removeEventListener('drop', this.drop);
+            });
+        }
+        if (this.deleteLinks) {
+            this.deleteLinks.forEach((link:HTMLLinkElement, index) => {
+               link.removeEventListener('click', this.onDelete);
             });
         }
     }
@@ -47,16 +58,40 @@ export class MenuItemList {
             item.addEventListener('dragleave', this.dragleave);
             item.addEventListener('drop', this.drop);
         });
+
+        if (this.deleteLinks) {
+            this.deleteLinks.forEach((link:HTMLLinkElement, index) => {
+                link.addEventListener('click', this.onDelete);
+            });
+        }
     }
 
-    private ondragstart = (event:Event) => {
+    public onDelete = (event:Event) => {
+        this.logger.trace('onDelete');
+        event.preventDefault();
+        const target = event.currentTarget as HTMLLinkElement;
+        if (target) {
+            if (confirm('Attention !! vous allez supprimer définitivement cet élément ? ') === true) {
+                const href:string = target.href;
+                this.apiService.delete(href).then((response:any) => {
+                    this.platform.taskQueue.queueTask(() => {
+                        this.platform.window.location.reload();
+                    });
+                }).catch((error:any) => {
+                    this.logger.trace('Delete  ERROR', error);
+                });
+            }
+        }
+    }
+
+    private readonly ondragstart = (event:Event) => {
         this.logger.trace('ondragstart');
         const item:HTMLLIElement = event.target as HTMLLIElement;
         item.classList.add('dragging');
         this.dragItem = item;
     }
 
-    private dragend = (event:Event) => {
+    private readonly dragend = (event:Event) => {
         this.logger.trace('dragend');
         const item:HTMLLIElement = event.target as HTMLLIElement;
         if (this.dragItem == item) {
@@ -65,7 +100,7 @@ export class MenuItemList {
         }
     }
 
-    private dragover = (event:Event) => {
+    private readonly dragover = (event:Event) => {
         this.logger.trace('dragover');
         event.preventDefault();
         const item:HTMLLIElement = event.target as HTMLLIElement;
@@ -74,13 +109,13 @@ export class MenuItemList {
             target.classList.add('over');
         }
     }
-    private dragleave = (event:Event) => {
+    private readonly dragleave = (event:Event) => {
         this.logger.trace('dragleave');
         const item:HTMLLIElement = event.target as HTMLLIElement;
         item.classList.remove('over');
     }
 
-    private drop = (event:Event) => {
+    private readonly drop = (event:Event) => {
         this.logger.trace('drop', event);
         event.stopPropagation();
         const item:HTMLElement = event.target as HTMLElement;
@@ -90,15 +125,31 @@ export class MenuItemList {
             this.apiService.manageMenuItems(
                 parseInt(target.getAttribute('data-menu-id')),
                 menuItemData).then((html) => {
-                this.dragItem.classList.remove('over');
-                this.dragItem.classList.remove('dragging');
-                target.classList.remove('over');
-                target.classList.remove('dragging');
-                target.parentNode.insertBefore(this.dragItem, target);
-                this.detached();
-                this.element.innerHTML = html;
-                this.attached();
-                this.logger.trace('drop Item déplacé !!!', menuItemData);
+                    const messageMove:IMoveMenuItem = {
+                        name:'menu-item-list',
+                        action:EMenuItemAction.detached
+                    };
+                    this.ea.publish(EEvents.ACTION_MOVE_MENU_ITEM_BEFORE, messageMove);
+                    this.dragItem.classList.remove('over');
+                    this.dragItem.classList.remove('dragging');
+                    target.classList.remove('over');
+                    target.classList.remove('dragging');
+                    target.parentNode.insertBefore(this.dragItem, target);
+                    this.platform.taskQueue.queueTask(() => {
+                        this.detached();
+                        this.element.innerHTML = html;
+                        this.attached();
+
+                        this.platform.requestAnimationFrame(() => {
+                            const messageMove:IMoveMenuItem = {
+                                name:'menu-item-list',
+                                action:EMenuItemAction.attached
+                            };
+                            this.ea.publish(EEvents.ACTION_MOVE_MENU_ITEM_AFTER, messageMove);
+                            this.logger.trace('drop Item déplacé !!!', menuItemData);
+                        });
+                    }, {delay:150});
+
             }).catch((error) => {
                 this.logger.warn(error);
                 this.logger.trace('drop Item ERROR !!!', error);
@@ -112,9 +163,7 @@ export class MenuItemList {
         this.logger.trace('buildMenuItemData');
         const menuItem:IMenuItem = {
             sourceMenuItemId:parseInt(dragItem.getAttribute('data-id')),
-            sourceIndex:parseInt(dragItem.getAttribute('data-index')),
             destMenuItemId:parseInt(target.getAttribute('data-id')),
-            destIndex:parseInt(target.getAttribute('data-index'))
         };
         return menuItem;
     }
