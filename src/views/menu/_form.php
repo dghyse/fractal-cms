@@ -10,7 +10,7 @@
  *
  * @var \yii\web\View $this
  * @var \fractalCms\models\Menu $model
- * @var \yii\redis\ActiveQuery $itemsQuery
+ * @var string $menuItemHtml
  */
 
 use fractalCms\helpers\Html;
@@ -43,7 +43,7 @@ use yii\helpers\ArrayHelper;
         <div class="row mt-3">
             <div class="card">
                 <div class="card-header">
-                    Gestion des éléments
+                    Gestion des éléments du menu
                 </div>
                 <?php
                     echo Html::beginTag(
@@ -53,7 +53,7 @@ use yii\helpers\ArrayHelper;
                         ]);
                     echo $this->render('_items',
                         [
-                            'itemsQuery' => $itemsQuery,
+                            'menuItemHtml' => $menuItemHtml,
                             'menu' => $model
                         ]);
                 ?>

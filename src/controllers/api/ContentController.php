@@ -82,6 +82,10 @@ class ContentController extends BaseController
             }
             $seo = $model->getSeo()->one();
             $slug = $model->getSlug()->one();
+            $model->seoId = null;
+            $model->slugId = null;
+            $model->save(false, ['seoId', 'slugId']);
+
             $itemQuery = $model->getItems();
             /** @var Item $item */
             foreach ($itemQuery->each() as $item) {

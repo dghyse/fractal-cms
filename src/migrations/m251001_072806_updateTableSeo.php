@@ -16,13 +16,8 @@ class m251001_072806_updateTableSeo extends Migration
 {
     public function up()
     {
-        /*
-         * <changefreq>monthly</changefreq>
-         * <priority>0.6</priority>
-         */
+
         $this->addColumn('{{%seos}}', 'twitterMeta', $this->boolean()->defaultValue(true)->after('ogMeta'));
-
-
         return true;
     }
 

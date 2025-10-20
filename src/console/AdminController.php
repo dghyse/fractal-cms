@@ -35,24 +35,19 @@ class AdminController extends Controller
             $password = $this->prompt("\t".'password :');
             $firstname = $this->prompt("\t".'firstname :');
             $lastname = $this->prompt("\t".'lastname :');
-            $administrator = Yii::createObject(User::class);
-            $administrator->scenario = User::SCENARIO_CREATE_ADMIN;
-            $administrator->email = $email;
-            $administrator->tmpPassword = $password;
-            $administrator->firstname = $firstname;
-            $administrator->lastname = $lastname;
-            $administrator->active = true;
-            if ($administrator->validate() === true) {
-                $administrator->hashPassword();
-                $administrator->save();
-                $this->stdout('Save administrator '.$administrator->email.' '.$administrator->tmpPassword."\n");
+            $administrator = User::createUser(
+                Constant::ROLE_ADMIN,
+                $email,
+                $password,
+                $firstname,
+                $lastname
+            );
+
+            if ($administrator->hasErrors() === false) {
+                $this->stdout('Save administrator '.$email.' '.$password."\n");
             } else {
                 $this->stdout('Administrator is invalid : '.Json::encode($administrator->errors)."\n");
                 return ExitCode::UNSPECIFIED_ERROR;
-            }
-            $role = Yii::$app->authManager->getRole(Constant::ROLE_ADMIN);
-            if ($role !== null) {
-                Yii::$app->authManager->assign($role, $administrator->id);
             }
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);

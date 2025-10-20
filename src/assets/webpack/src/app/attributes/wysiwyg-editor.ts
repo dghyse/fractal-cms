@@ -1,7 +1,7 @@
 import {bindable, customAttribute, ILogger, INode, resolve, IPlatform} from "aurelia";
 import {ApiServices} from "../services/api-services";
 import Quill, {QuillOptions} from "quill";
-
+import hljs from 'highlight.js';
 @customAttribute('cms-wysiwyg-editor')
 export class WysiwygEditor {
 
@@ -9,10 +9,11 @@ export class WysiwygEditor {
         theme: 'snow',
         placeholder: 'votre texte ici ...',
         modules: {
+            syntax: { hljs },
             toolbar: [
-                [{ header: [1, 2, 3, false] }],
+                [{ header: [2, 3, 4, false] }],
                 ['bold', 'italic', 'underline'],
-                ['blockquote', 'code-block'],
+                ['blockquote'],
                 [{ list: 'ordered' }, { list: 'bullet' }],
                 ['link', 'image'],
                 ['clean']

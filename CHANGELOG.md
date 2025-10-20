@@ -1,6 +1,14 @@
 CHANGELOG
 =========
 
+Release v1.4.0 20/10/2025 <david.ghyse@free.fr>
+----------------------------------------------
+
+* Update docs
+* Update html menu
+* Add ordered menu items
+* Add migrations
+
 Release v1.4.0 10/10/2025 <david.ghyse@free.fr>
 ----------------------------------------------
 

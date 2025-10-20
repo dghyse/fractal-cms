@@ -9,7 +9,7 @@
  * @package app\config
  *
  * @var \yii\web\View $this
- * @var \yii\db\ActiveQuery $itemsQuery
+ * @var string $menuItemHtml
  * @var \fractalCms\models\Menu $menu
  */
 
@@ -17,17 +17,10 @@ use fractalCms\helpers\Html;
 use yii\helpers\ArrayHelper;
 ?>
 
-<div class="row m-1">
-    <?php if ($itemsQuery !== null):?>
-        <?php
-            foreach ($itemsQuery->each() as $index => $item) {
-                echo $this->render('_line', [
-                    'model' => $item,
-                    'menu' => $menu
-                ]);
-            }
-        ?>
-    <?php endif;?>
+<div class="row m-1" cms-menu-item-list="">
+            <?php
+                echo $this->render('_menu_item_lines', ['menuItemHtml' => $menuItemHtml]);
+            ?>
 </div>
 <div class="row">
     <div class="col-sm-3  justify-content-end">

@@ -20,6 +20,7 @@ use fractalCms\console\InitController;
 use fractalCms\console\RbacController;
 use fractalCms\helpers\Menu;
 use fractalCms\helpers\ConfigType;
+use fractalCms\helpers\MenuItemBuilder;
 use fractalCms\helpers\SitemapBuilder;
 use fractalCms\models\User;
 use Yii;
@@ -41,7 +42,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public $relativeItemImgDirName = 'items';
     public $relativeSeoImgDirName = 'seo';
     public $cacheImgPath = 'cache';
-    public $version = 'v1.4.0';
+    public $version = 'v1.5.0';
     public $name = 'FractalCMS';
     public $commandNameSpace = 'fractalCms:';
 
@@ -69,7 +70,9 @@ class Module extends \yii\base\Module implements BootstrapInterface
             Yii::$container->setSingleton(Menu::class, [
                 'class' => Menu::class,
             ]);
-
+            Yii::$container->setSingleton(MenuItemBuilder::class, [
+                'class' => MenuItemBuilder::class,
+            ]);
             Yii::$container->setSingleton(ConfigType::class, [
                 'class' => ConfigType::class,
             ]);
@@ -94,7 +97,6 @@ class Module extends \yii\base\Module implements BootstrapInterface
                         $app->controllerMap['migrate']['migrationPath'] = ['@yii/rbac/migrations'];
                     }
                 }
-                $app->controllerNamespace = 'fractalCms\console';
                 $app->controllerMap[$this->commandNameSpace.'rbac'] = [
                     'class' => RbacController::class,
                 ];
@@ -215,6 +217,10 @@ class Module extends \yii\base\Module implements BootstrapInterface
                                 [
                                     'pattern' => 'menu/<id:([^/]+)>/supprimer',
                                     'route' => 'api/menu/delete',
+                                ],
+                                [
+                                    'pattern' => 'menu/<id:([^/]+)>/manage-menu-items',
+                                    'route' => 'api/menu/manage-menu-items',
                                 ],
                                 [
                                     'pattern' => 'parametres/liste',
