@@ -1,7 +1,12 @@
 CHANGELOG
 =========
 
-Release v1.4.0 20/10/2025 <david.ghyse@free.fr>
+Release v1.5.1 21/10/2025 <david.ghyse@free.fr>
+----------------------------------------------
+
+* Update Composer for add to packagist
+
+Release v1.5.0 20/10/2025 <david.ghyse@free.fr>
 ----------------------------------------------
 
 * Update docs
