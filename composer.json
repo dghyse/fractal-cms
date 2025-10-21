@@ -1,17 +1,17 @@
 {
   "name": "dghyse/fractal-cms",
-  "description": "Dghyse porte folio",
-  "keywords": ["David Ghyse", "fractal-cms", "cms", "fractalcms"],
+  "description": "FractalCMS - un CMS léger et modulaire basé sur Yii2",
+  "keywords": ["fractal-cms", "cms", "fractalcms", "php", "yii2", "blog", "website"],
   "homepage": "https://github.com/dghyse/fractal-cms",
-  "type": "project",
-  "license": "proprietary",
+  "type": "library",
+  "license": "MIT",
   "support": {
     "issues": "https://github.com/dghyse/fractal-cms/issues"
   },
   "authors": [
     {
       "name": "David Ghyse",
-      "email": "davidd@webcraftdg.fr"
+      "email": "davidg@webcraftdg.fr"
     }
   ],
   "repositories": [
@@ -39,12 +39,6 @@
     "yiisoft/yii2-debug":"~2.0",
     "yiisoft/yii2-gii":"~2.0"
   },
-  "config": {
-    "process-timeout": 1800,
-    "allow-plugins": {
-      "yiisoft/yii2-composer": true
-    }
-  },
   "autoload": {
     "psr-4": {
       "fractalCms\\": "src/"
@@ -53,5 +47,13 @@
   "scripts": {
     "post-install-cmd": [
     ]
-  }
+  },
+  "config": {
+    "process-timeout": 1800,
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }
