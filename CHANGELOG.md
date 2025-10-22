@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+Release v1.5.2 22/10/2025 <david.ghyse@free.fr>
+----------------------------------------------
+
+* Fix menu add item
+
 Release v1.5.1 21/10/2025 <david.ghyse@free.fr>
 ----------------------------------------------
 
