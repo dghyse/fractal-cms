@@ -302,7 +302,7 @@ class Cms
             if ($menuItemId !== null) {
                 $query->andWhere(['not', ['id' => $menuItemId]])->all();
             }
-            $query->orderBy(['pathKey' => SORT_ASC]);
+            $query->orderBy(['menuItemId' => SORT_ASC, 'order' => SORT_ASC]);
             /** @var MenuItem $menuItem */
             foreach ($query->each() as $menuItem) {
                 $deep = $menuItem->order;
