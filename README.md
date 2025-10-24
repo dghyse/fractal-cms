@@ -17,11 +17,11 @@ Il s’agit avant tout d’un projet personnel, pensé comme un terrain d’exp�
 
 * tester des idées d’architecture,
 * conserver la main sur les choix techniques,
-* et disposer d’un outil léger, adapté à un portfolio développeur.
+* et disposer d’un outil léger, adapté à un blog, site perso, portfolio développeur.
 
 ## 🔧 Stack utilisée
 
-* Backend : PHP (API REST) + MySQL
+* Backend : PHP + MySQL / MariaDb
 * Yii2
 * Frontend : Aurelia 2 + BootstrapCSS
 * Éditeur : JSONEditor / QuillJS pour la gestion des contenus
@@ -36,7 +36,8 @@ FractalCMS repose sur plusieurs briques open-source modernes :
 - [QuillJS](https://quilljs.com/) : éditeur WYSIWYG pour la création et la mise en forme de contenus
 - [JSONEditor](https://github.com/josdejong/jsoneditor) : interface de gestion et visualisation des données JSON
 - [Bootstrap 5](https://getbootstrap.com/) : composants et styles de base (via asset-packagist)
-
+- [MySQL](https://www.mysql.com/fr/) : Base de données
+- [MariaDb](https://mariadb.org/): Base de données
 ### Documentation
 
 * Voir la [Documentation](src/docs/index.md)
