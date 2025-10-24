@@ -12,7 +12,7 @@
 * Nodejs :v24.8.0
 * Nmp :11.6.0
 
-## Composer
+## Installation via Composer
 
 ``
 composer require dghyse\fractal-cms

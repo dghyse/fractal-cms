@@ -1,5 +1,3 @@
-/** Interface modal**/
-
 export interface IConfigItem {
     id:number;
     name:string;

@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  *
- * @package app\assets
+ * @package fractalCms\assets
  */
 
 namespace fractalCms\assets;

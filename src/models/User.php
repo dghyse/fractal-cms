@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\models
+ * @package fractalCms\models
  */
 namespace fractalCms\models;
 
@@ -15,8 +15,6 @@ use fractalCms\components\Constant;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
-use yii\rbac\Permission;
-use yii\rbac\Role;
 use yii\web\IdentityInterface;
 
 /**

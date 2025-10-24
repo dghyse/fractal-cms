@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package cms/helpers
+ * @package fractalCms/helpers
  */
 namespace fractalCms\helpers;
 

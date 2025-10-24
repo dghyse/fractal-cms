@@ -1,9 +1,5 @@
-import {bindable, customAttribute, ILogger, INode, resolve, IPlatform, IEventAggregator} from "aurelia";
+import {customAttribute, ILogger, INode, resolve, IPlatform, IEventAggregator} from "aurelia";
 import {ApiServices} from "../services/api-services";
-import {IActionEvent} from "../interfaces/events";
-import {EEvents} from "../enums/events";
-import {IAlertAddMessage} from "../interfaces/alert";
-import {getTextAlert} from "../helpers/alert";
 
 @customAttribute('cms-menu')
 export class Menu {

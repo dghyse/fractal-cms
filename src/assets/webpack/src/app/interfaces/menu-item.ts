@@ -1,4 +1,3 @@
-/** Interface modal**/
 import {EMenuItemAction} from "../enums/menu";
 
 export interface IMenuItem {

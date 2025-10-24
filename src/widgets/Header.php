@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package cms/widgets
+ * @package fractalCms/widgets
  */
 namespace fractalCms\widgets;
 
