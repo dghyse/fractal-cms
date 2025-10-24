@@ -44,9 +44,17 @@ foreach ($model->configItem->configArray as $attribute => $data):?>
                 break;
             case Html::CONFIG_TYPE_TEXT:
                 echo Html::activeLabel($content, 'items['.$model->id.']['.$attribute.']', ['label' => $title, 'class' => 'form-label']);
-                echo Html::activeTextarea($content, 'items['.$model->id.']['.$attribute.']',
-                    ['placeholder' => $title, 'class' => 'form-control',
-                        'value' => $model->$attribute]);
+                if(is_array($options) === false) {
+                    $options = [];
+                }
+                $options['placeholder'] = $title;
+                $options['value'] = $model->$attribute;
+                $class = 'form-control';
+                if (isset($options['class']) === true) {
+                    $options['class'] = $options['class'].' '.$class;
+                }
+                $options['style'] = 'width:100%;';
+                echo Html::activeTextarea($content, 'items['.$model->id.']['.$attribute.']',$options);
                 break;
             case Html::CONFIG_TYPE_WYSIWYG:
                 echo Html::activeLabel($content, 'items['.$model->id.']['.$attribute.']', ['label' => $title, 'class' => 'form-label']);
