@@ -112,8 +112,9 @@ export class WysiwygEditor {
                 code.classList.add('language-'+lang);
                 code.textContent = textLines.join("\n");
                 pre.append(code);
-                container.remove();
-                doc.body.append(pre);
+                //container.remove();
+                container.replaceWith(pre);
+                //doc.body.append(pre);
 
                 newHtml = doc.body.innerHTML;
             }
@@ -163,8 +164,8 @@ export class WysiwygEditor {
                         div.textContent = value;
                         container.appendChild(div);
                     })
-                    pre.remove();
-                    doc.body.append(container);
+                    pre.replaceWith(container);
+                    //doc.body.append(container);
                     newHtml = doc.body.innerHTML;
                 }
             }

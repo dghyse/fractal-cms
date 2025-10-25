@@ -146,6 +146,62 @@ Chaque attribut doit comporter au moins ces paramètres pour être utilisable.
 Désormais, l'élément peut-être configuré et enregistré. les informations pourront ête utilisées
 sur le _front_.
 
+#### Utilisation dans l'application
+
+**Dans le controlleur**
+
+```bash
+ public function actionIndex()
+    {
+        try {
+            Yii::debug('Trace :'.__METHOD__, __METHOD__);
+            $content = $this->getContent();
+            $itemEntete = $content->getItems()->andWhere(['configItemId' => Cms::getParameter('ITEM', 'ENTETE')])->one();
+            $itemsQuery = $content->getItems()->andWhere([
+                'not', ['configItemId' => [
+                    Cms::getParameter('ITEM', 'ENTETE'),
+                    ]]]);
+            return $this->render('index',
+                [
+                    'content' => $content,
+                    'entete' => $itemEntete,
+                    ]);
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
+```
+
+**Dans la vue (index)**
+
+```bash
+<?php
+/**
+ * main.php
+ *
+ * PHP Version 8.2+
+ *
+ * @version XXX
+ * @package webapp\views\layouts
+ *
+ * @var $this yii\web\View
+ * @var $content \fractalCms\models\Content
+ * @var $entete \fractalCms\models\Item
+ */
+ 
+use fractalCms\helpers\Html;
+use webapp\widgets\Breadcrumb;
+
+$title = ($entete instanceof \fractalCms\models\Item) ? $entete->title : $content->name;
+$subtitle = ($entete instanceof \fractalCms\models\Item) ? $entete->subtitle : null;
+$banner = ($entete instanceof \fractalCms\models\Item) ? $entete->banner : null;
+$description = ($entete instanceof \fractalCms\models\Item) ? $entete->description : null;
+
+../..
+```
+
 ## Gestion des types d'article
 
 Le configuration du type d'élément faite partie des concepts important de FractalCMS. C'est grâce à cette configuration qu'un
