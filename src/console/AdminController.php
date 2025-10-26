@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\console
+ * @package fractalCms\console
  */
 namespace fractalCms\console;
 

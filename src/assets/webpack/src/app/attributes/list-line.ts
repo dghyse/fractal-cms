@@ -1,8 +1,5 @@
 import {bindable, customAttribute, IDisposable, IEventAggregator, ILogger, INode, IPlatform, resolve} from "aurelia";
 import {ApiServices} from "../services/api-services";
-import {EEvents} from "../enums/events";
-import {IMoveMenuItem} from "../interfaces/menu-item";
-import {EMenuItemAction} from "../enums/menu";
 
 @customAttribute('cms-list-line')
 export class ListLine {

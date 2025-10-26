@@ -1,5 +1,12 @@
 <?php
-
+/**
+ * Seo.php
+ *
+ * PHP version 8.2+
+ *
+ * @author David Ghyse <davidg@webcraftdg.fr>
+ * @package fractalCms\behaviors
+ */
 namespace fractalCms\behaviors;
 
 use fractalCms\controllers\CmsController;

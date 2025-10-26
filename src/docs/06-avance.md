@@ -1,4 +1,4 @@
-# Sujet Avancer
+# Sujets Avancés
 
 ## Gestion du menu
 
@@ -26,7 +26,7 @@ Lors de l'ajout d'un menu, il est demandé en étape 1 le nom de ce menu.
 ### Création d'un menu étape 2
 
 Après avoir saisie un nom unique et valider le formulaire. Le formulaire ce met à jour afin
-de permettre d'ajouté des **élements du menu**, en cliquant sur le bouton **Ajouter un élément**.
+de permettre d'ajouter des **élements du menu**, en cliquant sur le bouton **Ajouter un élément**.
 
 ![Créer étape 2](./images/menu_creer_etape2.png)
 
@@ -36,7 +36,7 @@ de permettre d'ajouté des **élements du menu**, en cliquant sur le bouton **Aj
 
 * Nom : Nom de l'élément
 * Route CMS : Lien vers un article actif de FractalCMS
-* Route locale : Lien vers une action d'un controller hors FractalCMS de votre application Web
+* Route locale : Lien vers une action d'un contrôleur hors FractalCMS de votre application Web
 * Parent : L'élément créé peut-être un enfant d'un autre élément.
 
 ##### Exemple : Ajout élément "accueil"
@@ -47,7 +47,7 @@ de permettre d'ajouté des **élements du menu**, en cliquant sur le bouton **Aj
 
 ![Menu header](./images/menu_creer_header.png)
 
-#### Récupérer le menu sur votre site
+#### Récupérer le menu sur votre application Web
 
 Il est possible d'adapter la donnée de retour afin de correspondre à votre logique.
 
@@ -105,12 +105,30 @@ d'un article.
 
 ### Propriété
 
-La propriété public **viewItemPath** de FractalCMS peut-être valorisé dans le fichier de 
+La propriété public **viewItemPath** du module FractalCMS peut-être valorisé dans le fichier de 
 configuration. La propriété est valorisée par défaut par  **@webapp/views/fractal-cms**.
+
+#### exemple
+
+```bash
+/* fichier de configuration */
+/*../..*/
+'bootstrap' => [
+    'log',
+    'fractal-cms'
+],
+'modules' => [
+    'fractal-cms' => [
+        'class' => FractalCmsModule::class,
+        'viewItemPath'=> '@webapp/views/fractal-cms'
+    ]
+],
+/*../..*/
+```
 
 ### Régle de nommage des vues
 
-Le nom doit correspondre à la valeur de la propriété **name** de la **Configuration de l'élément**. Les noms
+Le nom du fichier doit correspondre à la valeur de la propriété **name** de la **Configuration de l'élément**. Les noms
 comportant des **-** seront automatiquement remplacés par des **_**.
 
 #### Exemples
@@ -126,5 +144,68 @@ comportant des **-** seront automatiquement remplacés par des **_**.
 * Nom : **image-html**
 * Valeur de la propriété **name** de la configuration : **image-html**
 * Nom de la vue : **image_html.php**
+
+### Exemple de fichier image_html.php
+
+```php
+<?php
+/**
+ * _sample-item.php
+ *
+ * PHP Version 8.2+
+ *
+ * @version XXX
+ * @package webapp\views\layouts
+ *
+ * @var $this yii\web\View
+ * @var $model \fractalCms\models\Item
+ * @var $content \fractalCms\models\Content
+ */
+
+use fractalCms\helpers\Html;
+use yii\helpers\ArrayHelper;
+use fractalCms\helpers\Cms;
+?>
+<?php
+foreach ($model->configItem->configArray as $attribute => $data):?>
+    <div class="col form-group p-0 mt-1">
+        <?php
+        $title = ($data['title']) ?? '';
+        $description = ($data['description']) ?? '';
+        $options = ($data['options']) ?? null;
+        $accept = ($data['accept']) ?? null;
+        switch ($data['type']) {
+            case Html::CONFIG_TYPE_FILE:
+            case Html::CONFIG_TYPE_FILES:
+                echo Html::tag('cms-file-upload', '', [
+                    'title.bind' => '\''.$title.'\'',
+                    'name' => Html::getInputName($content, 'items['.$model->id.']['.$attribute.']'),
+                    'value' => $model->$attribute,
+                    'upload-file-text' => 'Ajouter une fichier',
+                    'file-type' => $accept
+                ]);
+                break;
+            case Html::CONFIG_TYPE_WYSIWYG:
+                echo Html::activeLabel($content, 'items['.$model->id.']['.$attribute.']', ['label' => $title, 'class' => 'form-label']);
+                echo Html::activeHiddenInput($content, 'items['.$model->id.']['.$attribute.']', ['value' => $model->$attribute, 'class' => 'wysiwygInput']);
+                $inputNameId = Html::getInputId($content, 'items['.$model->id.']['.$attribute.']');
+                echo Html::tag('div', '',
+                    [
+                        'cms-wysiwyg-editor' => 'input-id.bind:\''.$inputNameId.'\'',
+                    ]);
+                break;
+        }
+        ?>
+    </div>
+
+    <?php if (empty($description) === false):?>
+        <div class="col p-0">
+            <p class="fw-lighter fst-italic">
+                <?php echo $description;?>
+            </p>
+        </div>
+    <?php endif;?>
+<?php endforeach;?>
+```
 
 [<- Précédent](05-content.md) | [Accueil](index.md)

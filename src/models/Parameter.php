@@ -6,11 +6,10 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\models
+ * @package fractalCms\models
  */
 namespace fractalCms\models;
 
-use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\Expression;
 

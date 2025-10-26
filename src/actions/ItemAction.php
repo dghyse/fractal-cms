@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\actions
+ * @package fractalCms\actions
  */
 namespace fractalCms\actions;
 

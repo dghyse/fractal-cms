@@ -1,7 +1,6 @@
 //Aurelia imports
 import Aurelia, { ConsoleSink, LoggerConfiguration, LogLevel } from 'aurelia';
 import {ValidationHtmlConfiguration, ValidationTrigger} from "@aurelia/validation-html";
-import {StateDefaultConfiguration} from '@aurelia/state';
 // Plugins imports
 // app imports
 import * as globalAttributes from './app/attributes/index';

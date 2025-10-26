@@ -6,12 +6,11 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\models
+ * @package fractalCms\models
  */
 namespace fractalCms\models;
 
 use Exception;
-use fractalCms\helpers\Cms;
 use fractalCms\Module;
 use fractalCms\traits\Elastic;
 use Yii;
