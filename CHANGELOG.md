@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+Release v1.5.3 26/10/2025 <david.ghyse@free.fr>
+----------------------------------------------
+
+* Update documentation
+* Fix get structure menu
+
 Release v1.5.2 22/10/2025 <david.ghyse@free.fr>
 ----------------------------------------------
 
