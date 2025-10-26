@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package views
  *
  * @var \fractalCms\models\ConfigItem[] $models
  */

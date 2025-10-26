@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <david.ghysefree.fr>
  * @version XXX
- * @package app\components
+ * @package fractalCms\components
  */
 namespace fractalCms\components;
 

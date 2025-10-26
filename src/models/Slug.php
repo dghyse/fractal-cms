@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\models
+ * @package fractalCms\models
  */
 namespace fractalCms\models;
 

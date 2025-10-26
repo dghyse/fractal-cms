@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\controllers
+ * @package fractalCms\controllers
  */
 
 namespace fractalCms\controllers;

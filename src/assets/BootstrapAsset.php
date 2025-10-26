@@ -5,7 +5,7 @@
  * PHP version 8.2+
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
- * @package app\assets
+ * @package fractalCms\assets
  */
 
 namespace fractalCms\assets;

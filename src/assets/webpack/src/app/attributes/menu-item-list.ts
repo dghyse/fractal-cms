@@ -3,7 +3,6 @@ import {ApiServices} from "../services/api-services";
 import {IMenuItem, IMoveMenuItem} from "../interfaces/menu-item";
 import {EEvents} from "../enums/events";
 import {EMenuItemAction} from "../enums/menu";
-import {$RecognizedRoute} from "@aurelia/router/dist/types/route-context";
 
 @customAttribute('cms-menu-item-list')
 export class MenuItemList {

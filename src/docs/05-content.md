@@ -101,7 +101,7 @@ insérées.
 
 #### Gestion des éléments
 
-Ici, ce trouve la coeur de la page. chaque article qu'il soit **section** ou **article** doit comporter des éléments.
+Ici, ce trouve la coeur de la page. chaque article qu'il soit **section** ou **article** peut comporter des éléments.
 
 Chaque élément est basé sur une configuration voir : [Gestion de la configuration des éléménts](03-configuration.md#gestion-de-la-configuration-des-éléménts).
 
@@ -235,7 +235,7 @@ La création se réalise en cliquant sur le bouton 'Ajouter'.
 Dans cette interface, il faut indiquer, l'identifiant (email), le nom, prénom et le mot de passe.
 Le mot de passe est soumit à des règles de validations indiquées dans le formulaire.
 
-La case à cocher 'Actver' permet d'activer ou désactiver un utilisateur. tant que l'utilisateur n'est pas activer, il ne pourra
+La case à cocher 'Activer' permet d'activer ou désactiver un utilisateur. tant que l'utilisateur n'est pas activer, il ne pourra
 pas se connecter.
 
 #### Les droits et permissions

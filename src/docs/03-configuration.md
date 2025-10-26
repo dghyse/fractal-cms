@@ -58,7 +58,7 @@ Pour récupérer cette valeur dans votre code, une fonction existe dans **fracta
 ## Gestion de la configuration des éléménts
 
 Tous les articles peuvent avoir des éléments. Ces éléments permettent de définir les informations
-qui seront utiles pour générer le HTML finale.
+qui seront utilisées pour générer le HTML finale.
 
 Chaque élément doit-être configuré avant de pouvoir être visible dans l'article.
 
@@ -74,7 +74,7 @@ Afin d'ajouter une nouvelle configuration d'un élément, il faut cliquer sur **
 
 * Nom : nom de la configuration, cette valeur doit-être unique
 * Configuration Json : Ajout des attributs et leur définition qui sera utiliser pour générer
-  le HTML de l'élément dans l'article et définir les attributs à utiliser voir (https://github.com/josdejong/jsoneditor)
+  le HTML de l'élément dans l'article et définir les attributs à utiliser voir [JsonEditor](https://github.com/josdejong/jsoneditor)
 
 #### paramétrage d'un attribut
 
@@ -139,17 +139,73 @@ Chaque attribut doit comporter au moins ces paramètres pour être utilisable.
 
 ![Item choix entête](./images/item_entete_ajout.png)
 
-**Ajout de la configuration dans l'article**
+**Ajout de la l'élément dans l'article**
 
 ![Item ajout entête](./images/item_entet_ajout.png)
 
 Désormais, l'élément peut-être configuré et enregistré. les informations pourront ête utilisées
 sur le _front_.
 
+#### Utilisation dans l'application
+
+**Dans le controlleur**
+
+```bash
+ public function actionIndex()
+    {
+        try {
+            Yii::debug('Trace :'.__METHOD__, __METHOD__);
+            $content = $this->getContent();
+            $itemEntete = $content->getItems()->andWhere(['configItemId' => Cms::getParameter('ITEM', 'ENTETE')])->one();
+            $itemsQuery = $content->getItems()->andWhere([
+                'not', ['configItemId' => [
+                    Cms::getParameter('ITEM', 'ENTETE'),
+                    ]]]);
+            return $this->render('index',
+                [
+                    'content' => $content,
+                    'entete' => $itemEntete,
+                    ]);
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
+```
+
+**Dans la vue (index)**
+
+```bash
+<?php
+/**
+ * main.php
+ *
+ * PHP Version 8.2+
+ *
+ * @version XXX
+ * @package webapp\views\layouts
+ *
+ * @var $this yii\web\View
+ * @var $content \fractalCms\models\Content
+ * @var $entete \fractalCms\models\Item
+ */
+ 
+use fractalCms\helpers\Html;
+use webapp\widgets\Breadcrumb;
+
+$title = ($entete instanceof \fractalCms\models\Item) ? $entete->title : $content->name;
+$subtitle = ($entete instanceof \fractalCms\models\Item) ? $entete->subtitle : null;
+$banner = ($entete instanceof \fractalCms\models\Item) ? $entete->banner : null;
+$description = ($entete instanceof \fractalCms\models\Item) ? $entete->description : null;
+
+../..
+```
+
 ## Gestion des types d'article
 
 Le configuration du type d'élément faite partie des concepts important de FractalCMS. C'est grâce à cette configuration qu'un
-élément (Content) pourra être dirigé vers le bon **Controller** et la bonne  **Action** et permettre
+article (Content) pourra être dirigé vers le bon **Controller** et la bonne  **Action** et permettre
 ainsi de construire une vue adapté à vos besoin.
 
 ### Interface

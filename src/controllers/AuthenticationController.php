@@ -1,12 +1,12 @@
 <?php
 /**
- * main.php
+ * AuthenticationController.php
  *
  * PHP Version 8.2+
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\controllers
+ * @package fractalCms\controllers
  */
 
 namespace fractalCms\controllers;

@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\interfaces
+ * @package fractalCms\interfaces
  */
 
 namespace fractalCms\interfaces;

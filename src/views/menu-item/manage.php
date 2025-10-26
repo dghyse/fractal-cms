@@ -6,7 +6,7 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package views
  *
  * @var \yii\web\View $this
  * @var \fractalCms\models\MenuItem $model

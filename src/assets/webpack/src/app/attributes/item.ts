@@ -4,7 +4,6 @@ import {IActionEvent} from "../interfaces/events";
 import {EEvents} from "../enums/events";
 import {IAlertAddMessage} from "../interfaces/alert";
 import {getTextAlert} from "../helpers/alert";
-import * as crypto from "node:crypto";
 
 @customAttribute('cms-item')
 export class Item {

@@ -1,4 +1,4 @@
-import {bindable, customElement, IDisposable, IEventAggregator, ILogger, INode, IPlatform, resolve} from 'aurelia';
+import {customElement, IDisposable, IEventAggregator, ILogger, INode, IPlatform, resolve} from 'aurelia';
 import {ApiServices} from "../services/api-services";
 import {EEvents} from "../enums/events";
 import {IAlertAddMessage, IAlertDeleteMessage} from "../interfaces/alert";

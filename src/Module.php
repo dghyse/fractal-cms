@@ -1,12 +1,12 @@
 <?php
 /**
- * main.php
+ * Module.php
  *
  * PHP Version 8.2+
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package app\config
+ * @package fractalCms
  */
 
 namespace fractalCms;
@@ -42,7 +42,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public $relativeItemImgDirName = 'items';
     public $relativeSeoImgDirName = 'seo';
     public $cacheImgPath = 'cache';
-    public $version = 'v1.5.2';
+    public $version = 'v1.5.3';
     public $name = 'FractalCMS';
     public $commandNameSpace = 'fractalCms:';
 

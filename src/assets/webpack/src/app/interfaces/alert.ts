@@ -1,5 +1,3 @@
-/** Interface modal**/
-
 export interface IAlertAddMessage {
     id:string;
     color:string;

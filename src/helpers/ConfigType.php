@@ -6,12 +6,11 @@
  *
  * @author David Ghyse <davidg@webcraftdg.fr>
  * @version XXX
- * @package cms/helpers
+ * @package fractalCms/helpers
  */
 namespace fractalCms\helpers;
 
 use fractalCms\components\Constant;
-use fractalCms\controllers\CmsController;
 use yii\base\Component;
 use Exception;
 use ReflectionClass;
