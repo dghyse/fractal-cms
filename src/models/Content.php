@@ -11,11 +11,13 @@
 namespace fractalCms\models;
 
 use Exception;
+use fractalCms\interfaces\ItemInterface;
 use fractalCms\Module;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
+use fractalCms\traits\Item as TraitItem;
 
 /**
  * This is the model class for table "contents".
@@ -37,9 +39,10 @@ use yii\db\Expression;
  * @property ContentItem[] $contentItems
  * @property Item[] $items
  */
-class Content extends \yii\db\ActiveRecord
+class Content extends \yii\db\ActiveRecord implements ItemInterface
 {
 
+    use TraitItem;
     /**
      * ENUM field values
      */
@@ -150,48 +153,14 @@ class Content extends \yii\db\ActiveRecord
     }
 
     /**
-     * Manage items before save
-     *
-     * @return void
-     * @throws \yii\db\Exception
-     */
-    public function manageItems($deleteSource = true)
-    {
-        try {
-            $models =  $this->items;
-            if (is_array($models) === true) {
-                foreach ($models as $id => $data) {
-                    $dbModel = Item::findOne($id);
-                    if ($dbModel !== null) {
-                        $dbModel->scenario = Item::SCENARIO_UPDATE;
-                        $newData = $dbModel->prepareData($data, $deleteSource);
-                        $dbModel->elasticModel->load($newData, '');
-                        $dbModel->data = $dbModel->elasticModel->toJson();
-                        $dbModel->active = 1;
-                        if ($dbModel->validate() === true) {
-                            $dbModel->save();
-                        } else {
-                            $this->items[$id]['errors'] = $dbModel->errors;
-                        }
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw  $e;
-        }
-    }
-
-
-    /**
-     * Attach Item in Content
+     * Attach Item
      *
      * @param Item $item
-     * @return array|ConfigItem|ContentItem|object|\yii\db\ActiveRecord|\yii\db\T|null
+     * @return ContentItem
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      */
-    public function attachItem(Item $item)
+    public function attachItem(Item $item) : ContentItem
     {
         try {
             $contentItem = ContentItem::find()
@@ -218,13 +187,40 @@ class Content extends \yii\db\ActiveRecord
      * @return int
      * @throws Exception
      */
-    public function detachItem(Item $item)
+    public function detachItem(Item $item) : int
     {
         try {
             return ConfigItem::deleteAll(['contentId' => $this->id, 'itemId' => $item->id]);
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw  $e;
+        }
+    }
+
+    /**
+     * Reorder items
+     *
+     * @return void
+     * @throws \yii\db\Exception
+     */
+    public function reOrderItems() : void
+    {
+        try {
+            $contentItemsQuery = ContentItem::find()
+                ->andWhere(['contentId' => $this->id])->orderBy(['order' => SORT_ASC]);
+            $index = 0;
+            /** @var ContentItem $contentItem */
+            foreach ($contentItemsQuery->each() as $contentItem) {
+                $contentItem->scenario = ContentItem::SCENARIO_UPDATE;
+                $contentItem->order = $index;
+                if ($contentItem->validate() === true) {
+                    $contentItem->save();
+                }
+                $index += 1;
+            }
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
         }
     }
 
@@ -294,33 +290,6 @@ class Content extends \yii\db\ActiveRecord
     {
         try {
            return $this->getItems()->andWhere(['configItemId' => $configItemId])->one();
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw $e;
-        }
-    }
-
-    /**
-     * Reorder items
-     *
-     * @return void
-     * @throws \yii\db\Exception
-     */
-    public function reOrderItems() : void
-    {
-        try {
-            $contentItemsQuery = ContentItem::find()
-                ->andWhere(['contentId' => $this->id])->orderBy(['order' => SORT_ASC]);
-            $index = 0;
-            /** @var ContentItem $contentItem */
-            foreach ($contentItemsQuery->each() as $contentItem) {
-                $contentItem->scenario = ContentItem::SCENARIO_UPDATE;
-                $contentItem->order = $index;
-                if ($contentItem->validate() === true) {
-                    $contentItem->save();
-                }
-                $index += 1;
-            }
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;

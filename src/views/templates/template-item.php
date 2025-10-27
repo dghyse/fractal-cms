@@ -13,7 +13,6 @@
  * @var $content \fractalCms\models\Content
  * @var integer $index
  * @var integer $total
- * @var array $configItems
  */
 
 use fractalCms\helpers\Html;
@@ -99,7 +98,7 @@ use fractalCms\helpers\Html;
                 }
                 echo $this->render($viewPath, [
                         'model' => $model,
-                        'content' => $content,
+                        'parentModel' => $content,
                     ]);
             ?>
         </div>

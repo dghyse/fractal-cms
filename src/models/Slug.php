@@ -119,8 +119,8 @@ class Slug extends \yii\db\ActiveRecord
             //switch accents to simpler text
             $string = preg_replace("/\s+/","-", $string);
             $string = str_replace(
-                ['é','è', 'ë', 'ê', 'à', 'ä', 'â', 'ù', 'ü', 'û', 'ö', 'ô', 'ï', 'ï', 'ü', 'û', 'ç'],
-                ['e','e', 'e', 'e', 'a', 'a', 'a', 'u', 'u', 'u', 'o', 'o', 'i', 'i', 'u', 'u', 'c'], $string);
+                ['é','è', 'ë', 'ê', 'à', 'ä', 'â', 'ù', 'ü', 'û', 'ö', 'ô', 'ï', 'ï', 'ü', 'û', 'ç', '\'', '/', '\\'],
+                ['e','e', 'e', 'e', 'a', 'a', 'a', 'u', 'u', 'u', 'o', 'o', 'i', 'i', 'u', 'u', 'c', '-', '-', '-'], $string);
             return trim(strtolower($string));;
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
