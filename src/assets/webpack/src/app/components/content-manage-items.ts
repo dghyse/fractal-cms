@@ -4,13 +4,15 @@ import {EEvents} from "../enums/events";
 import {IActionEvent} from "../interfaces/events";
 import {IAlertAddMessage} from "../interfaces/alert";
 import {EAlert} from "../enums/alert";
+import {EApi} from "../enums/api";
 
-@customElement('cms-content-manage-items')
+@customElement('fractalcms-content-manage-items')
 
 export class ContentManageItems
 {
     @bindable public id:number;
     @bindable public view : any;
+    @bindable public itemApiUrl : string;
     private form:HTMLFormElement;
     private buttonAdd:HTMLButtonElement;
     private eaActionDispose:IDisposable;
@@ -83,8 +85,9 @@ export class ContentManageItems
         if (this.form) {
             const formData = new FormData(this.form);
             formData.append(name, value);
-            this.apiServices.manageItems(this.id, formData).then((html) => {
-                if (name ! == EAlert.ADD_ITEM) {
+            const itemApiUrl = this.itemApiUrl.replace('{targetId}', this.id.toString())
+            this.apiServices.manageItems(itemApiUrl, formData).then((html) => {
+                if (name !== EAlert.ADD_ITEM) {
                     const message:IAlertAddMessage = {
                         id:window.crypto.randomUUID(),
                         message:'Un item a été ajouté',

@@ -1,6 +1,6 @@
 <?php
 /**
- * ContentController.php
+ * TagController.php
  *
  * PHP Version 8.2+
  *
@@ -14,12 +14,11 @@ namespace fractalCms\controllers\api;
 use Exception;
 use fractalCms\actions\ItemAction;
 use fractalCms\components\Constant;
-use fractalCms\models\Content;
-use fractalCms\models\ContentItem;
 use fractalCms\models\Item;
 use fractalCms\models\Seo;
 use fractalCms\models\Slug;
-use fractalCms\models\User;
+use fractalCms\models\Tag;
+use fractalCms\models\TagItem;
 use Yii;
 use yii\db\Expression;
 use yii\filters\AccessControl;
@@ -27,7 +26,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class ContentController extends BaseController
+class TagController extends BaseController
 {
 
     /**
@@ -38,8 +37,8 @@ class ContentController extends BaseController
         $actions = parent::actions();
         $actions['manage-items'] = [
             'class' => ItemAction::class,
-            'targetClass' => Content::class,
-            'targetRelationClass' => ContentItem::class
+            'targetClass' => Tag::class,
+            'targetRelationClass' => TagItem::class
         ];
         return $actions;
     }
@@ -59,7 +58,7 @@ class ContentController extends BaseController
                     'allow' => true,
                     'actions' => ['delete'],
                     'verbs' => ['delete'],
-                    'roles' => [Constant::PERMISSION_MAIN_CONTENT.Constant::PERMISSION_ACTION_DELETE],
+                    'roles' => [Constant::PERMISSION_MAIN_TAG.Constant::PERMISSION_ACTION_DELETE],
                     'denyCallback' => function ($rule, $action) {
                         throw new ForbiddenHttpException();
                     }
@@ -68,7 +67,7 @@ class ContentController extends BaseController
                     'allow' => true,
                     'actions' => ['activate'],
                     'verbs' => ['get'],
-                    'roles' => [Constant::PERMISSION_MAIN_CONTENT.Constant::PERMISSION_ACTION_ACTIVATION],
+                    'roles' => [Constant::PERMISSION_MAIN_TAG.Constant::PERMISSION_ACTION_ACTIVATION],
                     'denyCallback' => function ($rule, $action) {
                         throw new ForbiddenHttpException();
                     }
@@ -102,9 +101,10 @@ class ContentController extends BaseController
     {
         try {
             $response = Yii::$app->getResponse();
-            $model = Content::findOne(['id' => $id]);
+            /** @var Tag $model */
+            $model = Tag::findOne(['id' => $id]);
             if ($model === null) {
-                throw new NotFoundHttpException('content not found');
+                throw new NotFoundHttpException('tag not found');
             }
             $seo = $model->getSeo()->one();
             $slug = $model->getSlug()->one();
@@ -144,10 +144,10 @@ class ContentController extends BaseController
     {
         try {
             $response = Yii::$app->getResponse();
-            /** @var User $model */
-            $model = Content::findOne(['id' => $id]);
+            /** @var Tag $model */
+            $model = Tag::findOne(['id' => $id]);
             if ($model === null) {
-                throw new NotFoundHttpException('content not found');
+                throw new NotFoundHttpException('tag not found');
             }
             $model->active = true;
             $model->dateUpdate = new Expression('NEW()');

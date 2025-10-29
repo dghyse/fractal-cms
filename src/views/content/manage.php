@@ -14,6 +14,7 @@
  * @var array $sections
  * @var array $configItems
  * @var \yii\redis\ActiveQuery $itemsQuery
+ * @var \yii\redis\ActiveQuery $tagsQuery
  * @var \fractalCms\models\Slug $slug
  * @var \fractalCms\models\Seo $seo
  */
@@ -50,7 +51,8 @@ $configItems = ($configItems) ?? [];
             'configTypes' => $configTypes,
             'sections' => $sections,
             'configItems' => $configItems,
-            'itemsQuery' => $itemsQuery
+            'itemsQuery' => $itemsQuery,
+            'tagsQuery' => $tagsQuery,
         ]);
     ?>
 </div>

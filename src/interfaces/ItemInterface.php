@@ -41,10 +41,26 @@ interface ItemInterface
     public function reOrderItems() : void;
 
     /**
+     * Delete item
+     *
+     * @param Item $item
+     * @return int
+     */
+    public function deleteItem(Item $item) : int;
+
+    /**
      * Manage Item
      *
      * @param $deleteSource
      * @return void
      */
     public function manageItems($deleteSource = true) : void;
+
+    /**
+     * Get item with config
+     *
+     * @param int $configItemId
+     * @return Item|null
+     */
+    public function getItemByConfigId(int $configItemId): Item | null;
 }

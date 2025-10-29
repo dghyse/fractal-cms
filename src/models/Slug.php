@@ -12,6 +12,8 @@ namespace fractalCms\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 use Exception;
 
@@ -112,6 +114,22 @@ class Slug extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Content::class, ['slugId' => 'id']);
     }
+
+
+    /**
+     * Get target
+     *
+     * @return ActiveQuery
+     */
+    public function getTarget($active = true) : ActiveQuery
+    {
+        $targetQuery = $this->hasOne(Content::class, ['slugId' => 'id']);
+        if ($targetQuery->count() === 0) {
+            $targetQuery = $this->hasOne(Tag::class, ['slugId' => 'id']);
+        }
+        return $targetQuery;
+    }
+
 
     public static function cleanPath($string) : string
     {

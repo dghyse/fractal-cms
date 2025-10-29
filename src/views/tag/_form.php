@@ -72,13 +72,14 @@ use yii\helpers\ArrayHelper;
                         [
                             'class' => 'cad-body',
                         ]);
-                    echo Html::tag('cms-content-manage-items', '',
+                    echo Html::tag('fractalcms-content-manage-items', '',
                         [
                             'id.bind' => $model->id,
+                            'item-api-url' => '/tags/{targetId}/manage-items',
                             'view' => $this->render('_items', [
                                 'itemsQuery' => $itemsQuery,
                                 'configItems' => $configItems,
-                                'content' => $model
+                                'target' => $model
                             ])
                         ]
                     );

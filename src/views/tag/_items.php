@@ -10,7 +10,7 @@
  *
  * @var \yii\web\View $this
  * @var \yii\db\ActiveQuery $itemsQuery
- * @var \fractalCms\models\Content $content
+ * @var \fractalCms\models\Tag $target
  * @var array $configItems
  */
 
@@ -28,7 +28,7 @@ $model = Yii::createObject(\fractalCms\models\Item::class);
                 [
                     'model' => $item,
                     'index' => $index,
-                    'content' => $content,
+                    'target' => $target,
                     'total' => $itemsQuery->count()
                 ]);
             }

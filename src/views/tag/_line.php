@@ -15,7 +15,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 ?>
 <?php
-    $classes = ['row align-items-center  p-1 border mt-1'];
+    $classes = ['row justify-content-between  p-1 border mt-1'];
     if ((boolean)$model->active === true) {
         $classes[] = 'border-success';
     } elseif((boolean)$model->active === false) {
@@ -29,9 +29,8 @@ use yii\helpers\Url;
     $className[] = 'col-sm-6';
      $name = '#'.$model->id.' '.ucfirst($model->name);
     echo Html::tag('div', $name, ['class' => implode(' ', $className)]);
-    echo Html::tag('div', ucfirst($model->type), ['class' => 'col-sm-3']);
     echo Html::beginTag('div', ['class' => 'col-sm-3']);
-    echo Html::beginTag('div', ['class' => 'row align-items-center']);
+    echo Html::beginTag('div', ['class' => 'row']);
     if (Yii::$app->user->can(Constant::PERMISSION_MAIN_TAG.Constant::PERMISSION_ACTION_UPDATE) === true)  {
         echo Html::beginTag('a', ['href' => Url::to(['tag/update', 'id' => $model->id]), 'class' => 'icon-link col', 'title' => 'Editer']);
         ?>
@@ -58,7 +57,7 @@ use yii\helpers\Url;
         echo Html::endTag('span');
         // echo Html::endTag('a');
     }
-    if (Yii::$app->user->can(Constant::PERMISSION_MAIN_TAG.Constant::PERMISSION_ACTION_DELETE) === true && $model->pathKey !== '1')  {
+    if (Yii::$app->user->can(Constant::PERMISSION_MAIN_TAG.Constant::PERMISSION_ACTION_DELETE) === true)  {
         echo Html::beginTag('a', ['href' => Url::to(['api/tag/delete', 'id' => $model->id]), 'class' => 'icon-link col user-button-delete', 'title' => 'Supprimer']);
         ?>
         <svg width="24px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

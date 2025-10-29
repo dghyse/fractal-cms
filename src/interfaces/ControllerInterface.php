@@ -12,13 +12,14 @@
 namespace fractalCms\interfaces;
 
 use fractalCms\models\Content;
+use fractalCms\models\Tag;
 
 interface ControllerInterface
 {
     /**
      * Get content
      *
-     * @return Content|null
+     * @return Content|Tag|null
      */
-    public function getContent() : Content | null;
+    public function getTarget() : Content | Tag | null;
 }

@@ -18,6 +18,7 @@ use fractalCms\models\ConfigType;
 use fractalCms\models\Content;
 use fractalCms\models\Seo;
 use fractalCms\models\Slug;
+use fractalCms\models\Tag;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -168,6 +169,7 @@ class ContentController extends Controller
         try {
             $configTypes = ConfigType::find()->orderBy(['name' => SORT_ASC])->all();
             $sections = Cms::buildSections(false, true);
+            $tagsQuery = Tag::find()->where(['active' => 1]);
             //find content
             $model = Content::findOne(['id' => $id]);
             if ($model === null) {
@@ -229,6 +231,7 @@ class ContentController extends Controller
                 'sections' => $sections,
                 'configItems' => Cms::getConfigItems(),
                 'itemsQuery' => $itemsQuery,
+                'tagsQuery' => $tagsQuery,
             ]);
         } catch (Exception $e)  {
             Yii::error($e->getMessage(), __METHOD__);

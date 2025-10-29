@@ -15,6 +15,7 @@
  * @var array $sections
  * @var array $configItems
  * @var \yii\redis\ActiveQuery $itemsQuery
+ * @var \yii\redis\ActiveQuery $tagsQuery
  * @var \fractalCms\models\Slug $slug;
  * @var \fractalCms\models\Seo $seo;
  */
@@ -75,6 +76,19 @@ use yii\helpers\ArrayHelper;
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-6 p-0 mt-3">
+                <?php
+                    echo Html::activeLabel($model, 'formTags', ['label' => 'Tag / étiquettes', 'class' => 'form-label'])
+                ?>
+                <?php
+                   echo Html::activeDropDownList($model, 'formTags', ArrayHelper::map($tagsQuery->all(), 'id', 'name'), [
+                        'class' => 'form-control',
+                       'fractalcms-select-beautiful' => 'multiple.bind:"true";input-name.bind:"'.Html::getInputName($model, 'formTags').'"'
+                    ]);
+                ?>
+            </div>
+        </div>
         <?php if ($model->isNewRecord === false):?>
             <div class="row mt-3">
                 <?php
@@ -99,13 +113,14 @@ use yii\helpers\ArrayHelper;
                         [
                             'class' => 'cad-body',
                         ]);
-                    echo Html::tag('cms-content-manage-items', '',
+                    echo Html::tag('fractalcms-content-manage-items', '',
                         [
                             'id.bind' => $model->id,
+                            'item-api-url' => '/contents/{targetId}/manage-items',
                             'view' => $this->render('_items', [
                                 'itemsQuery' => $itemsQuery,
                                 'configItems' => $configItems,
-                                'content' => $model
+                                'target' => $model
                             ])
                         ]
                     );

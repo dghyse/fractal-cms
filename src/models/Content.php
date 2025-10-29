@@ -53,6 +53,7 @@ class Content extends \yii\db\ActiveRecord implements ItemInterface
     const SCENARIO_UPDATE = 'update';
     const SCENARIO_INIT = 'init';
     public $items;
+    public $formTags;
 
     /**
      * {@inheritdoc}
@@ -86,14 +87,14 @@ class Content extends \yii\db\ActiveRecord implements ItemInterface
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = [
-            'name', 'slugId', 'seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey'
+            'name', 'slugId', 'seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey', 'formTags'
         ];
 
         $scenarios[self::SCENARIO_UPDATE] = [
-            'name', 'slugId','seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey', 'items'
+            'name', 'slugId','seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey', 'items', 'formTags'
         ];
         $scenarios[self::SCENARIO_INIT] = [
-            'name', 'slugId','seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey'
+            'name', 'slugId','seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey', 'formTags'
         ];
         return $scenarios;
     }
@@ -224,6 +225,27 @@ class Content extends \yii\db\ActiveRecord implements ItemInterface
         }
     }
 
+    /**
+     * @param Item $item
+     * @return int
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function deleteItem(Item $item) : int
+    {
+        try {
+            $relationDeleted =  ContentItem::deleteAll(['itemId' => $item->id, 'contentId' => $this->id]);
+            if ($relationDeleted > 0) {
+                $item->deleteFilesDir();
+                $item->delete();
+            }
+            return  $relationDeleted;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
 
     /**
      * Gets query for [[ConfigType]].
@@ -280,13 +302,14 @@ class Content extends \yii\db\ActiveRecord implements ItemInterface
     }
 
     /**
-     * Get items by config item Id
+     * Get item with config
      *
      * @param $configItemId
-     * @return array|\yii\db\ActiveRecord|\yii\db\T|null
+     *
+     * @return Item|null
      * @throws Exception
      */
-    public function getItemByConfigId($configItemId)
+    public function getItemByConfigId($configItemId) : Item | null
     {
         try {
            return $this->getItems()->andWhere(['configItemId' => $configItemId])->one();

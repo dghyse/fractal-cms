@@ -14,6 +14,8 @@ namespace fractalCms\controllers;
 use fractalCms\interfaces\ControllerInterface;
 use fractalCms\models\Content;
 use fractalCms\models\Slug;
+use fractalCms\models\Tag;
+use yii\db\ActiveRecord;
 use yii\web\Controller;
 use Exception;
 use Yii;
@@ -24,9 +26,9 @@ class CmsController extends Controller implements ControllerInterface
     const EVENT_CONTENT_READY = 'contentReady';
 
     /**
-     * @var Content $content
+     * @var Content | Tag $target
      */
-    private Content $content;
+    private Content | Tag $target;
 
     /**
      * @inheritDoc
@@ -36,18 +38,18 @@ class CmsController extends Controller implements ControllerInterface
     {
         try {
             parent::init();
-            $content = null;
+            $target = null;
             $request = Yii::$app->request;
             $pathInfo = $request->getPathInfo();
             //Get slug with path info
             $slug = Slug::find()->andWhere(['path' => $pathInfo, 'active' => 1])->one();
             if ($slug instanceof Slug) {
                 //Get content with slug
-                $content = Content::find()->andWhere(['slugId' => $slug->id])->one();
+                $target = $slug->getTarget()->one();
             }
-            $this->content = $content;
+            $this->target = $target;
             //Event send when content is ready
-            if ($this->content instanceof Content) {
+            if ($this->target !== null) {
                 $this->trigger(static::EVENT_CONTENT_READY);
             }
         } catch (Exception $e) {
@@ -59,13 +61,13 @@ class CmsController extends Controller implements ControllerInterface
     /**
      * Get content in context
      *
-     * @return Content|null
+     * @return Content | Tag |null
      * @throws Exception
      */
-    public function getContent() : Content | null
+    public function getTarget() : Content | Tag | null
     {
         try {
-            return $this->content;
+            return $this->target;
         }catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;

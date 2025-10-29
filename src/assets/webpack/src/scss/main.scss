@@ -22,3 +22,84 @@
 
 .dragging { opacity: 0.5; }
 .over { border: 2px dashed #007bff; }
+
+.select-beautiful {
+  &-container {
+    width: 100%;
+    display: inline-flex;
+    padding: 5px;
+  }
+}
+
+.input {
+   &-search {
+     width: 100%;
+     padding: 5px;
+     border:  2px solid #007bff;
+     border-radius: 5px;
+     &--focus {
+       width: 100%;
+       padding: 5px;
+       border-top:  2px solid #007bff;
+       border-left:  2px solid #007bff;
+       border-right:  2px solid #007bff;
+       border-top-left-radius: 5px;
+       border-top-right-radius: 5px;
+       border-bottom: none;
+     }
+   }
+}
+
+.list-items-container {
+  width: 100%;
+  border-bottom:  2px solid #007bff;
+  border-left:  2px solid #007bff;
+  border-right:  2px solid #007bff;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-top: none;
+  padding: 5px;
+  list-style: none;
+}
+.list-option {
+  cursor: pointer;
+}
+
+.list-option:hover {
+  outline-offset: 2px;
+  outline: #007bff;
+}
+div.search-container {
+  width: 100%;
+}
+div.item-container {
+  width: 100%;
+}
+span.item {
+  position: relative;
+  display: inline;
+  padding: 5px;
+  margin: 1px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  background-color:white;
+  color: #007bff;
+}
+button.item-close {
+  position: relative;
+  display: inline;
+  font-size: 15px;
+  width: 28px;
+  background-color:white;
+  color: #007bff;
+  border: 2px solid #007bff;
+  border-radius: 18px;
+  margin: 1px;
+  padding: 1px;
+  right: -6px;
+  top: 0px;
+}
+li[aria-selected="true"] {
+  background-color:#007bff;
+  color: white;
+}

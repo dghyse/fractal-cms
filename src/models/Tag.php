@@ -199,6 +199,46 @@ class Tag extends \yii\db\ActiveRecord implements ItemInterface
     }
 
     /**
+     * @param Item $item
+     * @return int
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function deleteItem(Item $item) : int
+    {
+        try {
+            $relationDeleted =  TagItem::deleteAll(['itemId' => $item->id, 'contentId' => $this->id]);
+            if ($relationDeleted > 0) {
+                $item->deleteFilesDir();
+                $item->delete();
+            }
+            return  $relationDeleted;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
+
+    /**
+     * Get item with config
+     *
+     * @param $configItemId
+     *
+     * @return Item|null
+     * @throws Exception
+     */
+    public function getItemByConfigId($configItemId) : Item | null
+    {
+        try {
+            return $this->getItems()->andWhere(['configItemId' => $configItemId])->one();
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
+    /**
      * Gets query for [[ConfigType]].
      *
      * @return \yii\db\ActiveQuery
@@ -235,7 +275,10 @@ class Tag extends \yii\db\ActiveRecord implements ItemInterface
      */
     public function getItems()
     {
-        return $this->hasMany(Item::class, ['id' => 'itemId'])->viaTable('tagItems', ['tagId' => 'id']);
+        $query = Item::find()->andWhere(['tagId' => $this->id])
+            ->innerJoin(TagItem::tableName(), 'tagId='.$this->id.' and itemId=items.id');
+        $query->orderBy(['order' => SORT_ASC]);
+        return $query;
     }
 
     /**
