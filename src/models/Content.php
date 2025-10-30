@@ -151,6 +151,35 @@ class Content extends \yii\db\ActiveRecord implements ItemInterface
             $parentPathKey = substr($this->pathKey, 0,strlen($this->pathKey) -1);
             $this->parentPathKey = trim($parentPathKey, '.');
         }
+        $contentTagQuery = ContentTag::find()->andWhere(['contentId' => $this->id]);
+        /** @var ContentTag $contentTag */
+        foreach ($contentTagQuery->each() as $contentTag) {
+            $this->formTags[] = $contentTag->tagId;
+        }
+    }
+
+    public function manageTags()
+    {
+        try {
+            $deleted = ContentTag::deleteAll(['contentId' => $this->id]);
+            if (is_array($this->formTags) === true && empty($this->formTags) === false) {
+                foreach ($this->formTags as $tagId) {
+                    $tag = Tag::findOne($tagId);
+                    if ($tag !== null) {
+                        $contentTag = Yii::createObject(ContentTag::class);
+                        $contentTag->scenario = ContentTag::SCENARIO_CREATE;
+                        $contentTag->tagId = $tag->id;
+                        $contentTag->contentId = $this->id;
+                        if ($contentTag->validate() === true) {
+                            $contentTag->save();
+                        }
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw  $e;
+        }
     }
 
     /**

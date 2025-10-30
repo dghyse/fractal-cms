@@ -621,6 +621,7 @@
 .ql-snow .ql-tooltip[data-mode=video]::before{content:"Enter video:"}
 .ql-snow a{color:#06c}
 .ql-container.ql-snow{border:1px solid #ccc}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0}
 .collapse{visibility:collapse}
 .static{position:static}
 .m-0{margin:0px}
@@ -951,7 +952,9 @@ div.search-container{width:100%}
 div.item-container{width:100%}
 span.item{position:relative;display:inline;padding:5px;margin:1px;border:2px solid #007bff;border-radius:5px;background-color:#fff;color:#007bff}
 button.item-close{position:relative;display:inline;font-size:15px;width:28px;background-color:#fff;color:#007bff;border:2px solid #007bff;border-radius:18px;margin:1px;padding:1px;right:-6px;top:0px}
-li[aria-selected=true]{background-color:#007bff;color:#fff}
+.list-items-container li[aria-selected=true]{background-color:#007bff;color:#fff}
+.list-items-container li.active{border:1px solid #007bff;border-radius:2px;font-weight:bold}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0}
 @media (min-width: 768px){
 .md\:col-span-2{grid-column:span 2 / span 2}
 .md\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}}

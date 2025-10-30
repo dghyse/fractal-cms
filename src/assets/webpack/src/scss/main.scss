@@ -99,7 +99,24 @@ button.item-close {
   right: -6px;
   top: 0px;
 }
-li[aria-selected="true"] {
+.list-items-container li[aria-selected="true"] {
   background-color:#007bff;
   color: white;
+}
+.list-items-container li.active {
+  border: 1px solid #007bff;
+  border-radius: 2px;
+  font-weight: bold;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }

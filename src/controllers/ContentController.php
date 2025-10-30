@@ -202,6 +202,7 @@ class ContentController extends Controller
                 //Check url
                 $slug->path = $slug->validateAndBuild($slug->path);
                 $model->manageItems();
+                $model->manageTags();
                 if ($model->validate() === true && $slug->validate() === true && $seo->validate()) {
                     $slug->save();
                     $seo->save();
