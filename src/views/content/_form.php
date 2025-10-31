@@ -86,7 +86,7 @@ use yii\helpers\ArrayHelper;
                         'class' => 'form-control',
                        'multiple' => true,
                        'prompt' => 'Sélectionner une ou plusieurs Tag / étiquettes',
-                        'fractalcms-select-beautiful' => 'multiple.bind:"true";input-name.bind:"'.Html::getInputName($model, 'formTags').'"'
+                        'fractalcms-select-beautiful.bind' => '{multiple:true, removeText:\'enlevé\', theme:\'dark\'}',
                     ]);
                 ?>
             </div>

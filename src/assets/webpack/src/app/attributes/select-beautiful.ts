@@ -1,18 +1,47 @@
-import {bindable, customAttribute, ILogger, INode, resolve, IPlatform, IEventAggregator} from "aurelia";
-import {ApiServices} from "../services/api-services";
-import {text} from "node:stream/consumers";
+import {bindable, customAttribute, ILogger, INode, resolve, IPlatform} from "aurelia";
 
 export interface IItemChoice {
     value:any;
     content:string
 }
+export enum ECssTheme {
+    DEFAULT = 'default',
+    DARK = 'dark',
+    RED = 'red',
+    BLUE = 'blue',
+    SOFT = 'soft'
+}
+
+export interface ISelectBeautifulOptions {
+    multiple?: boolean;
+    searchPlaceholder?: string;
+    searchInputName?: string;
+    iconButtonDelete?: string;
+    removeText?: string;
+    addText?: string;
+    eventChangeItemName?: string;
+    theme?: ECssTheme;
+}
+
+export class SelectBeautifulOptions implements ISelectBeautifulOptions {
+    public multiple = true;
+    public searchPlaceholder = 'Rechercher';
+    public searchInputName = 'model[search]';
+    public iconButtonDelete: any;
+    public removeText = 'retiré';
+    public addText = 'ajouté';
+    public eventChangeItemName = 'fractalcms-select-change';
+    public theme: ECssTheme = ECssTheme.DEFAULT;
+
+    constructor(options?: Partial<ISelectBeautifulOptions>) {
+        Object.assign(this, options);
+    }
+}
 
 @customAttribute('fractalcms-select-beautiful')
 export class SelectBeautiful {
 
-    @bindable() multiple: boolean = true;
-    @bindable() inputName : string;
-    @bindable() searchInputName : string = 'model[search]';
+    @bindable({primary:true}) bindableOptions: SelectBeautifulOptions = new SelectBeautifulOptions();
     private listElement:HTMLUListElement;
     private readonly options:HTMLOptionElement[];
     private optionsFiltered:HTMLOptionElement[];
@@ -25,45 +54,86 @@ export class SelectBeautiful {
     private listOpen:boolean = false;
     private activeItemNewIndex:number = -1;
     private activeItemPrevIndex:number;
-    private availableKeyboard = [
+    private readonly availableKeyboard = [
         'ArrowDown',
         'ArrowUp',
         'Enter',
         'Escape',
     ];
+    private timeoutId:number;
+    private divListItemId:string;
 
     public constructor(
         private readonly logger: ILogger = resolve(ILogger).scopeTo('SelectBeautiful'),
         private readonly element: HTMLSelectElement = resolve(INode) as HTMLSelectElement,
-        private readonly ea: IEventAggregator = resolve(IEventAggregator),
-        private readonly apiService: ApiServices = resolve(ApiServices),
         private readonly platform:IPlatform = resolve(IPlatform)
     ) {
         this.logger.trace('constructor');
         this.options = [] as HTMLOptionElement[];
     }
 
+
     public attached()
     {
         this.logger.trace('attached');
-        if (this.multiple) {
-            this.init();
+        if (!this.divListItemId) {
+            this.divListItemId = 'list-item-ul'+Math.random().toString(36).slice(2, 8);
         }
-    }
-    public detached()
-    {
-        this.logger.trace('attached');
-        if(this.inputSearch) {
-            this?.inputSearch.removeEventListener('input', this.onSearch);
+        this.bindableOptions = this.setOptions(this.bindableOptions);
+        if (this.bindableOptions.multiple) {
+            this.initStructure();
+            this.buildList(this.options);
+            this.closeList();
+            this.restoreSelect();
         }
     }
 
-    private init()
+    /**
+     * set default options
+     *
+     * @param options
+     * @private
+     */
+    private setOptions(options: Partial<SelectBeautifulOptions> = this.bindableOptions): SelectBeautifulOptions {
+        const defaults = new SelectBeautifulOptions();
+        const merged = Object.assign({}, defaults, options);
+        return merged as SelectBeautifulOptions;
+    }
+
+    public detached()
     {
-        this.logger.trace('init');
-        if (this.multiple) {
-            this.element.setAttribute('multiple', 'true');
+        this.logger.trace('attached');
+        this.platform.document.removeEventListener('focusin', this.onFocusinDom, true);
+        this.platform.document.removeEventListener('pointerdown', this.onPointerdown, true);
+        if(this.inputSearch) {
+            this.inputSearch.removeEventListener('input', this.onSearch);
+            this.inputSearch.removeEventListener('focusin', this.onFocusin);
+            this.inputSearch.removeEventListener('keydown', this.onKeydown);
         }
+        if (this.listElement) {
+            this.listElement.removeEventListener('click', this.onListItemClick);
+        }
+
+        if (this.divItemContainer) {
+            this.divItemContainer.querySelectorAll('button').forEach((button:HTMLButtonElement, index:number) => {
+                button.removeEventListener('click', this.onRemoveItem);
+            });
+        }
+        if (this.timeoutId) {
+            this.platform.clearTimeout(this.timeoutId);
+        }
+
+    }
+
+    /**
+     * Init structure
+     *
+     * @private
+     */
+    private initStructure()
+    {
+        this.logger.trace('initStructure');
+        this.element.setAttribute('multiple', 'true');
         const listLabel = this.element.getAttribute('prompt');
         this.element.style.display = 'none';
         //Store select options
@@ -71,7 +141,6 @@ export class SelectBeautiful {
             if (option.value) {
                 this.options.push(option);
                 if (option.selected) {
-                    option.setAttribute('aria-selected', 'true');
                     const itemChoice:IItemChoice = {
                         value:option.value,
                         content:option.textContent
@@ -81,48 +150,53 @@ export class SelectBeautiful {
             }
 
         });
+        //Create div container
+        this.divContainer = this.platform.document.createElement('div');
+        this.divContainer.classList.add('theme-'+this.bindableOptions.theme, 'select-beautiful');
+        //Create item container
+        this.divItemContainer = this.platform.document.createElement('div');
+        this.divItemContainer.classList.add('select-beautiful--item');
+        //Search container
+        this.divSearchContainer = this.platform.document.createElement('div');
+        this.divSearchContainer.classList.add('select-beautiful--search');
         //Create ul list item
         this.listElement = this.platform.document.createElement('ul');
-        this.closeList()
         this.listElement.setAttribute('role', 'listbox');
         this.listElement.setAttribute('aria-label', listLabel);
         this.listElement.setAttribute('aria-multiselectable', 'true');
         this.listElement.setAttribute('tabindex', '0');
-        this.listElement.classList.add('list-items-container')
-        this.buildList(this.options);
-
-        //Create div container
-        this.divContainer = this.platform.document.createElement('div');
-        this.divContainer.classList.add('select-beautiful-container');
+        this.listElement.classList.add('select-beautiful--search---list--items')
+        this.listElement.setAttribute('id', this.divListItemId);
+        this.listElement.addEventListener('click', this.onListItemClick);
         //Create input search
         this.inputSearch = this.platform.document.createElement('input');
         this.inputSearch.type = 'text';
-        this.inputSearch.classList.add('input-search')
-        this.inputSearch.name = this.searchInputName;
+        this.inputSearch.classList.add('select-beautiful--search---input')
+        this.inputSearch.name = this.bindableOptions.searchInputName;
         this.inputSearch.setAttribute('autocomplete', 'off');
-        this.inputSearch.placeholder = 'Rechercher';
-        this.inputSearch.setAttribute('aria-label', 'Rechercher');
+        this.inputSearch.placeholder = this.bindableOptions.searchPlaceholder;
+        this.inputSearch.setAttribute('aria-label', this.bindableOptions.searchPlaceholder);
+        this.inputSearch.setAttribute('aria-controls', this.divListItemId);
+        this.inputSearch.setAttribute('role', 'combobox');
+        this.inputSearch.setAttribute('aria-expanded', 'false');
         this.inputSearch.addEventListener('input', this.onSearch);
-        this.inputSearch.addEventListener('focusin', this.onFocus);
-        this.inputSearch.addEventListener('focusout', this.onFocusout);
+        this.inputSearch.addEventListener('focusin', this.onFocusin);
         this.inputSearch.addEventListener('keydown', this.onKeydown);
-        //Create item container
-        this.divItemContainer = this.platform.document.createElement('div');
-        this.divItemContainer.classList.add('item-container');
-        this.divItemContainer.append(this.inputSearch);
-        this.divSearchContainer = this.platform.document.createElement('div');
-        this.divSearchContainer.classList.add('search-container');
+        this.divSearchContainer.append(this.inputSearch);
         this.divSearchContainer.append(this.listElement);
 
         //Create div live message
         this.divLiveMsg = this.platform.document.createElement('div');
         this.divLiveMsg.setAttribute('aria-live','polite');
         this.divLiveMsg.classList.add('sr-only');
+        this.divContainer.append(this.divItemContainer, this.divSearchContainer, this.divLiveMsg);
         //Append element in Dom
-        this.element.before(this.divItemContainer);
-        this.element.before(this.divSearchContainer);
-        this.element.before(this.divLiveMsg);
+        this.element.before(this.divContainer);
+    }
 
+    private restoreSelect()
+    {
+        this.logger.trace('restoreSelect');
         //Add selected item
         this.listElement.querySelectorAll('li').forEach((li:HTMLLIElement, key:number) => {
             const selected = li.getAttribute('aria-selected');
@@ -131,28 +205,6 @@ export class SelectBeautiful {
             }
         });
     }
-
-
-    /**
-     * Search in option
-     *
-     * @param event
-     */
-    private readonly onSearch = (event:Event) => {
-        this.logger.trace('onSearch');
-        event.preventDefault();
-        this.openList()
-        const target = event.currentTarget as HTMLInputElement;
-        const value = target.value.trim().toLowerCase();
-        this.optionsFiltered = this.options.filter((option, key) => {
-            if (option.textContent.includes(value)) {
-                return option;
-            }
-        });
-        this.buildList(this.optionsFiltered);
-    }
-
-
     /**
      * build list displaying
      *
@@ -163,6 +215,9 @@ export class SelectBeautiful {
     {
         this.logger.trace('buildList');
         this.listElement.innerHTML = ''
+        if (options.length) {
+            this.activeItemNewIndex = -1;
+        }
         options.forEach((ele, key) => {
             this.addItemList(ele, key);
         });
@@ -179,19 +234,18 @@ export class SelectBeautiful {
     {
         this.logger.trace('addItemList', key);
         const li:HTMLLIElement = this.platform.document.createElement('li');
-        li.classList.add('list-option');
+        li.classList.add('select-beautiful--search---list--items---option');
         li.setAttribute('role', 'option');
         li.setAttribute('id', 'option-'+key);
         li.setAttribute('data-id', option.value);
         li.setAttribute('data-index', key.toString());
-        const itemFind = this.findChoiceItem(option.value);
+        const itemFind = this.findInChoiceItem(option.value);
         if (itemFind) {
             li.setAttribute('aria-selected', 'true');
         } else {
             li.setAttribute('aria-selected', 'false');
         }
         li.textContent = option.textContent;
-        li.addEventListener('click', this.onItemClick);
         this.listElement.append(li);
     }
 
@@ -200,15 +254,62 @@ export class SelectBeautiful {
      *
      * @param event
      */
-    private readonly onFocus = (event:Event) => {
-        this.logger.trace('onFocus');
-        event.preventDefault();
+    private readonly onFocusin = (event:Event) => {
+        this.logger.trace('onFocusin');
         this.openList();
     }
 
-    private readonly onFocusout = (event:Event) => {
-        this.logger.trace('onFocusout');
+    /**
+     * Focus out container
+     *
+     * @param event
+     */
+    private readonly onFocusinDom = (event:Event) => {
+        const target = event.target as Node;
+        this.logger.trace('onFocusinDom', target);
+        if (!this.divContainer.contains(target) && this.listOpen) {
+            this.closeList();
+        }
+    }
+
+    private readonly onPointerdown = (event:Event) => {
+        const target = event.target as Node;
+        this.logger.trace('onPointerdown', target);
+        if (!this.divContainer.contains(target) && this.listOpen) {
+            this.closeList();
+        }
+    }
+
+    /**
+     * Search in option
+     *
+     * @param event
+     */
+    private readonly onSearch = (event:Event) => {
+        this.logger.trace('onSearch');
         event.preventDefault();
+        if (!this.listOpen) {
+            this.openList();
+        }
+        const target = event.currentTarget as HTMLInputElement;
+        const value = target.value.trim().toLowerCase();
+        this.optionsFiltered = this.options.filter((option, key) => {
+            return option.textContent?.toLowerCase().includes(value);
+        });
+        this.buildList(this.optionsFiltered);
+    }
+
+    /**
+     * Click on li from this list item
+     *
+     * @param event
+     */
+    private readonly onListItemClick = (event:Event) => {
+        this.logger.trace('onListItemClick');
+        event.preventDefault();
+        const target = event.target as HTMLElement;
+        const item = target.closest('li');
+        this.manageItem(item);
         this.closeList();
     }
 
@@ -244,7 +345,7 @@ export class SelectBeautiful {
                     break;
                 case 'Enter': {
                     this.logger.trace('Enter', this.activeItemNewIndex, total, this.activeItemPrevIndex);
-                    const item = this.findListItem(this.activeItemNewIndex);
+                    const item = this.findInListItem(this.activeItemNewIndex);
                     this.manageItem(item);
                     break;
                 }
@@ -257,7 +358,41 @@ export class SelectBeautiful {
             this.ariaActiveItem(this.activeItemNewIndex, true);
             this.ariaActiveItem(this.activeItemPrevIndex, false);
         }
+    }
 
+    /**
+     * Remove item selected
+     *
+     * @param event
+     */
+    private readonly onRemoveItem = (event:Event) => {
+        this.logger.trace('onRemoveItem');
+        event.preventDefault();
+        const  current = event.currentTarget as HTMLElement;
+        const target:HTMLSpanElement = current.closest('span');
+        if (target) {
+            const firstChild = target.querySelector(':not(button)');
+            let textContent = target.firstChild.textContent;
+            if (firstChild) {
+                textContent = firstChild.textContent;
+            }
+            this.notification(textContent+' '+this.bindableOptions.removeText);
+            this.removeAndUnSelected(target);
+        }
+    }
+
+
+    /**
+     * Dispatch event change
+     *
+     * @private
+     */
+    private dispatchChangeEvent() {
+        const event = new CustomEvent(this.bindableOptions.eventChangeItemName, {
+            detail: this.currentChoiced,
+            bubbles: true
+        });
+        this.element.dispatchEvent(event);
     }
 
 
@@ -272,11 +407,13 @@ export class SelectBeautiful {
     {
         this.logger.trace('activeItem');
         const liId = 'option-'+index;
-        this.listElement.setAttribute('aria-activedescendant', liId);
-        const item = this.findListItem(index);
+        const item = this.findInListItem(index);
         if(item) {
             if (active) {
                 item.classList.add('active');
+                if (this.inputSearch) {
+                    this.inputSearch.setAttribute('aria-activedescendant', liId);
+                }
             } else {
                 item.classList.remove('active');
             }
@@ -291,38 +428,9 @@ export class SelectBeautiful {
      */
     private notification(msg:string)
     {
-        this.platform.setTimeout(() => {
+        this.timeoutId = this.platform.setTimeout(() => {
             this.divLiveMsg.textContent = msg;
         }, 50);
-    }
-
-    /**
-     * Add new item choiced in div
-     *
-     * @param itemLi
-     * @private
-     */
-    private addItem(itemLi:HTMLLIElement)
-    {
-        this.logger.trace('addItem');
-        const span = this.platform.document.createElement('span');
-        itemLi.setAttribute('aria-selected', 'true');
-        span.setAttribute('data-id', itemLi.getAttribute('data-id'));
-        span.classList.add('item');
-        span.textContent = itemLi.textContent;
-        const btnClose = this.platform.document.createElement('button');
-        btnClose.classList.add('item-close');
-        btnClose.role ='button';
-        btnClose.textContent = 'X';
-        btnClose.addEventListener('click', this.onRemoveItem);
-        span.append(btnClose);
-        const item:IItemChoice  = {
-            value:itemLi.getAttribute('data-id'),
-            content:itemLi.textContent
-        };
-        this.notification(itemLi.textContent+' ajouté');
-        this.pushChoiceItem(item);
-        this.inputSearch.before(span);
     }
 
     /**
@@ -334,7 +442,7 @@ export class SelectBeautiful {
     private pushChoiceItem(newItem:IItemChoice)
     {
         this.logger.trace('pushChoiceItem');
-        const find = this.findChoiceItem(newItem.value);
+        const find = this.findInChoiceItem(newItem.value);
         if(!find) {
             this.currentChoiced.push(newItem);
         }
@@ -368,18 +476,18 @@ export class SelectBeautiful {
      * @param value
      * @private
      */
-    private findChoiceItem(value:any) :IItemChoice
+    private findInChoiceItem(value:any) :IItemChoice
     {
-        this.logger.trace('findChoiceItem');
+        this.logger.trace('findInChoiceItem');
         return this.currentChoiced.find((item:IItemChoice, index:number) => {
             return value == item.value;
         });
     }
 
 
-    private findListItem(index:number) :HTMLLIElement | null
+    private findInListItem(index:number) :HTMLLIElement | null
     {
-        this.logger.trace('findChoiceItem');
+        this.logger.trace('findInListItem');
         let item:HTMLLIElement;
         if (this.listElement) {
             item = this.listElement.children.item(index) as HTMLLIElement;
@@ -387,41 +495,56 @@ export class SelectBeautiful {
         return item
     }
 
-
     /**
-     * Remove item
+     * Add new item choiced in div
      *
      * @param itemLi
      * @private
      */
-    private removeItem(itemLi:HTMLLIElement)
+    private addItem(itemLi:HTMLLIElement)
     {
-        this.logger.trace('removeItem');
-        const dataItemId =  itemLi.getAttribute('data-id');
-        const spans = this.divItemContainer.querySelectorAll('span');
-        spans.forEach((span:HTMLSpanElement, key:number) => {
-           const dataId =  span.getAttribute('data-id');
-           if (dataId == dataItemId) {
-               this.removeChoiceItem(dataId);
-               span.remove();
-               this.notification(itemLi.textContent+' retiré');
-           }
-        });
+        this.logger.trace('addItem');
+        const span = this.platform.document.createElement('span');
+        itemLi.setAttribute('aria-selected', 'true');
+        span.setAttribute('data-id', itemLi.getAttribute('data-id'));
+        span.classList.add('select-beautiful--item---item');
+        span.textContent = itemLi.textContent;
+        const btnClose = this.platform.document.createElement('button');
+        btnClose.classList.add('select-beautiful--item---item-close');
+        btnClose.role ='button';
+        btnClose.textContent = 'X';
+        btnClose.addEventListener('click', this.onRemoveItem);
+        span.append(btnClose);
+        const item:IItemChoice  = {
+            value:itemLi.getAttribute('data-id'),
+            content:itemLi.textContent
+        };
+        this.notification(itemLi.textContent+' '+this.bindableOptions.addText);
+        this.pushChoiceItem(item);
+        this.divItemContainer.append(span);
     }
 
     /**
-     * Click on li from this list item
+     * Remove and unselect item
      *
-     * @param event
+     * @param element
+     * @private
      */
-    private readonly onItemClick = (event:Event) => {
-        this.logger.trace('onItemClick');
-        event.preventDefault();
-        const target = event.currentTarget as HTMLLIElement;
-        this.manageItem(target);
-        this.closeList();
+    private removeAndUnSelected(element:HTMLElement) {
+        this.logger.trace('removeAndUnSelected');
+        const itemId = element.getAttribute('data-id');
+        this.listElement.querySelector(`[data-id="${itemId}"]`)?.setAttribute('aria-selected', 'false');
+        this.divItemContainer.querySelector(`[data-id="${itemId}"]`)?.remove();
+        this.removeChoiceItem(itemId);
     }
 
+
+    /**
+     * Manage item
+     *
+     * @param item
+     * @private
+     */
     private manageItem(item:HTMLLIElement)
     {
         this.logger.trace('manageItem');
@@ -430,8 +553,8 @@ export class SelectBeautiful {
             if (ariaSelected == 'false') {
                 this.addItem(item);
             } else {
-                item.setAttribute('aria-selected', 'false');
-                this.removeItem(item);
+                this.notification(item.textContent+' '+this.bindableOptions.removeText);
+                this.removeAndUnSelected(item)
             }
             this.updateInputSelectElement();
         }
@@ -444,11 +567,17 @@ export class SelectBeautiful {
     private closeList()
     {
         this.listElement.style.display = 'none';
-        if( this.inputSearch) {
-            this.inputSearch.classList.add('input-search');
-            this.inputSearch.classList.remove('input-search--focus');
+        this.listElement.setAttribute('aria-hidden', 'true');
+        if (this.listOpen) {
+            if( this.inputSearch) {
+                this.inputSearch.classList.add('select-beautiful--search---input');
+                this.inputSearch.classList.remove('select-beautiful--search---input--focus');
+                this.inputSearch.setAttribute('aria-expanded', 'false');
+            }
+            this.platform.document.removeEventListener('focusin', this.onFocusinDom, true);
+            this.platform.document.removeEventListener('pointerdown', this.onPointerdown, true);
+            this.listOpen = false;
         }
-        this.listOpen = false;
     }
 
 
@@ -460,49 +589,19 @@ export class SelectBeautiful {
     private openList()
     {
         this.listElement.style.display = 'block';
-        if (this.inputSearch) {
-            this.inputSearch.classList.remove('input-search');
-            this.inputSearch.classList.add('input-search--focus');
-        }
-        this.listOpen = true;
-    }
-
-
-    /**
-     * Remove item selected
-     *
-     * @param event
-     */
-    private readonly onRemoveItem = (event:Event) => {
-        this.logger.trace('removeItem');
-        event.preventDefault();
-        const  current = event.currentTarget as HTMLElement;
-        const target:HTMLSpanElement = current.closest('span.item');
-        if (target) {
-            this.unSelected(target);
-            this.notification(target.firstChild.textContent+' retiré');
-            target.remove();
-        }
-    }
-
-    /**
-     * Un selected item
-     *
-     * @param span
-     * @private
-     */
-    private unSelected(span:HTMLSpanElement) {
-        this.logger.trace('unSelected');
-        const itemId = span.getAttribute('data-id');
-        const selectedLis = this.listElement.querySelectorAll('li');
-        selectedLis.forEach((li:HTMLLIElement, key:number) => {
-            const liId = li.getAttribute('data-id');
-            if (itemId == liId) {
-                this.removeChoiceItem(liId);
-                li.setAttribute('aria-selected', 'false');
+        this.listElement.setAttribute('aria-hidden', 'false');
+        if (!this.listOpen) {
+            if (this.inputSearch) {
+                this.inputSearch.classList.remove('select-beautiful--search---input');
+                this.inputSearch.classList.add('select-beautiful--search---input--focus');
+                this.inputSearch.setAttribute('aria-expanded', 'true');
             }
-        });
+            this.platform.document.addEventListener('focusin', this.onFocusinDom, true);
+            this.platform.document.addEventListener('pointerdown', this.onPointerdown, true);
+            this.listOpen = true;
+        }
     }
+
 
     /**
      * Update select value
@@ -512,13 +611,13 @@ export class SelectBeautiful {
     private updateInputSelectElement()
     {
         this.logger.trace('updateInputSelectElement');
+        const selectedValues = new Set(this.currentChoiced.map(i => i.value));
         this.options.forEach((option:HTMLOptionElement, index:number) => {
             option.removeAttribute('selected');
-            this.currentChoiced.forEach((itemChoice:IItemChoice, key:number) => {
-                if (option.value == itemChoice.value) {
-                    option.setAttribute('selected', '');
-                }
-            });
+            if (selectedValues.has(option.value)) {
+                option.setAttribute('selected', '');
+            }
         });
+        this.dispatchChangeEvent();
     }
 }
