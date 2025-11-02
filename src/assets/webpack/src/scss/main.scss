@@ -137,41 +137,41 @@
 
 .theme-red.select-beautiful {
   .select-beautiful--item---item {
-    border: 2px solid #ff5b5b;
-    color: #ff5b5b;
+    border: 2px solid #e04343;
+    color: #e04343;
   }
 
   .select-beautiful--item---item-close {
     background-color: white;
-    color: #ff5b5b;
-    border: 2px solid #ff5b5b;
+    color: #e04343;
+    border: 2px solid #e04343;
   }
 
   .select-beautiful--search---input {
-    border: 2px solid #ff5b5b;
+    border: 2px solid #e04343;
 
     &--focus {
-      border-top: 2px solid #ff5b5b;
-      border-left: 2px solid #ff5b5b;
-      border-right: 2px solid #ff5b5b;
+      border-top: 2px solid #e04343;
+      border-left: 2px solid #e04343;
+      border-right: 2px solid #e04343;
     }
   }
 
   .select-beautiful--search---list--items {
-    border-bottom: 2px solid #ff5b5b;
-    border-left: 2px solid #ff5b5b;
-    border-right: 2px solid #ff5b5b;
+    border-bottom: 2px solid #e04343;
+    border-left: 2px solid #e04343;
+    border-right: 2px solid #e04343;
 
     &---option.active {
-      border: 1px solid #ff5b5b;
+      border: 1px solid #e04343;
     }
 
     &---option:hover {
-      outline: #ff5b5b;
+      outline: #e04343;
     }
 
     &---option[aria-selected="true"] {
-      background-color: #ff5b5b;
+      background-color: #e04343;
       color: white;
     }
   }
@@ -258,6 +258,50 @@
     &---option[aria-selected="true"] {
       background-color: #007bff;
       color: white;
+    }
+  }
+}
+
+
+.theme-green.select-beautiful {
+  .select-beautiful--item---item {
+    border: 2px solid #28a745;
+    color: #222;
+  }
+
+  .select-beautiful--item---item-close {
+    background-color: #28a745;
+    color: #222;
+    border: 2px solid #28a745;
+  }
+
+  .select-beautiful--search---input {
+    border: 2px solid #28a745;
+
+    &--focus {
+      border-top: 2px solid #28a745;
+      border-left: 2px solid #28a745;
+      border-right: 2px solid #28a745;
+    }
+  }
+
+  .select-beautiful--search---list--items {
+    border-bottom: 2px solid #28a745;
+    border-left: 2px solid #28a745;
+    border-right: 2px solid #28a745;
+
+    &---option.active {
+      border: 1px solid #28a745;
+      color: #222;
+    }
+
+    &---option:hover {
+      outline: #28a745;
+    }
+
+    &---option[aria-selected="true"] {
+      background-color: #d6f5df;
+      color: #222;
     }
   }
 }

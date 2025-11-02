@@ -84,9 +84,9 @@ use yii\helpers\ArrayHelper;
                 <?php
                    echo Html::activeDropDownList($model, 'formTags', ArrayHelper::map($tagsQuery->all(), 'id', 'name'), [
                         'class' => 'form-control',
-                       'multiple' => true,
+                       'multiple' => false,
                        'prompt' => 'Sélectionner une ou plusieurs Tag / étiquettes',
-                        'fractalcms-select-beautiful.bind' => '{multiple:true, removeText:\'enlevé\', theme:\'dark\'}',
+                        'fractalcms-select-beautiful.bind' => '{multiple:true, removeText:\'enlevé\', theme:\'green\'}',
                     ]);
                 ?>
             </div>

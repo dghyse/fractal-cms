@@ -963,14 +963,14 @@ div.jsoneditor-statusbar>.jsoneditor-curserinfo-label,div.jsoneditor-statusbar>.
 .theme-soft.select-beautiful .select-beautiful--search---list--items---option.active{border:1px solid #333}
 .theme-soft.select-beautiful .select-beautiful--search---list--items---option:hover{outline:#333}
 .theme-soft.select-beautiful .select-beautiful--search---list--items---option[aria-selected=true]{background-color:#333;color:#eef1f5}
-.theme-red.select-beautiful .select-beautiful--item---item{border:2px solid #ff5b5b;color:#ff5b5b}
-.theme-red.select-beautiful .select-beautiful--item---item-close{background-color:#fff;color:#ff5b5b;border:2px solid #ff5b5b}
-.theme-red.select-beautiful .select-beautiful--search---input{border:2px solid #ff5b5b}
-.theme-red.select-beautiful .select-beautiful--search---input--focus{border-top:2px solid #ff5b5b;border-left:2px solid #ff5b5b;border-right:2px solid #ff5b5b}
-.theme-red.select-beautiful .select-beautiful--search---list--items{border-bottom:2px solid #ff5b5b;border-left:2px solid #ff5b5b;border-right:2px solid #ff5b5b}
-.theme-red.select-beautiful .select-beautiful--search---list--items---option.active{border:1px solid #ff5b5b}
-.theme-red.select-beautiful .select-beautiful--search---list--items---option:hover{outline:#ff5b5b}
-.theme-red.select-beautiful .select-beautiful--search---list--items---option[aria-selected=true]{background-color:#ff5b5b;color:#fff}
+.theme-red.select-beautiful .select-beautiful--item---item{border:2px solid #e04343;color:#e04343}
+.theme-red.select-beautiful .select-beautiful--item---item-close{background-color:#fff;color:#e04343;border:2px solid #e04343}
+.theme-red.select-beautiful .select-beautiful--search---input{border:2px solid #e04343}
+.theme-red.select-beautiful .select-beautiful--search---input--focus{border-top:2px solid #e04343;border-left:2px solid #e04343;border-right:2px solid #e04343}
+.theme-red.select-beautiful .select-beautiful--search---list--items{border-bottom:2px solid #e04343;border-left:2px solid #e04343;border-right:2px solid #e04343}
+.theme-red.select-beautiful .select-beautiful--search---list--items---option.active{border:1px solid #e04343}
+.theme-red.select-beautiful .select-beautiful--search---list--items---option:hover{outline:#e04343}
+.theme-red.select-beautiful .select-beautiful--search---list--items---option[aria-selected=true]{background-color:#e04343;color:#fff}
 .theme-dark.select-beautiful .select-beautiful--item---item{border:2px solid #333;color:#333}
 .theme-dark.select-beautiful .select-beautiful--item---item-close{background-color:#fff;color:#333;border:2px solid #333}
 .theme-dark.select-beautiful .select-beautiful--search---input{border:2px solid #333}
@@ -987,6 +987,14 @@ div.jsoneditor-statusbar>.jsoneditor-curserinfo-label,div.jsoneditor-statusbar>.
 .theme-default.select-beautiful .select-beautiful--search---list--items---option.active{border:1px solid #007bff}
 .theme-default.select-beautiful .select-beautiful--search---list--items---option:hover{outline:#007bff}
 .theme-default.select-beautiful .select-beautiful--search---list--items---option[aria-selected=true]{background-color:#007bff;color:#fff}
+.theme-green.select-beautiful .select-beautiful--item---item{border:2px solid #28a745;color:#222}
+.theme-green.select-beautiful .select-beautiful--item---item-close{background-color:#28a745;color:#222;border:2px solid #28a745}
+.theme-green.select-beautiful .select-beautiful--search---input{border:2px solid #28a745}
+.theme-green.select-beautiful .select-beautiful--search---input--focus{border-top:2px solid #28a745;border-left:2px solid #28a745;border-right:2px solid #28a745}
+.theme-green.select-beautiful .select-beautiful--search---list--items{border-bottom:2px solid #28a745;border-left:2px solid #28a745;border-right:2px solid #28a745}
+.theme-green.select-beautiful .select-beautiful--search---list--items---option.active{border:1px solid #28a745;color:#222}
+.theme-green.select-beautiful .select-beautiful--search---list--items---option:hover{outline:#28a745}
+.theme-green.select-beautiful .select-beautiful--search---list--items---option[aria-selected=true]{background-color:#d6f5df;color:#222}
 .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border-width:0}
 @media (min-width: 768px){
 .md\:col-span-2{grid-column:span 2 / span 2}
