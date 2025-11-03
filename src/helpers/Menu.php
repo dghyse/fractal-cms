@@ -161,7 +161,7 @@ class Menu extends Component
                     $contents['optionsClass'] = $optionsClass;
                 }
                 $contents['children'][] = [
-                    'title' => 'Tag (étiquette)',
+                    'title' => 'Etiquettes (Tags)',
                     'url' => Url::to(['tag/index']),
                     'optionsClass' => $optionsClass,
                     'children' => [],

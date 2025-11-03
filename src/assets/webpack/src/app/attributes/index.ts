@@ -5,4 +5,3 @@ export * from './wysiwyg-editor';
 export * from './item';
 export * from './menu';
 export * from './menu-item-list';
-export * from './select-beautiful';

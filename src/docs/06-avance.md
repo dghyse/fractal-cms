@@ -150,7 +150,7 @@ comportant des **-** seront automatiquement remplacés par des **_**.
 ```php
 <?php
 /**
- * _sample-item.php
+ * image_html.php
  *
  * PHP Version 8.2+
  *
@@ -159,7 +159,7 @@ comportant des **-** seront automatiquement remplacés par des **_**.
  *
  * @var $this yii\web\View
  * @var $model \fractalCms\models\Item
- * @var $content \fractalCms\models\Content
+ * @var $target \fractalCms\models\Content | \fractalCms\models\Tag
  */
 
 use fractalCms\helpers\Html;
@@ -179,16 +179,16 @@ foreach ($model->configItem->configArray as $attribute => $data):?>
             case Html::CONFIG_TYPE_FILES:
                 echo Html::tag('cms-file-upload', '', [
                     'title.bind' => '\''.$title.'\'',
-                    'name' => Html::getInputName($content, 'items['.$model->id.']['.$attribute.']'),
+                    'name' => Html::getInputName($target, 'items['.$model->id.']['.$attribute.']'),
                     'value' => $model->$attribute,
                     'upload-file-text' => 'Ajouter une fichier',
                     'file-type' => $accept
                 ]);
                 break;
             case Html::CONFIG_TYPE_WYSIWYG:
-                echo Html::activeLabel($content, 'items['.$model->id.']['.$attribute.']', ['label' => $title, 'class' => 'form-label']);
-                echo Html::activeHiddenInput($content, 'items['.$model->id.']['.$attribute.']', ['value' => $model->$attribute, 'class' => 'wysiwygInput']);
-                $inputNameId = Html::getInputId($content, 'items['.$model->id.']['.$attribute.']');
+                echo Html::activeLabel($target, 'items['.$model->id.']['.$attribute.']', ['label' => $title, 'class' => 'form-label']);
+                echo Html::activeHiddenInput($target, 'items['.$model->id.']['.$attribute.']', ['value' => $model->$attribute, 'class' => 'wysiwygInput']);
+                $inputNameId = Html::getInputId($target, 'items['.$model->id.']['.$attribute.']');
                 echo Html::tag('div', '',
                     [
                         'cms-wysiwyg-editor' => 'input-id.bind:\''.$inputNameId.'\'',

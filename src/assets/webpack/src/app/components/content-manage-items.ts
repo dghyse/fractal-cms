@@ -87,7 +87,7 @@ export class ContentManageItems
             formData.append(name, value);
             const itemApiUrl = this.itemApiUrl.replace('{targetId}', this.id.toString())
             this.apiServices.manageItems(itemApiUrl, formData).then((html) => {
-                if (name !== EAlert.ADD_ITEM) {
+                if (name == EAlert.ADD_ITEM) {
                     const message:IAlertAddMessage = {
                         id:window.crypto.randomUUID(),
                         message:'Un item a été ajouté',

@@ -207,7 +207,7 @@ class Tag extends \yii\db\ActiveRecord implements ItemInterface
     public function deleteItem(Item $item) : int
     {
         try {
-            $relationDeleted =  TagItem::deleteAll(['itemId' => $item->id, 'contentId' => $this->id]);
+            $relationDeleted =  TagItem::deleteAll(['itemId' => $item->id, 'tagId' => $this->id]);
             if ($relationDeleted > 0) {
                 $item->deleteFilesDir();
                 $item->delete();

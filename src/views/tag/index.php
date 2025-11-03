@@ -18,7 +18,7 @@ use yii\helpers\Url;
 
 <div class="row mt-3 align-items-center">
     <div class="col-sm-6">
-        <h2>Liste des tags</h2>
+        <h2>Liste des étiquettes (Tags)</h2>
     </div>
 </div>
 <div class="row mt-3">

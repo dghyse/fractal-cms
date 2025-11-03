@@ -23,7 +23,7 @@ $configItems = ($configItems) ?? [];
 ?>
 <div class="row mt-3 align-items-center">
     <div class="col-sm-8">
-        <h2>Création d'un tag</h2>
+        <h2>Création d'une étiquette (Tag)</h2>
     </div>
     <div class="col-sm-4">
         <div class="row align-items-center">
