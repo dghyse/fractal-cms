@@ -48,9 +48,12 @@ class RbacController extends Controller
                 Constant::PERMISSION_MAIN_USER,
                 Constant::PERMISSION_MAIN_CONTENT,
                 Constant::PERMISSION_MAIN_ITEM,
+                Constant::PERMISSION_MAIN_TAG,
                 Constant::PERMISSION_MAIN_MENU,
                 Constant::PERMISSION_MAIN_PARAMETER,
                 Constant::PERMISSION_MAIN_CONTENT_ITEM,
+                Constant::PERMISSION_MAIN_TAG_ITEM,
+                Constant::PERMISSION_MAIN_CONTENT_TAG,
                 Constant::PERMISSION_MAIN_CONFIG_TYPE,
                 Constant::PERMISSION_MAIN_CONFIG_ITEM,
             ];

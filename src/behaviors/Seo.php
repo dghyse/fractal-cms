@@ -32,7 +32,7 @@ class Seo extends Behavior
         try {
             $controller = $this->owner;
             if ($controller instanceof CmsController) {
-                $content = $controller->getContent();
+                $content = $controller->getTarget();
                 if ($content !== null) {
                     $seo = $content->getSeo()->one();
                     $view = $controller->getView();

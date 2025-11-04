@@ -5,7 +5,8 @@ import {ValidationHtmlConfiguration, ValidationTrigger} from "@aurelia/validatio
 // app imports
 import * as globalAttributes from './app/attributes/index';
 import * as globalComponents from './app/components/index';
-import {CmsApp} from "./app/app";
+import {FractalCmsApp} from "./app/app";
+import {SelectBeautiful} from "@fractalcms/aurelia-select-beautiful";
 
 declare const webpackBaseUrl: string;
 declare let __webpack_public_path__: string;
@@ -20,6 +21,7 @@ const page = document.querySelector('body') as HTMLElement;
 const au = Aurelia
      .register(globalAttributes)
     .register(globalComponents)
+    .register(SelectBeautiful)
     .register(ValidationHtmlConfiguration.customize((options) => {
         // customization callback
         options.DefaultTrigger = ValidationTrigger.blur;
@@ -35,5 +37,5 @@ if(PRODUCTION == false) {
 }
 au.enhance({
     host: page,
-    component: CmsApp
+    component: FractalCmsApp
 });

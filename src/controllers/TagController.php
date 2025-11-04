@@ -1,6 +1,6 @@
 <?php
 /**
- * ContentController.php
+ * TagController.php
  *
  * PHP Version 8.2+
  *
@@ -25,7 +25,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class ContentController extends Controller
+class TagController extends Controller
 {
 
     /**
@@ -41,7 +41,7 @@ class ContentController extends Controller
                 [
                     'allow' => true,
                     'actions' => ['index'],
-                    'roles' => [Constant::PERMISSION_MAIN_CONTENT.Constant::PERMISSION_ACTION_LIST],
+                    'roles' => [Constant::PERMISSION_MAIN_TAG.Constant::PERMISSION_ACTION_LIST],
                     'denyCallback' => function ($rule, $action) {
                         return $this->redirect(['default/index']);
                     }
@@ -49,7 +49,7 @@ class ContentController extends Controller
                 [
                     'allow' => true,
                     'actions' => ['create'],
-                    'roles' => [Constant::PERMISSION_MAIN_CONTENT.Constant::PERMISSION_ACTION_CREATE],
+                    'roles' => [Constant::PERMISSION_MAIN_TAG.Constant::PERMISSION_ACTION_CREATE],
                     'denyCallback' => function ($rule, $action) {
                         return $this->redirect(['default/index']);
                     }
@@ -57,7 +57,7 @@ class ContentController extends Controller
                 [
                     'allow' => true,
                     'actions' => ['update'],
-                    'roles' => [Constant::PERMISSION_MAIN_CONTENT.Constant::PERMISSION_ACTION_UPDATE],
+                    'roles' => [Constant::PERMISSION_MAIN_TAG.Constant::PERMISSION_ACTION_UPDATE],
                     'denyCallback' => function ($rule, $action) {
                         return $this->redirect(['default/index']);
                     }
@@ -77,11 +77,9 @@ class ContentController extends Controller
     public function actionIndex() : string
     {
         try {
-            $modelQuery = Content::find()->orderBy(['pathKey' => SORT_ASC]);
-            $structure = Cms::buildStructure($modelQuery);
+            $modelQuery = Tag::find();
             return $this->render('index', [
-                'models' => $modelQuery->all(),
-                'structure' => $structure
+                'modelQuery' => $modelQuery
             ]);
         } catch (Exception $e)  {
             Yii::error($e->getMessage(), __METHOD__);
@@ -101,9 +99,8 @@ class ContentController extends Controller
         try {
             $response = null;
             $configTypes = ConfigType::find()->orderBy(['name' => SORT_ASC])->all();
-            $sections = Cms::buildSections(false, true);
-            $model = Yii::createObject(Content::class);
-            $model->scenario = Content::SCENARIO_CREATE;
+            $model = Yii::createObject(Tag::class);
+            $model->scenario = Tag::SCENARIO_CREATE;
 
             $slug = Yii::createObject(Slug::class);
             $slug->scenario = Slug::SCENARIO_CREATE;
@@ -127,12 +124,10 @@ class ContentController extends Controller
                     $seo->save();
                     $seo->refresh();
                     $model->seoId = $seo->id;
-
-                    $model->attach();
                     if ($model->save() === true ) {
                         $dbTransaction->commit();
                         $model->refresh();
-                        $response = $this->redirect(['content/update', 'id' => $model->id]);
+                        $response = $this->redirect(['tag/update', 'id' => $model->id]);
                     } else {
                         $dbTransaction->rollBack();
                     }
@@ -144,7 +139,6 @@ class ContentController extends Controller
                     'slug' => $slug,
                     'seo' => $seo,
                     'configTypes' => $configTypes,
-                    'sections' => $sections,
                     'itemsQuery' => $model->getItems(),
                 ]);
             }
@@ -168,12 +162,10 @@ class ContentController extends Controller
     {
         try {
             $configTypes = ConfigType::find()->orderBy(['name' => SORT_ASC])->all();
-            $sections = Cms::buildSections(false, true);
-            $tagsQuery = Tag::find()->where(['active' => 1]);
-            //find content
-            $model = Content::findOne(['id' => $id]);
+            //find tag
+            $model = Tag::findOne(['id' => $id]);
             if ($model === null) {
-                throw new NotFoundHttpException('content not found');
+                throw new NotFoundHttpException('tag not found');
             }
             //find slug attach to content
             $slug = Slug::findOne($model->slugId);
@@ -190,11 +182,10 @@ class ContentController extends Controller
                 $seo->scenario = Seo::SCENARIO_UPDATE;
             }
             $slug->scenario = Slug::SCENARIO_UPDATE;
-            $model->scenario = Content::SCENARIO_UPDATE;
+            $model->scenario = Tag::SCENARIO_UPDATE;
             $request = Yii::$app->request;
             if ($request->isPost === true) {
                 $body = $request->getBodyParams();
-                $oldPathKey = $model->parentPathKey;
                 $model->load($body);
                 $slug->load($body);
                 $seo->load($body);
@@ -202,17 +193,12 @@ class ContentController extends Controller
                 //Check url
                 $slug->path = $slug->validateAndBuild($slug->path);
                 $model->manageItems();
-                $model->manageTags();
                 if ($model->validate() === true && $slug->validate() === true && $seo->validate()) {
                     $slug->save();
                     $seo->save();
-                    if ($oldPathKey !== $model->parentPathKey) {
-                        $model->attach();
-                    }
                     if (empty($model->seoId) === true) {
                         $model->seoId = $seo->id;
                     }
-
                     if ($model->save() === true) {
                         $model->refresh();
                         $dbTransation->commit();
@@ -229,10 +215,8 @@ class ContentController extends Controller
                 'slug' => $slug,
                 'seo' => $seo,
                 'configTypes' => $configTypes,
-                'sections' => $sections,
                 'configItems' => Cms::getConfigItems(),
                 'itemsQuery' => $itemsQuery,
-                'tagsQuery' => $tagsQuery,
             ]);
         } catch (Exception $e)  {
             Yii::error($e->getMessage(), __METHOD__);

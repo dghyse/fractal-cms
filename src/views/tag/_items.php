@@ -10,7 +10,7 @@
  *
  * @var \yii\web\View $this
  * @var \yii\db\ActiveQuery $itemsQuery
- * @var \fractalCms\models\Content $target
+ * @var \fractalCms\models\Tag $target
  * @var array $configItems
  */
 

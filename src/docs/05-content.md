@@ -199,6 +199,63 @@ $this->title = $title;
     </section>
 </main>
 ```
+## Gestion des étiquettes(Tag)
+
+Dans FractalCMS, il est possible de créer des étiquettes (Tag).
+Un contenu qu'il soit une **section** ou un **article** peut-être lié à un ou plusieurs étiquettes.
+
+### Interface
+
+![Tag menu](./images/tag_menu.png)
+
+### Editer / Ajouter
+
+![Tag list](./images/tag_list.png)
+
+L'édition d'un article se réalise en cliquant sur le stylet de la ligne.
+La création se réalise en cliquant sur le bouton 'Ajouter'.
+
+## Formulaire (Partie Haute)
+
+![formulaire partie haute](./images/tag_form_partie_haute.png)
+
+* Actif : l'étiquette doit-être actif pour être visible sur le front
+* Nom : Nom de l'étiquette (cette valeur doit être unique dans le site)
+* Configuration de l'étiquette : liste de choix liée aux configurations créés dans [Configuration du type des articles](03-configuration.md#gestion-des-types-darticle)
+
+## Formulaire (les autres parties)
+
+Toutes les parties suivantes du formulaire fonctionnent comme le formulaire de création d'un **article**.
+
+* [Url](05-content.md#url-valeur-unique)
+* [SEO](05-content.md#seo)
+* [Sitemap](05-content.md#sitemap)
+* [Méta données](05-content.md#meta-données)
+* [Gestion des éléments](05-content.md#gestion-des-éléments)
+
+## Exemple de code d'une action 
+
+```
+  public function actionIndex()
+    {
+        try {
+            Yii::debug('Trace :'.__METHOD__, __METHOD__);
+            /** @var Tag $content */
+            $content = $this->getTarget();
+            $hero = $content->getItems()->andWhere(['configItemId' => Cms::getParameter('ITEM', 'HERO')])->one();
+            $contentQuery = $content->getContents()->andWhere(['active' => 1]);
+            return $this->render('index',
+                [
+                    'content' => $content,
+                    'hero' => $hero,
+                    'contentQuery' => $contentQuery,
+                ]);
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+```
 
 ## Gestion des utilisateurs et droits
 

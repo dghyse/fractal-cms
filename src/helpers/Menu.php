@@ -152,6 +152,22 @@ class Menu extends Component
                 ];
             }
 
+            if (Yii::$app->user->can(Constant::PERMISSION_MAIN_TAG.Constant::PERMISSION_ACTION_LIST) === true) {
+                $optionsClass = [];
+                if (Yii::$app->controller->id == 'tag') {
+                    $optionsClass[] = 'text-primary fw-bold';
+                }
+                if(empty($contents['optionsClass']) === true) {
+                    $contents['optionsClass'] = $optionsClass;
+                }
+                $contents['children'][] = [
+                    'title' => 'Etiquettes (Tags)',
+                    'url' => Url::to(['tag/index']),
+                    'optionsClass' => $optionsClass,
+                    'children' => [],
+                ];
+            }
+
             if (Yii::$app->user->can(Constant::PERMISSION_MAIN_PARAMETER.Constant::PERMISSION_ACTION_LIST) === true) {
                 $optionsClass = [];
                 if (Yii::$app->controller->id == 'parameter') {

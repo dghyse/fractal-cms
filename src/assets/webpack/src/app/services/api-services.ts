@@ -77,9 +77,9 @@ export class ApiServices {
             });
     }
 
-    public manageItems(id:number, body:FormData): Promise<string>
+    public manageItems(urlApi:string, body:FormData): Promise<string>
     {
-        const url:string = this.configService.getApiBaseUrl()+EApi.ITEM_MANAGE.replace('{contentId}', id.toString());
+        const url:string = this.configService.getApiBaseUrl()+urlApi;
         return this.httpClient.fetch(url, {
             method: 'POST',
             body:body,

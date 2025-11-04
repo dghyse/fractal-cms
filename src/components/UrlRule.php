@@ -12,6 +12,7 @@ namespace fractalCms\components;
 
 use fractalCms\models\Content;
 use fractalCms\models\Slug;
+use fractalCms\models\Tag;
 use yii\base\BaseObject;
 use Exception;
 use Yii;
@@ -25,11 +26,20 @@ class UrlRule extends BaseObject implements UrlRuleInterface
         try {
             $prettyUrl = $route;
             $matches = [];
-            if ( preg_match('/(content)-(\d+)$/', $route, $matches) === 1) {
+            if ( preg_match('/(content|tag)-(\d+)$/', $route, $matches) === 1) {
                 $elementId = $matches[2];
-                $content = Content::findOne($elementId);
-                if ($content instanceof Content) {
-                    $slug = Slug::findOne($content->slugId);
+                $elementName = $matches[1];
+                switch ($elementName) {
+                    case 'content':
+                        $element = Content::findOne($elementId);
+                        break;
+                    case 'tag':
+                        $element = Tag::findOne($elementId);
+                        break;
+                }
+
+                if ($element !== null && $element->hasAttribute('slugId')) {
+                    $slug = Slug::findOne($element->slugId);
                     if ($slug instanceof Slug) {
                         $host = (empty($slug->host) === false) ? $slug->host : '';
                         $prettyUrl = $host.'/'.$slug->path;
@@ -57,10 +67,11 @@ class UrlRule extends BaseObject implements UrlRuleInterface
             ];
             $slug = Slug::find()->andWhere(['path' => $pathInfo, 'active' => 1])->one();
             if ($slug instanceof Slug) {
-                $content = $slug->getContent()->andWhere(['active' => 1])->one();
-                if ($content instanceof Content && $content->configType !== null) {
+                /** @var Tag | Content $element */
+                $element = $slug->getTarget()->andWhere(['active' => 1])->one();
+                if ($element !== null && $element->configType !== null) {
                     $result= [
-                        $content->configType->config,
+                        $element->configType->config,
                         $params
                     ];
                 }
