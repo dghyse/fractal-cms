@@ -2,7 +2,7 @@
   "name": "dghyse/fractal-cms",
   "description": "FractalCMS - un CMS léger et modulaire basé sur Yii2",
   "keywords": ["fractal-cms", "cms", "fractalcms", "php", "yii2", "blog", "website"],
-  "version": "v1.6.0",
+  "version": "v1.6.1",
   "homepage": "https://github.com/dghyse/fractal-cms",
   "type": "library",
   "license": "MIT",

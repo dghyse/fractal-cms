@@ -212,7 +212,7 @@ Un contenu qu'il soit une **section** ou un **article** peut-être lié à un ou
 
 ![Tag list](./images/tag_list.png)
 
-L'édition d'un article se réalise en cliquant sur le stylet de la ligne.
+L'édition d'un étiquette se réalise en cliquant sur le stylet de la ligne.
 La création se réalise en cliquant sur le bouton 'Ajouter'.
 
 ## Formulaire (Partie Haute)
