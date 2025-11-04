@@ -42,7 +42,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public $relativeItemImgDirName = 'items';
     public $relativeSeoImgDirName = 'seo';
     public $cacheImgPath = 'cache';
-    public $version = 'v1.6.0';
+    public $version = 'v1.6.1';
     public $name = 'FractalCMS';
     public $commandNameSpace = 'fractalCms:';
 
