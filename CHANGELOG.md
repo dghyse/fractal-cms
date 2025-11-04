@@ -1,6 +1,12 @@
 CHANGELOG
 =========
 
+Release v1.6.1 04/11/2025 <dghyse@webcrafdg.fr>
+----------------------------------------------
+
+* Fix bug on create article
+* Fix multi bloc code in wysiwyg
+
 Release v1.6.0 04/11/2025 <dghyse@webcrafdg.fr>
 ----------------------------------------------
 
