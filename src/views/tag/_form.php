@@ -41,7 +41,7 @@ use yii\helpers\ArrayHelper;
             </div>
             <div class="col-sm-6 form-group">
                 <?php
-                echo Html::activeLabel($model, 'configTypeId', ['label' => 'Configuration de l\'article', 'class' => 'form-label']);
+                echo Html::activeLabel($model, 'configTypeId', ['label' => 'Configuration de l\'étiquette', 'class' => 'form-label']);
                 echo Html::activeDropDownList($model, 'configTypeId', ArrayHelper::map($configTypes, 'id', 'name'), [
                     'prompt' => 'Sélectionner un type', 'class' => 'form-control',
                 ]);

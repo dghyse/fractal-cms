@@ -102,6 +102,7 @@ class ContentController extends Controller
             $response = null;
             $configTypes = ConfigType::find()->orderBy(['name' => SORT_ASC])->all();
             $sections = Cms::buildSections(false, true);
+            $tagsQuery = Tag::find()->where(['active' => 1]);
             $model = Yii::createObject(Content::class);
             $model->scenario = Content::SCENARIO_CREATE;
 
@@ -146,6 +147,7 @@ class ContentController extends Controller
                     'configTypes' => $configTypes,
                     'sections' => $sections,
                     'itemsQuery' => $model->getItems(),
+                    'tagsQuery' => $tagsQuery,
                 ]);
             }
             return  $response;

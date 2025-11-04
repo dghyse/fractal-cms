@@ -81,8 +81,9 @@ foreach ($model->configItem->configArray as $attribute => $data):?>
                 break;
             case Html::CONFIG_TYPE_LIST_CMS:
                 $contents = Cms::getStructure(true, 'Cms');
+                $tags = Cms::getTags(true, 'Tag');
                 $routesIntern = Cms::getInternCmsRoutes();
-                $contents = ArrayHelper::merge($contents, $routesIntern);
+                $contents = ArrayHelper::merge($contents, $tags, $routesIntern);
                 echo Html::activeLabel($target, 'items['.$model->id.']['.$attribute.']', ['label' => $title, 'class' => 'form-label']);
                 echo Html::activeDropDownList($target, 'items['.$model->id.']['.$attribute.']', ArrayHelper::map($contents, 'route', 'name', 'group'), [
                     'prompt' => 'Sélectionner une cible',
