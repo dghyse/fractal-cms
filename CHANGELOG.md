@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+Release v1.6.0 04/11/2025 <dghyse@webcrafdg.fr>
+----------------------------------------------
+
+- Ajout du système de tags pour les articles
+- Mise à jour de la documentation
+- Correction de petits bugs d’affichage dans l’admin
+
 Release v1.5.3 26/10/2025 <david.ghyse@free.fr>
 ----------------------------------------------
 
