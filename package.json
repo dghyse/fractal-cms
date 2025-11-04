@@ -9,7 +9,7 @@
     "dist": "node_modules/.bin/webpack --mode production --progress",
     "dist-clean": "node_modules/.bin/webpack --mode production --progress --env cleanup"
   },
-  "author": "DAvid Ghyse <david.ghyse@free.fr>",
+  "author": "David Ghyse <dghyse@webcraftdg.fr>",
   "license": "BSD-3-Clause",
   "devDependencies": {
     "@types/node": "^17.0.45",
