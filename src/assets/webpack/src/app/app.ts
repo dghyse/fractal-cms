@@ -1,22 +1,9 @@
 import {ILogger, resolve} from 'aurelia';
-export class CmsApp {
-
-   /* static routes = [
-        {
-            path: '',
-            redirectTo: 'accueil'
-        },
-        {
-            path: 'cms',
-            component: () => import('./pages/accueil'),
-            id: 'cms',
-        },
-    ];*/
-
+export class FractalCmsApp {
     constructor(
         private readonly logger: ILogger = resolve(ILogger),
     ) {
-        this.logger = logger.scopeTo('CmsApp');
+        this.logger = logger.scopeTo('FractalCmsApp');
 
     }
 

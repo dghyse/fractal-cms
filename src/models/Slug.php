@@ -12,6 +12,8 @@ namespace fractalCms\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveQuery;
+use yii\db\ActiveRecord;
 use yii\db\Expression;
 use Exception;
 
@@ -113,14 +115,30 @@ class Slug extends \yii\db\ActiveRecord
         return $this->hasOne(Content::class, ['slugId' => 'id']);
     }
 
+
+    /**
+     * Get target
+     *
+     * @return ActiveQuery
+     */
+    public function getTarget($active = true) : ActiveQuery
+    {
+        $targetQuery = $this->hasOne(Content::class, ['slugId' => 'id']);
+        if ($targetQuery->count() === 0) {
+            $targetQuery = $this->hasOne(Tag::class, ['slugId' => 'id']);
+        }
+        return $targetQuery;
+    }
+
+
     public static function cleanPath($string) : string
     {
         try {
             //switch accents to simpler text
             $string = preg_replace("/\s+/","-", $string);
             $string = str_replace(
-                ['é','è', 'ë', 'ê', 'à', 'ä', 'â', 'ù', 'ü', 'û', 'ö', 'ô', 'ï', 'ï', 'ü', 'û', 'ç'],
-                ['e','e', 'e', 'e', 'a', 'a', 'a', 'u', 'u', 'u', 'o', 'o', 'i', 'i', 'u', 'u', 'c'], $string);
+                ['é','è', 'ë', 'ê', 'à', 'ä', 'â', 'ù', 'ü', 'û', 'ö', 'ô', 'ï', 'ï', 'ü', 'û', 'ç', '\'', '/', '\\'],
+                ['e','e', 'e', 'e', 'a', 'a', 'a', 'u', 'u', 'u', 'o', 'o', 'i', 'i', 'u', 'u', 'c', '-', '-', '-'], $string);
             return trim(strtolower($string));;
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);

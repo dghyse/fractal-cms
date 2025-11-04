@@ -5,11 +5,11 @@ import {EEvents} from "../enums/events";
 import {IAlertAddMessage} from "../interfaces/alert";
 import {getTextAlert} from "../helpers/alert";
 
-@customAttribute('cms-item')
+@customAttribute('fractalcms-item')
 export class Item {
 
     @bindable() id: number;
-    @bindable() contentId: number;
+    @bindable() targetId: number;
 
     private actionButtons:NodeList;
     public constructor(

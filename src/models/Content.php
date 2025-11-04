@@ -11,11 +11,13 @@
 namespace fractalCms\models;
 
 use Exception;
+use fractalCms\interfaces\ItemInterface;
 use fractalCms\Module;
 use Yii;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
+use fractalCms\traits\Item as TraitItem;
 
 /**
  * This is the model class for table "contents".
@@ -37,9 +39,10 @@ use yii\db\Expression;
  * @property ContentItem[] $contentItems
  * @property Item[] $items
  */
-class Content extends \yii\db\ActiveRecord
+class Content extends \yii\db\ActiveRecord implements ItemInterface
 {
 
+    use TraitItem;
     /**
      * ENUM field values
      */
@@ -50,6 +53,7 @@ class Content extends \yii\db\ActiveRecord
     const SCENARIO_UPDATE = 'update';
     const SCENARIO_INIT = 'init';
     public $items;
+    public $formTags;
 
     /**
      * {@inheritdoc}
@@ -83,14 +87,14 @@ class Content extends \yii\db\ActiveRecord
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CREATE] = [
-            'name', 'slugId', 'seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey'
+            'name', 'slugId', 'seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey', 'formTags'
         ];
 
         $scenarios[self::SCENARIO_UPDATE] = [
-            'name', 'slugId','seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey', 'items'
+            'name', 'slugId','seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey', 'items', 'formTags'
         ];
         $scenarios[self::SCENARIO_INIT] = [
-            'name', 'slugId','seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey'
+            'name', 'slugId','seoId', 'configTypeId', 'pathKey', 'dateCreate', 'dateUpdate', 'active', 'type', 'parentPathKey', 'formTags'
         ];
         return $scenarios;
     }
@@ -147,31 +151,27 @@ class Content extends \yii\db\ActiveRecord
             $parentPathKey = substr($this->pathKey, 0,strlen($this->pathKey) -1);
             $this->parentPathKey = trim($parentPathKey, '.');
         }
+        $contentTagQuery = ContentTag::find()->andWhere(['contentId' => $this->id]);
+        /** @var ContentTag $contentTag */
+        foreach ($contentTagQuery->each() as $contentTag) {
+            $this->formTags[] = $contentTag->tagId;
+        }
     }
 
-    /**
-     * Manage items before save
-     *
-     * @return void
-     * @throws \yii\db\Exception
-     */
-    public function manageItems($deleteSource = true)
+    public function manageTags()
     {
         try {
-            $models =  $this->items;
-            if (is_array($models) === true) {
-                foreach ($models as $id => $data) {
-                    $dbModel = Item::findOne($id);
-                    if ($dbModel !== null) {
-                        $dbModel->scenario = Item::SCENARIO_UPDATE;
-                        $newData = $dbModel->prepareData($data, $deleteSource);
-                        $dbModel->elasticModel->load($newData, '');
-                        $dbModel->data = $dbModel->elasticModel->toJson();
-                        $dbModel->active = 1;
-                        if ($dbModel->validate() === true) {
-                            $dbModel->save();
-                        } else {
-                            $this->items[$id]['errors'] = $dbModel->errors;
+            $deleted = ContentTag::deleteAll(['contentId' => $this->id]);
+            if (is_array($this->formTags) === true && empty($this->formTags) === false) {
+                foreach ($this->formTags as $tagId) {
+                    $tag = Tag::findOne($tagId);
+                    if ($tag !== null) {
+                        $contentTag = Yii::createObject(ContentTag::class);
+                        $contentTag->scenario = ContentTag::SCENARIO_CREATE;
+                        $contentTag->tagId = $tag->id;
+                        $contentTag->contentId = $this->id;
+                        if ($contentTag->validate() === true) {
+                            $contentTag->save();
                         }
                     }
                 }
@@ -182,16 +182,15 @@ class Content extends \yii\db\ActiveRecord
         }
     }
 
-
     /**
-     * Attach Item in Content
+     * Attach Item
      *
      * @param Item $item
-     * @return array|ConfigItem|ContentItem|object|\yii\db\ActiveRecord|\yii\db\T|null
+     * @return ContentItem
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\Exception
      */
-    public function attachItem(Item $item)
+    public function attachItem(Item $item) : ContentItem
     {
         try {
             $contentItem = ContentItem::find()
@@ -218,13 +217,61 @@ class Content extends \yii\db\ActiveRecord
      * @return int
      * @throws Exception
      */
-    public function detachItem(Item $item)
+    public function detachItem(Item $item) : int
     {
         try {
             return ConfigItem::deleteAll(['contentId' => $this->id, 'itemId' => $item->id]);
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw  $e;
+        }
+    }
+
+    /**
+     * Reorder items
+     *
+     * @return void
+     * @throws \yii\db\Exception
+     */
+    public function reOrderItems() : void
+    {
+        try {
+            $contentItemsQuery = ContentItem::find()
+                ->andWhere(['contentId' => $this->id])->orderBy(['order' => SORT_ASC]);
+            $index = 0;
+            /** @var ContentItem $contentItem */
+            foreach ($contentItemsQuery->each() as $contentItem) {
+                $contentItem->scenario = ContentItem::SCENARIO_UPDATE;
+                $contentItem->order = $index;
+                if ($contentItem->validate() === true) {
+                    $contentItem->save();
+                }
+                $index += 1;
+            }
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
+    /**
+     * @param Item $item
+     * @return int
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function deleteItem(Item $item) : int
+    {
+        try {
+            $relationDeleted =  ContentItem::deleteAll(['itemId' => $item->id, 'contentId' => $this->id]);
+            if ($relationDeleted > 0) {
+                $item->deleteFilesDir();
+                $item->delete();
+            }
+            return  $relationDeleted;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
         }
     }
 
@@ -284,43 +331,17 @@ class Content extends \yii\db\ActiveRecord
     }
 
     /**
-     * Get items by config item Id
+     * Get item with config
      *
      * @param $configItemId
-     * @return array|\yii\db\ActiveRecord|\yii\db\T|null
+     *
+     * @return Item|null
      * @throws Exception
      */
-    public function getItemByConfigId($configItemId)
+    public function getItemByConfigId($configItemId) : Item | null
     {
         try {
            return $this->getItems()->andWhere(['configItemId' => $configItemId])->one();
-        } catch (Exception $e) {
-            Yii::error($e->getMessage(), __METHOD__);
-            throw $e;
-        }
-    }
-
-    /**
-     * Reorder items
-     *
-     * @return void
-     * @throws \yii\db\Exception
-     */
-    public function reOrderItems() : void
-    {
-        try {
-            $contentItemsQuery = ContentItem::find()
-                ->andWhere(['contentId' => $this->id])->orderBy(['order' => SORT_ASC]);
-            $index = 0;
-            /** @var ContentItem $contentItem */
-            foreach ($contentItemsQuery->each() as $contentItem) {
-                $contentItem->scenario = ContentItem::SCENARIO_UPDATE;
-                $contentItem->order = $index;
-                if ($contentItem->validate() === true) {
-                    $contentItem->save();
-                }
-                $index += 1;
-            }
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw $e;

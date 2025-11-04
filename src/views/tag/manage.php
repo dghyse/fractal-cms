@@ -9,12 +9,10 @@
  * @package views
  *
  * @var \yii\web\View $this
- * @var \fractalCms\models\Content $model
+ * @var \fractalCms\models\Tag $model
  * @var \fractalCms\models\ConfigType $configTypes
- * @var array $sections
  * @var array $configItems
  * @var \yii\redis\ActiveQuery $itemsQuery
- * @var \yii\redis\ActiveQuery $tagsQuery
  * @var \fractalCms\models\Slug $slug
  * @var \fractalCms\models\Seo $seo
  */
@@ -25,7 +23,7 @@ $configItems = ($configItems) ?? [];
 ?>
 <div class="row mt-3 align-items-center">
     <div class="col-sm-8">
-        <h2>Création d'un article</h2>
+        <h2>Création d'une étiquette (Tag)</h2>
     </div>
     <div class="col-sm-4">
         <div class="row align-items-center">
@@ -49,10 +47,8 @@ $configItems = ($configItems) ?? [];
                 'slug' => $slug,
                 'seo' => $seo,
             'configTypes' => $configTypes,
-            'sections' => $sections,
             'configItems' => $configItems,
-            'itemsQuery' => $itemsQuery,
-            'tagsQuery' => $tagsQuery,
+            'itemsQuery' => $itemsQuery
         ]);
     ?>
 </div>

@@ -27,7 +27,7 @@ export class File
     public deleteUrl: string = EApi.IMPORT_ASYNC_DELETE;
     private subscriptionFileEnd: IDisposable;
 
-    @bindable() public fileType: string = 'xls,xlsx,csv,zip,TXT,txt, png,jpeg,jpg,gif';
+    @bindable() public fileType: string = 'xls,xlsx,csv,zip,TXT,txt, png,jpeg,jpg,gif,webp';
     @bindable() public name: string;
     @bindable() public multiple: string|boolean = false;
     @bindable() public value: string = '';
@@ -87,7 +87,7 @@ export class File
     {
         evt.stopPropagation();
         evt.preventDefault();
-        this.logger.debug('Should remove file', handledFile);
+        this.logger.debug('Should remove file', handledFile, evt);
         let fileIndex:number|null = null;
         this.handledFiles.forEach((file:UploadedFile, index:number) => {
             if (handledFile.name === file.name) {

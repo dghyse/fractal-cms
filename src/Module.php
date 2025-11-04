@@ -240,8 +240,13 @@ class Module extends \yii\base\Module implements BootstrapInterface
                                 ],
 
                                 [
-                                    'pattern' => 'contents/<contentId:([^/]+)>/manage-items',
-                                    'route' => 'api/item/manage-items',
+                                    'pattern' => 'contents/<targetId:([^/]+)>/manage-items',
+                                    'route' => 'api/content/manage-items',
+                                ],
+
+                                [
+                                    'pattern' => 'tags/<targetId:([^/]+)>/manage-items',
+                                    'route' => 'api/tag/manage-items',
                                 ],
                             ]
                         ]),

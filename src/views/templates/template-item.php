@@ -10,17 +10,16 @@
  * @var $this yii\web\View
  * @var $config array
  * @var $model \fractalCms\models\Item
- * @var $content \fractalCms\models\Content
+ * @var $target \fractalCms\models\Content | \fractalCms\models\Tag
  * @var integer $index
  * @var integer $total
- * @var array $configItems
  */
 
 use fractalCms\helpers\Html;
 ?>
 <?php echo Html::beginTag('div', [
     'class' => 'row mt-1',
-    'cms-item' => 'id.bind:'.$model->id.';content-id.bind:'.$content->id,
+    'fractalcms-item' => 'id.bind:'.$model->id.';target-id.bind:'.$target->id,
 ]);?>
     <div class="card">
         <div class="card-header row align-items-center">
@@ -99,7 +98,7 @@ use fractalCms\helpers\Html;
                 }
                 echo $this->render($viewPath, [
                         'model' => $model,
-                        'content' => $content,
+                        'target' => $target,
                     ]);
             ?>
         </div>
