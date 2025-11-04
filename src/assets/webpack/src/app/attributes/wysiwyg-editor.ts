@@ -2,6 +2,7 @@ import {bindable, customAttribute, ILogger, INode, resolve, IPlatform} from "aur
 import {ApiServices} from "../services/api-services";
 import Quill, {QuillOptions} from "quill";
 import hljs from 'highlight.js';
+import {Element} from "chart.js";
 @customAttribute('cms-wysiwyg-editor')
 export class WysiwygEditor {
 
@@ -96,8 +97,8 @@ export class WysiwygEditor {
         if (innerHtml) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(innerHtml, 'text/html');
-            const container = doc.querySelector('.ql-code-block-container');
-            if (container) {
+            const containers:NodeListOf<HTMLElement> = doc.querySelectorAll('.ql-code-block-container');
+            containers.forEach((container:HTMLElement, index:number) => {
                 const lines:NodeListOf<HTMLElement> = container.querySelectorAll('.ql-code-block');
                 let lang : string | null = null;
                 let textLines:string[] = [];
@@ -117,7 +118,7 @@ export class WysiwygEditor {
                 //doc.body.append(pre);
 
                 newHtml = doc.body.innerHTML;
-            }
+            });
         }
         return newHtml;
     }
@@ -129,8 +130,9 @@ export class WysiwygEditor {
         if (innerHtml) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(innerHtml, 'text/html');
-            const pre = doc.querySelector('pre');
-            if (pre) {
+          //  const pre = doc.querySelector('pre');
+            const pres:NodeListOf<HTMLElement> = doc.querySelectorAll('pre');
+            pres.forEach((pre:HTMLElement, index:number) => {
                 const code = pre.querySelector('code');
                 if (code) {
                     let langClass : string | null = null;
@@ -165,10 +167,9 @@ export class WysiwygEditor {
                         container.appendChild(div);
                     })
                     pre.replaceWith(container);
-                    //doc.body.append(container);
                     newHtml = doc.body.innerHTML;
                 }
-            }
+            });
         }
         return newHtml;
     }

@@ -17,6 +17,7 @@ use fractalCms\models\ConfigItem;
 use fractalCms\models\Content;
 use fractalCms\models\MenuItem;
 use fractalCms\models\Parameter;
+use fractalCms\models\Tag;
 use Yii;
 use yii\db\ActiveQuery;
 use yii\rest\Controller;
@@ -92,6 +93,43 @@ class Cms
                     'id' => $content->id,
                     'name' => $prefix.' '.$content->name.' ( '.$sufix.' )',
                     'route' => $content->getRoute(),
+                ];
+                if ($group !== null) {
+                    $options['group'] = $group;
+                }
+                $structure[] = $options;
+
+            }
+            return $structure;
+        } catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw $e;
+        }
+    }
+
+    /**
+     * Get tags
+     *
+     * @param boolean $isActive
+     * @param $group
+     * @return array
+     * @throws Exception
+     */
+    public static function getTags(bool $isActive = false, $group = null) : array
+    {
+        try {
+            $structure = [];
+            $query = Tag::find();
+            if ($isActive === true) {
+                $query->andWhere(['active' => 1]);
+            }
+            $query->orderBy(['name' => SORT_ASC]);
+            /** @var Tag $tag */
+            foreach ($query->each() as $tag) {
+                $options = [
+                    'id' => $tag->id,
+                    'name' => $tag->name,
+                    'route' => $tag->getRoute(),
                 ];
                 if ($group !== null) {
                     $options['group'] = $group;

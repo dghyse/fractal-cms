@@ -11,7 +11,7 @@
  * @var \yii\web\View $this
  * @var \fractalCms\models\MenuItem $model
  * @var \fractalCms\models\MenuItem[] $menusItems
- * @var \fractalCms\models\Content[] $contents
+ * @var array $contents
  * @var  array $routes
  */
 
