@@ -1,60 +1,71 @@
 {
-  "name": "dghyse/fractal-cms",
-  "description": "FractalCMS - un CMS léger et modulaire basé sur Yii2",
-  "keywords": ["fractal-cms", "cms", "fractalcms", "php", "yii2", "blog", "website"],
-  "version": "v1.6.1",
-  "homepage": "https://github.com/dghyse/fractal-cms",
-  "type": "library",
-  "license": "MIT",
-  "support": {
-    "issues": "https://github.com/dghyse/fractal-cms/issues"
-  },
-  "authors": [
-    {
-      "name": "David Ghyse",
-      "email": "davidg@webcraftdg.fr"
-    }
-  ],
-  "repositories": [
-    {
-      "type": "composer",
-      "url": "https://asset-packagist.org"
-    }
-
-  ],
-  "require": {
-    "php": ">=8.2",
-    "ext-intl": "*",
-    "ext-dom": "*",
-    "ext-json": "*",
-    "ext-mbstring": "*",
-    "ext-gd": "*",
-    "ext-fileinfo": "*",
-    "vlucas/phpdotenv": "~5.0",
-    "yiisoft/yii2": "~2.0",
-    "yiisoft/yii2-redis": "~2.0",
-    "bower-asset/bootstrap": "~5.0",
-    "league/flysystem": "^3.25"
-  },
-  "require-dev" : {
-    "yiisoft/yii2-debug":"~2.0",
-    "yiisoft/yii2-gii":"~2.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "fractalCms\\": "src/"
-    }
-  },
-  "scripts": {
-    "post-install-cmd": [
-    ]
-  },
-  "config": {
-    "process-timeout": 1800,
-    "allow-plugins": {
-      "yiisoft/yii2-composer": true
-    }
-  },
-  "minimum-stability": "stable",
-  "prefer-stable": true
+    "name": "dghyse/fractal-cms",
+    "description": "FractalCMS - un CMS l\u00e9ger et modulaire bas\u00e9 sur Yii2",
+    "keywords": [
+        "fractal-cms",
+        "cms",
+        "fractalcms",
+        "php",
+        "yii2",
+        "blog",
+        "website"
+    ],
+    "version": "v1.6.1",
+    "homepage": "https://github.com/dghyse/fractal-cms",
+    "type": "library",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/dghyse/fractal-cms/issues"
+    },
+    "authors": [
+        {
+            "name": "David Ghyse",
+            "email": "davidg@webcraftdg.fr"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "ext-intl": "*",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-gd": "*",
+        "ext-fileinfo": "*",
+        "vlucas/phpdotenv": "~5.0",
+        "yiisoft/yii2": "~2.0",
+        "yiisoft/yii2-redis": "~2.0",
+        "bower-asset/bootstrap": "~5.0",
+        "league/flysystem": "^3.25"
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.0",
+        "yiisoft/yii2-gii": "~2.0",
+        "codeception/codeception": "^5.3",
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-asserts": "*",
+        "codeception/module-yii2": "^2.0",
+        "codeception/module-db": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "fractalCms\\": "src/"
+        }
+    },
+    "scripts": {
+        "post-install-cmd": []
+    },
+    "config": {
+        "process-timeout": 1800,
+        "allow-plugins": {
+            "yiisoft/yii2-composer": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }

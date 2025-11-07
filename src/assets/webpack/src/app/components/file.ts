@@ -120,7 +120,7 @@ export class File
     {
         this.handledFiles.push({
             name: name,
-            shortname: name.split(/.*[\/|\\]/).pop(),
+            shortname: name.split(/.+[/|\\]/).pop(),
             previewUrl: this.generatePreviewUrl(name),
             deleteUrl: this.generateDeleteUrl(name),
             file: file
@@ -211,7 +211,7 @@ export class File
 
             return {
                 name: value,
-                shortname: value.split(/.*[\/|\\]/).pop(),
+                shortname: value.split(/.+[/|\\]/).pop(),// NOSONAR
                 previewUrl: this.generatePreviewUrl(value),
                 deleteUrl: this.generateDeleteUrl(value)
             }
@@ -226,12 +226,11 @@ export class File
             if (handledFile.file && handledFile.file !== null) {
                 this.resumable.removeFile(handledFile.file);
             }
-          //  this.importService.delete(handledFile.deleteUrl);
         });
         this.handledFiles = [
             {
                 name: name,
-                shortname: name.split(/.*[\/|\\]/).pop(),
+                shortname: name.split(/.+[/|\\]/).pop(),// NOSONAR
                 previewUrl: this.generatePreviewUrl(name),
                 deleteUrl: this.generateDeleteUrl(name),
                 file: file

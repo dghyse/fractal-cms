@@ -237,7 +237,6 @@ class Html extends \yii\helpers\Html
 
             // Préserver transparence PNG/GIF
             if ($type == IMAGETYPE_PNG || $type == IMAGETYPE_GIF || $type == IMAGETYPE_WEBP) {
-                imagecolortransparent($dst, imagecolorallocatealpha($dst, 0, 0, 0, 127));
                 imagealphablending($dst, false);
                 imagesavealpha($dst, true);
             }
