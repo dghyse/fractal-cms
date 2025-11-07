@@ -1,4 +1,5 @@
 ## Editors - OS
+.scannerwork/
 node_modules
 src/node_modules
 vendor/
