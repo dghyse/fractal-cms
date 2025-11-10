@@ -26,7 +26,6 @@ use fractalCms\models\User;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\console\Application as ConsoleApplication;
-use yii\web\Application;
 use yii\web\Application as WebApplication;
 use yii\web\GroupUrlRule;
 use yii\web\User as WebUser;

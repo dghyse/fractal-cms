@@ -92,4 +92,5 @@ $config = [
     'params' => [
     ],
 ];
+$config['controllerNamespace'] = 'fractalCms\controllers';
 return $config;

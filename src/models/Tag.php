@@ -170,7 +170,7 @@ class Tag extends \yii\db\ActiveRecord implements ItemInterface
     public function detachItem(Item $item) : int
     {
         try {
-            return TagItem::deleteAll(['contentId' => $this->id, 'itemId' => $item->id]);
+            return TagItem::deleteAll(['tagId' => $this->id, 'itemId' => $item->id]);
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw  $e;
