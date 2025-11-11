@@ -3,6 +3,7 @@
 node_modules
 src/node_modules
 vendor/
+.env
 .idea
 ## Force files to keep
 !.gitkeep
