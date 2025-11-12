@@ -1,10 +1,12 @@
 ## Editors - OS
 .scannerwork/
+sonar-project.properties
 node_modules
 src/node_modules
 vendor/
-app/webapp/runtime/*
-app/webapp/runtime/debug/*
+tests/_output/*
+tests/Support/_generated/*
+tests/runtime/*
 .env
 .idea
 ## Force files to keep
