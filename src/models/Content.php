@@ -169,7 +169,10 @@ class Content extends \yii\db\ActiveRecord implements ItemInterface
     {
         try {
             ContentTag::deleteAll(['contentId' => $this->id]);
-            if (is_array($this->formTags) === true && empty($this->formTags) === false) {
+            if (is_array($this->formTags) === false) {
+                $this->formTags = [$this->formTags];
+            }
+            if (empty($this->formTags) === false) {
                 foreach ($this->formTags as $tagId) {
                     $tag = Tag::findOne($tagId);
                     if ($tag !== null) {
