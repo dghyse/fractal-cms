@@ -1,6 +1,13 @@
 CHANGELOG
 =========
 
+Release v1.7.0 13/11/2025 <dghyse@webcrafdg.fr>
+----------------------------------------------
+
+* Add test Unit for models
+* Fix transparency for webp
+* Fix select-beautiful
+
 Release v1.6.1 04/11/2025 <dghyse@webcrafdg.fr>
 ----------------------------------------------
 
