@@ -158,11 +158,21 @@ class Content extends \yii\db\ActiveRecord implements ItemInterface
         }
     }
 
-    public function manageTags()
+    /**
+     * Manage tags
+     *
+     * @return void
+     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\db\Exception
+     */
+    public function manageTags() : void
     {
         try {
-            $deleted = ContentTag::deleteAll(['contentId' => $this->id]);
-            if (is_array($this->formTags) === true && empty($this->formTags) === false) {
+            ContentTag::deleteAll(['contentId' => $this->id]);
+            if (is_array($this->formTags) === false) {
+                $this->formTags = [$this->formTags];
+            }
+            if (empty($this->formTags) === false) {
                 foreach ($this->formTags as $tagId) {
                     $tag = Tag::findOne($tagId);
                     if ($tag !== null) {
@@ -220,7 +230,7 @@ class Content extends \yii\db\ActiveRecord implements ItemInterface
     public function detachItem(Item $item) : int
     {
         try {
-            return ConfigItem::deleteAll(['contentId' => $this->id, 'itemId' => $item->id]);
+            return ContentItem::deleteAll(['contentId' => $this->id, 'itemId' => $item->id]);
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw  $e;

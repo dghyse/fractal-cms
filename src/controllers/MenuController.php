@@ -150,7 +150,7 @@ class MenuController extends Controller
             if ($model === null) {
                 throw new NotFoundHttpException('content not found');
             }
-            $model->scenario = Content::SCENARIO_UPDATE;
+            $model->scenario = Menu::SCENARIO_UPDATE;
             $request = Yii::$app->request;
             if ($request->isPost === true) {
                 $body = $request->getBodyParams();

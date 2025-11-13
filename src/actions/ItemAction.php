@@ -42,7 +42,7 @@ class ItemAction extends Action
      * @throws \yii\db\Exception
      * @throws \yii\db\StaleObjectException
      */
-    public function run($targetId)
+    public function run($targetId) : string
     {
         try {
             $target = $this->targetClass::findOne(['id' => $targetId]);
@@ -59,38 +59,28 @@ class ItemAction extends Action
                 $model->load($body);
                 //Load content data if there are update in front
                 $target->load($body);
-                if (isset($body['addItem']) === true) {
-                    if ($model->validate() === true) {
-                        $model->save();
-                        $model->refresh();
-                        $targetItem = $target->attachItem($model);
-                        $targetItem->refresh();
-                    }
-                } elseif (isset($body['upItem']) === true) {
+                if (isset($body['addItem']) === true && $model->validate() === true) {
+                    $model->save();
+                    $model->refresh();
+                    $targetItem = $target->attachItem($model);
+                    $targetItem->refresh();
+                } elseif (empty($body['upItem']) === false) {
                     $itemId = $body['upItem'];
-                    if (empty($itemId)  === false) {
-                        $model->move($targetId, $itemId);
-
-                    }
-                } elseif (isset($body['downItem']) === true) {
+                    $model->move($targetId, $itemId);
+                } elseif (empty($body['downItem']) === false) {
                     $itemId = $body['downItem'];
-                    if (empty($itemId)  === false) {
-                        $model->move($targetId, $itemId, 'down');
-                    }
-                } elseif (isset($body['deleteItem']) === true) {
+                    $model->move($targetId, $itemId, 'down');
+                } elseif (empty($body['deleteItem']) === false) {
                     $itemId = $body['deleteItem'];
                     /** @var Item $modelDb */
                     $modelDb = Item::findOne($itemId);
                     if ($modelDb !== null) {
-                        $result = $target->deleteItem($modelDb);
-                        if ($result > 0 ) {
-                            $target->reOrderItems();
-                        }
+                        $target->deleteItem($modelDb);
+                        $target->reOrderItems();
                     }
                 }
                 //Save current updated
                 $target->manageItems();
-
             }
             $itemsQuery = $target->getItems();
 

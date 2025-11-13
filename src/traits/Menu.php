@@ -28,18 +28,16 @@ trait Menu
      *
      * @return bool
      */
-    public function moveMenuItem():bool
+    public function moveMenuItem() : bool
     {
         try {
-            $sourceMenuItem= MenuItem::findOne($this->sourceMenuItemId);
-            if ($sourceMenuItem === null) {
-                throw new NotFoundHttpException('Menu item source not found');
-            }
+            $success = false;
+            $sourceMenuItem = MenuItem::findOne($this->sourceMenuItemId);
             $destMenuItem = MenuItem::findOne($this->destMenuItemId);
-            if ($destMenuItem === null) {
-                throw new NotFoundHttpException('Menu item dest not found');
+            if ($sourceMenuItem !== null && $destMenuItem !== null) {
+                $success = $destMenuItem->move($sourceMenuItem);
             }
-            return $destMenuItem->move($sourceMenuItem);
+            return $success;
         } catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
         }
