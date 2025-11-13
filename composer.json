@@ -10,7 +10,7 @@
         "blog",
         "website"
     ],
-    "version": "v1.6.1",
+    "version": "v1.7.0",
     "homepage": "https://github.com/dghyse/fractal-cms",
     "type": "library",
     "license": "MIT",
