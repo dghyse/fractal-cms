@@ -1,7 +1,13 @@
 ## Editors - OS
+.scannerwork/
+sonar-project.properties
 node_modules
 src/node_modules
 vendor/
+tests/_output/*
+tests/Support/_generated/*
+tests/runtime/*
+.env
 .idea
 ## Force files to keep
 !.gitkeep

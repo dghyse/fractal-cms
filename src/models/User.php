@@ -132,8 +132,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function getInitials()
     {
         try {
-            $initials = '';
-            $initials .= (empty($this->firstname) === false) ? substr(ucfirst($this->firstname), 0, 1) : '';
+            $initials = (empty($this->firstname) === false) ? substr(ucfirst($this->firstname), 0, 1) : '';
             $initials .= (empty($this->lastname) === false) ? substr(ucfirst($this->lastname), 0, 1) : '';
             return $initials;
         } catch (Exception $e) {

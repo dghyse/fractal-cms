@@ -57,10 +57,10 @@ class ResumableUploadAction extends ViewAction
     /**
      * Upload file
      *
-     * @return string|\yii\console\Response|Response
+     * @return Response
      * @throws ServerErrorHttpException
      */
-    public function run()
+    public function run() : Response
     {
         if ($this->getIsUpload() === true) {
             $this->originalFilename = $this->getResumableParam('filename');
@@ -79,7 +79,7 @@ class ResumableUploadAction extends ViewAction
     /**
      * @throws ServerErrorHttpException
      */
-    protected function handleChunk()
+    protected function handleChunk() : void
     {
         $identifier = $this->getResumableParam('identifier');
         $chunkNumber = $this->getResumableParam('chunkNumber');
@@ -101,9 +101,9 @@ class ResumableUploadAction extends ViewAction
      * @return boolean
      * @since XXX
      */
-    protected function getIsUpload()
+    protected function getIsUpload() : bool
     {
-        return (isset($_FILES) === true && empty($_FILES) === false);
+        return empty($_FILES) === false;
     }
 
     /**
@@ -112,7 +112,7 @@ class ResumableUploadAction extends ViewAction
      * @param string $chunkNumber
      * @return bool
      */
-    protected function getIsChunkUploaded($identifier, $filename, $chunkNumber)
+    protected function getIsChunkUploaded(string $identifier, string $filename, string $chunkNumber) : bool
     {
         $filePath = $this->getTmpChunkFile($identifier, $filename, $chunkNumber);
         return file_exists($filePath);
@@ -125,7 +125,7 @@ class ResumableUploadAction extends ViewAction
      * @param integer $totalSize
      * @return bool
      */
-    protected function getIsUploadComplete($filename, $identifier, $chunkSize, $totalSize)
+    protected function getIsUploadComplete(string $filename, string $identifier, int $chunkSize, int $totalSize) : bool
     {
         if ($chunkSize <= 0) {
             return false;
@@ -145,16 +145,16 @@ class ResumableUploadAction extends ViewAction
      * @param integer $chunkNumber
      * @return string
      */
-    protected function getTmpChunkFile($identifier, $filename, $chunkNumber)
+    protected function getTmpChunkFile(string $identifier, string $filename, int $chunkNumber) : string
     {
         return $this->getTmpChunkDir($identifier) . DIRECTORY_SEPARATOR . $this->getTmpChunkname($filename, $chunkNumber);
     }
 
     /**
-     * @param string $identifier
-     * @return bool|string
+     * @param string | null $identifier
+     * @return string
      */
-    protected function getTmpChunkDir($identifier)
+    protected function getTmpChunkDir(string | null $identifier) : string
     {
         if ($identifier !== null) {
             $identifier = preg_replace('/[^a-z0-9_\-.]+/i', '_', $identifier);
@@ -174,7 +174,7 @@ class ResumableUploadAction extends ViewAction
      * @param integer $chunkNumber
      * @return string
      */
-    protected function getTmpChunkname($filename, $chunkNumber)
+    protected function getTmpChunkname(string $filename, int $chunkNumber) : string
     {
         return $filename . '.part' . $chunkNumber;
     }
@@ -182,7 +182,7 @@ class ResumableUploadAction extends ViewAction
     /**
      * Create the final file from chunks
      */
-    protected function createFileAndDeleteTmp($identifier, $filename)
+    protected function createFileAndDeleteTmp(string | null $identifier, string $filename) : void
     {
         $tmpFolder = $this->getTmpChunkDir($identifier);
         $chunkFiles = scandir($tmpFolder);
@@ -207,7 +207,7 @@ class ResumableUploadAction extends ViewAction
      * @param string $filename
      * @return string
      */
-    public static function cleanUpFilename($filename)
+    public static function cleanUpFilename(string $filename) : string
     {
         if ($filename !== null) {
             return preg_replace('/[^a-z0-9_\-.]+/i', '_', $filename);
@@ -220,7 +220,7 @@ class ResumableUploadAction extends ViewAction
     /**
      * @param string $directory
      */
-    protected function deleteDirectory($directory)
+    protected function deleteDirectory(string $directory) : void
     {
         $dir = opendir($directory);
         while(false !== ( $file = readdir($dir)) ) {
@@ -243,7 +243,7 @@ class ResumableUploadAction extends ViewAction
      * @param string $destFile
      * @return bool
      */
-    protected function createFileFromChunks($chunkFiles, $destFile)
+    protected function createFileFromChunks(array $chunkFiles, string $destFile) : bool
     {
         natsort($chunkFiles);
         $destHandle = fopen($destFile, 'w');
@@ -262,7 +262,7 @@ class ResumableUploadAction extends ViewAction
      * @return string|null
      * @since XXX
      */
-    protected function getResumableParam($name)
+    protected function getResumableParam(string $name) : string | null
     {
         $paramName = 'resumable' . ucfirst($name);
         return Yii::$app->request->getBodyParam($paramName, null);
@@ -274,7 +274,7 @@ class ResumableUploadAction extends ViewAction
      * @return string
      * @since XXX
      */
-    protected function extractExtension($filename)
+    protected function extractExtension(string $filename) : string
     {
         return pathinfo($filename, PATHINFO_EXTENSION);
     }

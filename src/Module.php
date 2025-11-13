@@ -35,19 +35,152 @@ class Module extends \yii\base\Module implements BootstrapInterface
 
 
     public $layoutPath = '@fractalCms/views/layouts';
-    public $viewItemPath = '@webapp/views/fractal-cms';
+    public string $viewItemPath = '@webapp/views/fractal-cms';
     public $layout = 'main';
     public $defaultRoute = 'default/index';
-    public $filePath = '@webroot/data';
-    public $relativeItemImgDirName = 'items';
-    public $relativeSeoImgDirName = 'seo';
-    public $cacheImgPath = 'cache';
+    public string $filePath = '@webroot/data';
+    public string $relativeItemImgDirName = 'items';
+    public string $relativeSeoImgDirName = 'seo';
+    public string $cacheImgPath = 'cache';
     public $version = 'v1.6.1';
-    public $name = 'FractalCMS';
-    public $commandNameSpace = 'fractalCms:';
+    public string $name = 'FractalCMS';
+    public string $commandNameSpace = 'fractalCms:';
 
-    private $_contextId = 'cms';
+    private string $contextId = 'cms';
+    private static array $routeRules = [
+        [
+            'pattern' =>'tableau-de-bord',
+            'route' => 'default/index',
+        ],
+        [
+            'pattern' => 'gestion-des-utilisateurs',
+            'route' => 'user/index',
+        ],
+        [
+            'pattern' => 'connexion',
+            'route' => 'authentification/login',
+        ],
+        [
+            'pattern' => 'deconnexion',
+            'route' => 'authentication/logout',
+        ],
+        [
+            'pattern' => 'utilisateurs/<id:([^/]+)>/editer',
+            'route' => 'user/update',
+        ],
+        [
+            'pattern' => 'utilisateurs/<id:([^/]+)>/supprimer',
+            'route' => 'user-api/delete',
+        ],
+        [
+            'pattern' => 'utilisateurs/<id:([^/]+)>/activer-desactiver',
+            'route' => 'user-api/activate',
+        ],
+        [
+            'pattern' => 'utilisateurs/creer',
+            'route' => 'user/create',
+        ],
+        [
+            'pattern' => 'utilisateurs/liste',
+            'route' => 'user/index',
+        ],
+        [
+            'pattern' => 'configuration-des-items/liste',
+            'route' => 'config-item/index',
+        ],
+        [
+            'pattern' => 'configuration-des-items/creer',
+            'route' => 'config-item/create',
+        ],
+        [
+            'pattern' => 'configuration-des-items/<id:([^/]+)>/editer',
+            'route' => 'config-item/update',
+        ],
+        [
+            'pattern' => 'configuration-des-items/<id:([^/]+)>/supprimer',
+            'route' => 'api/config-item/delete',
+        ],
 
+        [
+            'pattern' => 'configuration-type-article/liste',
+            'route' => 'config-type/index',
+        ],
+        [
+            'pattern' => 'configuration-type-article/creer',
+            'route' => 'config-type/create',
+        ],
+        [
+            'pattern' => 'configuration-type-article/<id:([^/]+)>/editer',
+            'route' => 'config-type/update',
+        ],
+        [
+            'pattern' => 'configuration-type-article/<id:([^/]+)>/supprimer',
+            'route' => 'api/config-type/delete',
+        ],
+        [
+            'pattern' => 'articles/liste',
+            'route' => 'content/index',
+        ],
+        [
+            'pattern' => 'articles/creer',
+            'route' => 'content/create',
+        ],
+        [
+            'pattern' => 'articles/<id:([^/]+)>/editer',
+            'route' => 'content/update',
+        ],
+        [
+            'pattern' => 'articles/<id:([^/]+)>/supprimer',
+            'route' => 'api/content/delete',
+        ],
+
+        [
+            'pattern' => 'menus/liste',
+            'route' => 'menu/index',
+        ],
+        [
+            'pattern' => 'menu/creer',
+            'route' => 'menu/create',
+        ],
+        [
+            'pattern' => 'menu/<id:([^/]+)>/editer',
+            'route' => 'menu/update',
+        ],
+        [
+            'pattern' => 'menu/<id:([^/]+)>/supprimer',
+            'route' => 'api/menu/delete',
+        ],
+        [
+            'pattern' => 'menu/<id:([^/]+)>/manage-menu-items',
+            'route' => 'api/menu/manage-menu-items',
+        ],
+        [
+            'pattern' => 'parametres/liste',
+            'route' => 'parameter/index',
+        ],
+        [
+            'pattern' => 'parametres/creer',
+            'route' => 'parameter/create',
+        ],
+        [
+            'pattern' => 'parametres/<id:([^/]+)>/editer',
+            'route' => 'parameter/update',
+        ],
+        [
+            'pattern' => 'parametres/<id:([^/]+)>/supprimer',
+            'route' => 'api/parameter/delete',
+        ],
+
+        [
+            'pattern' => 'contents/<targetId:([^/]+)>/manage-items',
+            'route' => 'api/content/manage-items',
+        ],
+
+        [
+            'pattern' => 'tags/<targetId:([^/]+)>/manage-items',
+            'route' => 'api/tag/manage-items',
+        ],
+    ];
     public function bootstrap($app)
     {
         try {
@@ -82,187 +215,9 @@ class Module extends \yii\base\Module implements BootstrapInterface
             ]);
 
             if ($app instanceof ConsoleApplication) {
-                //Init migration
-                if (isset($app->controllerMap['migrate']) === true) {
-                    //Add migrations namespace
-                    if (isset($app->controllerMap['migrate']['migrationNamespaces']) === true) {
-                        $app->controllerMap['migrate']['migrationNamespaces'][] = 'fractalCms\migrations';
-                    } else {
-                        $app->controllerMap['migrate']['migrationNamespaces'] = ['fractalCms\migrations'];
-                    }
-                    //Add rbac
-                    if (isset($app->controllerMap['migrate']['migrationPath']) === true) {
-                        $app->controllerMap['migrate']['migrationPath'][] = '@yii/rbac/migrations';
-                    } else {
-                        $app->controllerMap['migrate']['migrationPath'] = ['@yii/rbac/migrations'];
-                    }
-                }
-                $app->controllerMap[$this->commandNameSpace.'rbac'] = [
-                    'class' => RbacController::class,
-                ];
-                $app->controllerMap[$this->commandNameSpace.'admin'] = [
-                    'class' => AdminController::class,
-                ];
-                $app->controllerMap[$this->commandNameSpace.'author'] = [
-                    'class' => AuthorController::class,
-                ];
-                $app->controllerMap[$this->commandNameSpace.'init'] = [
-                    'class' => InitController::class,
-                ];
+                $this->configConsoleApp($app);
             } elseif ($app instanceof WebApplication) {
-                $app->getUrlManager()->addRules(
-                    [
-                        new GroupUrlRule([
-                            'prefix' => Module::getInstance()->id,
-                            'routePrefix' => Module::getInstance()->id,
-                            'rules' => [
-                                [
-                                    'pattern' =>'tableau-de-bord',
-                                    'route' => 'default/index',
-                                ],
-                                [
-                                    'pattern' => 'gestion-des-utilisateurs',
-                                    'route' => 'user/index',
-                                ],
-                                [
-                                    'pattern' => 'connexion',
-                                    'route' => 'authentification/login',
-                                ],
-                                [
-                                    'pattern' => 'deconnexion',
-                                    'route' => 'authentication/logout',
-                                ],
-                                [
-                                    'pattern' => 'utilisateurs/<id:([^/]+)>/editer',
-                                    'route' => 'user/update',
-                                ],
-                                [
-                                    'pattern' => 'utilisateurs/<id:([^/]+)>/supprimer',
-                                    'route' => 'user-api/delete',
-                                ],
-                                [
-                                    'pattern' => 'utilisateurs/<id:([^/]+)>/activer-desactiver',
-                                    'route' => 'user-api/activate',
-                                ],
-                                [
-                                    'pattern' => 'utilisateurs/creer',
-                                    'route' => 'user/create',
-                                ],
-                                [
-                                    'pattern' => 'utilisateurs/liste',
-                                    'route' => 'user/index',
-                                ],
-                                [
-                                    'pattern' => 'configuration-des-items/liste',
-                                    'route' => 'config-item/index',
-                                ],
-                                [
-                                    'pattern' => 'configuration-des-items/creer',
-                                    'route' => 'config-item/create',
-                                ],
-                                [
-                                    'pattern' => 'configuration-des-items/<id:([^/]+)>/editer',
-                                    'route' => 'config-item/update',
-                                ],
-                                [
-                                    'pattern' => 'configuration-des-items/<id:([^/]+)>/supprimer',
-                                    'route' => 'api/config-item/delete',
-                                ],
-
-                                [
-                                    'pattern' => 'configuration-type-article/liste',
-                                    'route' => 'config-type/index',
-                                ],
-                                [
-                                    'pattern' => 'configuration-type-article/creer',
-                                    'route' => 'config-type/create',
-                                ],
-                                [
-                                    'pattern' => 'configuration-type-article/<id:([^/]+)>/editer',
-                                    'route' => 'config-type/update',
-                                ],
-                                [
-                                    'pattern' => 'configuration-type-article/<id:([^/]+)>/supprimer',
-                                    'route' => 'api/config-type/delete',
-                                ],
-                                [
-                                    'pattern' => 'articles/liste',
-                                    'route' => 'content/index',
-                                ],
-                                [
-                                    'pattern' => 'articles/creer',
-                                    'route' => 'content/create',
-                                ],
-                                [
-                                    'pattern' => 'articles/<id:([^/]+)>/editer',
-                                    'route' => 'content/update',
-                                ],
-                                [
-                                    'pattern' => 'articles/<id:([^/]+)>/supprimer',
-                                    'route' => 'api/content/delete',
-                                ],
-
-                                [
-                                    'pattern' => 'menus/liste',
-                                    'route' => 'menu/index',
-                                ],
-                                [
-                                    'pattern' => 'menu/creer',
-                                    'route' => 'menu/create',
-                                ],
-                                [
-                                    'pattern' => 'menu/<id:([^/]+)>/editer',
-                                    'route' => 'menu/update',
-                                ],
-                                [
-                                    'pattern' => 'menu/<id:([^/]+)>/supprimer',
-                                    'route' => 'api/menu/delete',
-                                ],
-                                [
-                                    'pattern' => 'menu/<id:([^/]+)>/manage-menu-items',
-                                    'route' => 'api/menu/manage-menu-items',
-                                ],
-                                [
-                                    'pattern' => 'parametres/liste',
-                                    'route' => 'parameter/index',
-                                ],
-                                [
-                                    'pattern' => 'parametres/creer',
-                                    'route' => 'parameter/create',
-                                ],
-                                [
-                                    'pattern' => 'parametres/<id:([^/]+)>/editer',
-                                    'route' => 'parameter/update',
-                                ],
-                                [
-                                    'pattern' => 'parametres/<id:([^/]+)>/supprimer',
-                                    'route' => 'api/parameter/delete',
-                                ],
-
-                                [
-                                    'pattern' => 'contents/<targetId:([^/]+)>/manage-items',
-                                    'route' => 'api/content/manage-items',
-                                ],
-
-                                [
-                                    'pattern' => 'tags/<targetId:([^/]+)>/manage-items',
-                                    'route' => 'api/tag/manage-items',
-                                ],
-                            ]
-                        ]),
-                    ], true);            //adding route here
-
-                //Add rules to create an parse cms url
-                $app->urlManager->addRules([
-                    [
-                        'class' => UrlRule::class,
-                    ]
-                ], true);
-                $filePath = Yii::getAlias($this->filePath);
-                if(file_exists($filePath) === false) {
-                    mkdir($filePath);
-                }
-
+                $this->configWebApp($app);
             }
         } catch (Exception $e){
             Yii::error($e->getMessage(), __METHOD__);
@@ -270,11 +225,94 @@ class Module extends \yii\base\Module implements BootstrapInterface
         }
     }
 
+    /**
+     * Config Web application
+     *
+     * @param WebApplication $app
+     * @return void
+     * @throws Exception
+     */
+    public function configWebApp(WebApplication $app) : void
+    {
+        try {
+            $app->getUrlManager()->addRules(
+                [
+                    new GroupUrlRule([
+                        'prefix' => Module::getInstance()->id,
+                        'routePrefix' => Module::getInstance()->id,
+                        'rules' => static::$routeRules
+                    ]),
+                ], true);            //adding route here
 
+            //Add rules to create an parse cms url
+            $app->urlManager->addRules([
+                [
+                    'class' => UrlRule::class,
+                ]
+            ], true);
+            $filePath = Yii::getAlias($this->filePath);
+            if(file_exists($filePath) === false) {
+                mkdir($filePath);
+            }
+        }catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw  $e;
+        }
+    }
+
+    /**
+     * Config Console Application
+     *
+     * @param ConsoleApplication $app
+     * @return void
+     * @throws Exception
+     */
+    protected function configConsoleApp(ConsoleApplication $app) : void
+    {
+        try {
+            //Init migration
+            if (isset($app->controllerMap['migrate']) === true) {
+                //Add migrations namespace
+                if (isset($app->controllerMap['migrate']['migrationNamespaces']) === true) {
+                    $app->controllerMap['migrate']['migrationNamespaces'][] = 'fractalCms\migrations';
+                } else {
+                    $app->controllerMap['migrate']['migrationNamespaces'] = ['fractalCms\migrations'];
+                }
+                //Add rbac
+                if (isset($app->controllerMap['migrate']['migrationPath']) === true) {
+                    $app->controllerMap['migrate']['migrationPath'][] = '@yii/rbac/migrations';
+                } else {
+                    $app->controllerMap['migrate']['migrationPath'] = ['@yii/rbac/migrations'];
+                }
+            }
+            $app->controllerMap[$this->commandNameSpace.'rbac'] = [
+                'class' => RbacController::class,
+            ];
+            $app->controllerMap[$this->commandNameSpace.'admin'] = [
+                'class' => AdminController::class,
+            ];
+            $app->controllerMap[$this->commandNameSpace.'author'] = [
+                'class' => AuthorController::class,
+            ];
+            $app->controllerMap[$this->commandNameSpace.'init'] = [
+                'class' => InitController::class,
+            ];
+        }catch (Exception $e) {
+            Yii::error($e->getMessage(), __METHOD__);
+            throw  $e;
+        }
+    }
+
+    /**
+     * Get context id
+     *
+     * @return string
+     * @throws Exception
+     */
     public function getContextId() : string
     {
         try {
-            return $this->_contextId;
+            return $this->contextId;
         }catch (Exception $e) {
             Yii::error($e->getMessage(), __METHOD__);
             throw  $e;

@@ -1,0 +1,18 @@
+# Codeception Test Suite Configuration
+#
+# Suite for unit or integration tests.
+
+actor: UnitTester
+modules:
+    enabled:
+        - Asserts
+        - Yii2:
+            configFile: 'tests/config/common.php'
+        - Db:
+            dsn: 'mysql:host=localhost;port=3306;dbname=fractalcms_test'
+            user: 'dghyse'
+            password: 'redcat'
+            dump: tests/Support/Data/fractalcms_local_07112025.sql
+            cleanup: true # reload dump between tests
+            populate: true # load dump before all tests
+step_decorators: ~

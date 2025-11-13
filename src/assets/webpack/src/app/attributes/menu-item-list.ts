@@ -122,7 +122,7 @@ export class MenuItemList {
         if (target && this.dragItem && this.dragItem !== target) {
             const menuItemData = this.buildMenuItemData(target, this.dragItem);
             this.apiService.manageMenuItems(
-                parseInt(target.getAttribute('data-menu-id')),
+                Number.parseInt(target.getAttribute('data-menu-id')),
                 menuItemData).then((html) => {
                     const messageMove:IMoveMenuItem = {
                         name:'menu-item-list',
@@ -161,8 +161,8 @@ export class MenuItemList {
     {
         this.logger.trace('buildMenuItemData');
         const menuItem:IMenuItem = {
-            sourceMenuItemId:parseInt(dragItem.getAttribute('data-id')),
-            destMenuItemId:parseInt(target.getAttribute('data-id')),
+            sourceMenuItemId:Number.parseInt(dragItem.getAttribute('data-id')),
+            destMenuItemId:Number.parseInt(target.getAttribute('data-id')),
         };
         return menuItem;
     }
