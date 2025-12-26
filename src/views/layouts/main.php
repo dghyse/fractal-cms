@@ -18,7 +18,7 @@ use fractalCms\Module;
 use yii\helpers\Html;
 
 $moduleInstance = Module::getInstance();
-WebpackAsset::register($this);
+WebpackAsset::register($this)
 BootstrapAsset::register($this);
 $baseUrl = StaticAsset::register($this)->baseUrl;
 Yii::$app->response->headers->set('X-Frame-Options', 'ALLOW-FROM \'self\'');
