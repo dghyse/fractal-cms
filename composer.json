@@ -1,16 +1,15 @@
 {
     "name": "dghyse/fractal-cms",
-    "description": "FractalCMS - un CMS léger et modulaire basé sur Yii2",
-    "keywords": [
-        "fractal-cms",
-        "cms",
-        "fractalcms",
-        "php",
-        "yii2",
-        "blog",
-        "website"
-    ],
-    "version": "v1.7.0",
+    "description": "⚠️ OBSOLETE – Use webcraftdg/fractal-cms-content instead",
+    "conflict": {
+        "webcraftdg/fractal-cms-content": "*"
+    },
+    "replace": {
+        "webcraftdg/fractal-cms-content": "*"
+    },
+    "suggest": {
+        "webcraftdg/fractal-cms-content": "Replacement package. Install this instead."
+    },
     "homepage": "https://github.com/dghyse/fractal-cms",
     "type": "library",
     "license": "MIT",
