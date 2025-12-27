@@ -1,6 +1,7 @@
 {
     "name": "dghyse/fractal-cms",
-    "description": "⚠️ OBSOLETE – Use webcraftdg/fractal-cms-content instead",
+    "description": "⚠️ OBSOLETE",
+    "abandoned": true,
     "replace": {
         "webcraftdg/fractal-cms-content": "*"
     },
